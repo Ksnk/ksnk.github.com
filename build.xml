@@ -6,7 +6,11 @@
     <property name="test_dir" value="z:\home\github.me\www\"/>
     <property name="test_url" value="http://github.me/"/>
 
-    <target name="release">
+    <target name="build">
+        <preprocess config="config.build.xml"/>
+    </target>
+
+    <target name="release" depends="build">
         <preprocess config="config.xml">
             <param name="target" value="release"/>
             <param name="dst" value="${test_dir}"/>

@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
+    <files dst="sitesrc">
+        <file>Readme.markdown</file>
+        <file dst="..">index.html</file>
+    </files>
+
     <files dstdir="$dst">
         <copy>**/*.*</copy>
         <copy>index.html</copy>
