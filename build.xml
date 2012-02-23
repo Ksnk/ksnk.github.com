@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="fly" default="release">
+
+    <taskdef name="preprocess" classname="phing.tasks.ext.preprocessor.preprocessTask" />
+
+    <property name="test_dir" value="z:\home\github.me\www\"/>
+    <property name="test_url" value="http://github.me/"/>
+
+    <target name="release">
+        <preprocess config="config.xml">
+            <param name="target" value="release"/>
+            <param name="dst" value="${test_dir}"/>
+        </preprocess>
+    </target>
+
+
+    <target name="browser" depends="release" description="run test">
+        <exec command="start ${test_url}" checkreturn="false" logoutput="false"/>
+    </target>
+
+</project>
