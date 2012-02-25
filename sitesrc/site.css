@@ -147,8 +147,6 @@ markdown-body a:hover {
 .markdown-body h2 a {
 	color: <%=$textlink%>;
 	font-size:11px;
-	padding:6px 0 0 15px;
-	background:url(img/arrred.gif) 5px 1em no-repeat;
 	margin-right:30px;
 }
 /** список ссылок */
