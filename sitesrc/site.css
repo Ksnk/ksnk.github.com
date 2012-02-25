@@ -1,0 +1,165 @@
+/**
+<%  $gray = 'rgb(99,100,102)';
+ 	$lgray = 'rgb(217,220,227)';
+    $red = 'rgb(152,27,30)' ;
+    $textlink = 'rgb(97,134,186)';
+%>
+ */
+ 
+#debug {display:none;}
+
+div.para {
+	padding:5px 0;
+}
+
+.size11 {
+	line-height:14px;
+}
+
+.text ul {
+	font-size:11px;
+}
+
+.ctext {
+	color: <%=$gray%>;
+}
+.cltext {
+	color:<%=$gray%>;
+}
+
+.blue, .blue a ,a.blue ,.ctext a,.c2text a{
+	color:#2c6fa4;
+}
+
+.ctext a,.c2text a{
+	color: <%=$textlink%> ;
+}
+
+.bgray{ color:#697886; }
+
+.border_left, .borderx_left {
+	padding:0 40px 0 20px;
+	border-left:2px solid #d3d2d2 ;
+	color: #697886 ;
+	font-size: 11px;
+	line-height: 16px;
+}
+.borderx_left{
+	border-left:1px solid #d3d2d2 ;
+}
+
+a.link1 img {
+	border:0;
+}
+a.link1 {
+	font-size: 11px;
+
+}
+
+a.current,  a.white.current {
+	color: #f37e01;
+	text-decoration: underline;
+}
+
+.red {
+	color:<%=$red%>;
+}
+
+.cltext a:hover, .ctext a:hover, .c2text a:hover, .red a:hover,a.white:hover {
+	color: <%=$red%>;
+	text-decoration: underline;
+}
+
+.float_center {
+	padding: 0 20px 30px 0;
+}
+
+.footer .float_center {
+	padding: 0;
+}
+
+.float_left {
+	float: left;
+	padding: 0 20px 10px 0;
+}
+
+.float_right {
+	float: right;
+	padding: 0 0 5px 20px;
+}
+
+select{
+	border: 1px solid #cdcdcd;
+	border-bottom:1px solid #f4f4f4;
+	border-right:1px solid #f4f4f4;
+	
+}
+
+.pad10 {
+	padding: 0 10px; 
+}
+.pad5 {
+	padding: 0 7px; 
+}
+
+img {
+	border:0;
+}
+
+table.pad5 td {padding:0 5px ;vertical-align:middle;}
+
+.x24 td {height:24px;}
+
+p {margin :0;}
+
+.white, a.white{
+	color:white;
+}
+
+a.block {
+	display:block;
+	width:100%;
+	height:100%;
+	text-decoration:none;
+}
+a.block:hover {
+	text-decoration:none;
+}
+
+.size16 {
+	font-size:16px;
+}
+
+.menu {padding-bottom:7px;}
+
+/** список ссылок */
+.links a {
+	color: <%=$textlink%>;
+	font-size:11px;
+	padding:6px 0 0 15px;
+	background:url(img/arrred.gif) 5px 1em no-repeat;
+	margin-right:30px;
+}
+markdown-body a:hover {
+	color: <%=$red%>;
+}
+/** список ссылок */
+.markdown-body h2 a {
+	color: <%=$textlink%>;
+	font-size:11px;
+	padding:6px 0 0 15px;
+	background:url(img/arrred.gif) 5px 1em no-repeat;
+	margin-right:30px;
+}
+/** список ссылок */
+.markdown-body h2 a {
+	font-size:24px;
+}
+
+<% include 'markdown.css'; %>
+<% include 'common.css'; %>
+<% include 'footer.css'; %>
+<% include 'ul.oglav.css'; %>
+<% include 'ul.menu.css'; %>
+<% include 'nfirst.css'; %>
+<% include 'news.css'; %>

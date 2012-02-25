@@ -3,6 +3,7 @@
     <files dir="sitesrc">
         <file>Readme.markdown</file>
         <file dstdir=".">index.html</file>
+        <file dstdir="." depend='sitesrc/*.css'>site.css</file>
     </files>
 
 </config>

@@ -8,5 +8,6 @@
     <files dstdir="$dst">
         <copy>**/*.*</copy>
         <copy>index.html</copy>
+        <copy>site.css</copy>
     </files>
 </config>

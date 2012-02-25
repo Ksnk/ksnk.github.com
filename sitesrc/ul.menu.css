@@ -1,0 +1,100 @@
+#menu_container {
+    height:80px;
+    border-bottom:1px solid <?=$lgray?>;
+    margin-bottom:20px;
+}
+ul.ulmenu {
+/*	font-family: arial, sans-serif; */
+	font-weight:bold;
+	z-index:100;
+	padding:0; margin:0; 
+	list-style: none;
+}
+
+ul.ulmenu ul{
+	list-style: none;
+}
+
+ul.ulmenu li {
+	float:left; position:relative;
+	display:block;
+	height:36px; 
+}
+
+ul.ulmenu li.last a {
+	border-right:1px solid <?=$lgray?>;
+}
+
+ul.ulmenu li a span{
+	display:block;
+	height:15px; margin:4px 0; float:left;
+	overflow:hidden;
+    background-position:0 0;
+}
+
+ul.ulmenu li a.current span, ul.ulmenu li a:hover span{
+    background-position:0 15px;
+}
+ul.ulmenu li a span img{
+    visibility:hidden;
+}
+
+ul.ulmenu li a {
+	float:left;
+	text-decoration:none;
+	background:url(img/arrgray.gif) 95% 0.7em no-repeat;
+	padding:0 49px 0 19px;
+	border-left:1px solid <?=$lgray?>;
+	cursor:pointer;	
+	font-size:11px; line-height:18px; 
+	color: <?=$gray?>;
+}
+
+ul.ulmenu li.open a{
+	background-image:url(img/arrreddown.gif);
+}
+
+ul.ulmenu li a:hover, ul.ulmenu li a.current {
+	color:<?=$red?>;
+/*	background-image:url(img/arrreddown.gif);*/
+}
+
+ul.ulmenu li ul {
+	background: <?=$lgray?>;
+	padding:8px 0 ;
+	position:absolute;
+	top:31px; left:0;
+	margin:12px 0 0 0;
+	width:auto;
+	display: none;
+}
+ul.ulmenu li ul li{
+	float:none;
+	display:block;
+	height:auto; 
+}
+ul.ulmenu li.open li a{
+	background:none;
+}
+ul.ulmenu li li.first a {
+	border-top:0;
+}
+ul.ulmenu li li a {
+	background:none;
+	float:none; display:block;
+	border-right:none;
+	border-top:1px dotted white;
+	white-space:nowrap;
+	color: <?=$lgray?>;
+	text-decoration:none;
+	font-weight:normal;
+	font-size:11px;
+/*margin: 0 11px;*/
+	padding:4px 25px 4px 22px ;
+	cursor:pointer;	
+}
+ul.ulmenu li li a:hover, ul.ulmenu li li a.current {
+	background:transparent;
+	color: <?=$red?>;
+}
+ul.ulmenu li ul li ul{top:5px;left:100%; }

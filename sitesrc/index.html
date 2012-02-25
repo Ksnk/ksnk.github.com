@@ -1,20 +1,104 @@
-<!DOCTYPE html>
+<!DOCTYPE html><html>
 <head><title>Ksnk projects at Github</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
-<script type="text/javascript" src="fly.min.js"></script>
-<link href="/markdown.min.css" media="screen" rel="stylesheet" type="text/css">
+<link href="/site.css" media="screen" rel="stylesheet" type="text/css">
 <style></style>
 </head>
-<body style="background-color:rgba(144,153,54,0.56);">
+<body class="tahoma">
+<!--[if lt IE 7]>
+<style type="text/css" >
+.cat_border { width: 1%;}
+</style>
+<![endif]-->
 
+<table class="fixed long">
+<col width="250px">
+<col width="30%">
+<col width="730px">
+<col width="40%px">
+<col width="15px">
+<col width="30%">
+<tr><td colspan=2 style="vertical-align:middle;text-align:center;">
+	<img src="img/map.gif" alt="map" usemap="#Map">
+</td>
+<td colspan=2 style="background:url(img/brickx.png) repeat-x;">
+<div style="float:right;">
+<img style="margin:55px 70px 30px 0;" alt="телефон" src="img/logoksnk.png">
+</div>
+<a href="/"><img src="img/logo.png" alt="{title>>html}"></a>
+</td>
+<td colspan=2 rowspan=3></td>
+</tr>
+<tr><td colspan=2><div style="background:url(img/brick0.gif) 0 0 no-repeat; height:137px; ">
+<ul class="oglav">
+    <li><a href="#">Preprocessor</a></li>
+    <li><a href="#">Preprocessor</a></li>
+    <li><a href="#">Preprocessor</a></li>
+    <li><a href="#">Preprocessor</a></li>
+</ul>
 
-<div id="debug" style="color:red;"></div>
-<div style="height:1px;overflow:hidden;width:1200px;"></div>
-<div style="float:right;height:1400px;overflow:hidden;width:1px;"></div>
-
-<div class="markdown-body" style="background-color:rgb(247,247,247);width:700px;padding:20px 30px;margin:100px auto;">
-<%=POINT::get('index','markdown-html');%>
+</div>
+<div style="padding-right:20px;">
+<!-- тестовый блок новостей-->
+    <div id="news_b">
+        <div class="news_title">Новости</div>
+        <%=POINT::get('news','markdown-html');%>
+    </div>
+<!-- -->
 </div>
 
+</td>
+<td colspan=2 style="background:url(img/brick2.gif) 0 -128px  repeat-x;">
+    <div style="height:8px;"></div>
+<div id="menu_container" style="height:72px;"><div style="height:30px;"></div>
+    <ul class="ulmenu">
+        <li><a href="#">Preprocessor</a></li>
+        <li><a href="#">Preprocessor</a></li>
+        <li><a href="#">Preprocessor</a></li>
+        <li><a href="#">Preprocessor</a></li>
+    </ul>
+</div>
+    <div id="nfirst">
+    <a href="/">Главная</a>
+
+
+    <div class="title">
+    Мои проекты
+    </div>
+    </div>
+    <div class="para">
+        <div class="markdown-body" style="margin:0 auto 100px auto;">
+        <%=POINT::get('index','markdown-html');%>
+        </div>
+
+	</div>
+</td>
+</tr>
+
+<tr>
+<td  colspan=2>
+<div style="background:url(img/brick.gif) 0 10px no-repeat;padding-left:70px;" id="xilen">
+	<a href="mailto@sergekoriakin@gmail.com"><img alt='Xilen' src="img/logoksnk.png"></a>
+</div>
+</td>
+<td  colspan=2 id="footer">
+<div style="height:20px; border-bottom:10px solid gray;"></div>
+<div class="address" style="float:left;">
+Адрес:<br>
+sergekoriakin@gmail.com
+</div>
+<div class="address" style="float:right;">
+©2012 by Ksnk<br>
+Все права защищены.
+</div>
+</td></tr>
+</table>
+<map name="Map">
+  <area shape="rect"  alt="Главная" coords="0,0,11,17" href="/">
+  <area shape="rect"  alt="Карта сайта" coords="47,0,58,17" href="{::curl:do:id}do=sitemap">
+  <area shape="rect"  alt="Пишите нам" coords="97,0,108,17" href="{::curl:do:id}do=writeus">
+</map>
+<div id="debug"></div>
 </body>
+</html>

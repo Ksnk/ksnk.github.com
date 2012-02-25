@@ -1,0 +1,48 @@
+/**
+ *   менюшка слева - оглавление 
+ */
+ul.oglav {
+	list-style-type:none;
+	padding:12px 10px 0 20px;
+	margin:0px 0 0 10px;
+	font-size:11px;
+	font-weight:bold; 
+}
+ul.oglav  ul{
+	list-style-type:none;
+	padding:5px 0 5px 10px;
+	margin:0;
+	font-size:11px;
+	font-weight:normal; 
+}
+
+ul.oglav  li{
+	padding:6px 0px;
+	background:url(img/arrred.gif) 5px 1em no-repeat;
+}
+
+ul.oglav  li a{
+	display:block;
+	color:<?=$red?> ;
+	padding-left:20px;
+	text-decoration:underline;
+}
+/*
+ul.oglav  li a.current,ul.oglav  li a:hover{
+	color:!RED;
+}*/
+ul.oglav  li a:hover{
+	text-decoration:none;
+}
+ul.oglav  li li a {
+	padding-left:15px;
+}
+ul.oglav  li li li a {
+	padding-left:10px;
+}
+
+ul.oglav  li li{
+	padding:3px 0px;
+	padding-left:0;
+	background:url(img/x1x1.gif) 5px 0.6em no-repeat;
+}

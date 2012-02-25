@@ -1,0 +1,7 @@
+
+#footer .address {
+	margin: 20px 0 ;
+	font-weight:bold;
+	font-size:11px;
+	color: <?=$gray ?>;
+}

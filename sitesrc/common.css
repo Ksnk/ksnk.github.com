@@ -1,0 +1,120 @@
+/* 
+общий кусок 
+ никакой цветной конкретики!
+*/
+html     , body {
+	margin: 0;
+	padding: 0;
+}
+
+ a:active, a:focus, img { outline: none; } 
+
+table {
+	border: 0px;
+	border-collapse: collapse;
+	padding: 0px;
+	margin: 0;
+}
+
+table td,table th {
+	border-spacing:0;
+	padding: 0px;
+	margin: 0;
+}
+table td {
+	vertical-align: top;
+}
+
+table.fixed {
+	table-layout: fixed;
+}
+/* блок статей */
+.tahoma {
+	font-family: tahoma, arial;
+}
+
+
+.size10 {
+	font-size: 10px;
+}
+.size11 {
+	font-size: 11px;
+}
+
+.size12 {
+	font-size: 12px;
+}
+
+.size16 {
+	font-size: 16px;
+}
+
+.size14 {
+	font-size: 14px;
+}
+
+.size18 {
+	font-size: 18px;
+}
+/* блок меню */
+.menu, .bold {
+	font-weight: bold;
+}
+.norm{
+	font-weight: normal ;
+}
+/* раскраски шапки */
+.hand {
+	cursor: pointer;
+}
+
+.align_left {
+	text-align: left;
+}
+
+.align_left .align_center, .align_center {
+	text-align: center;
+}
+
+.align_middle, table.align_middle td{
+	vertical-align:middle;
+}
+
+.align_bottom{
+	vertical-align:bottom;
+}
+
+.align_right .align_center table, .align_left .align_center table,.align_center table ,.align_left .align_center div, .align_center div, .align_center img  {
+	margin-left:auto;
+	margin-right:auto;
+}
+
+.align_right {
+	text-align: right;
+}
+.align_right table , .align_right div {
+	margin-left:auto;
+	margin-right:0
+}
+.align_left table , .align_left div {
+	margin-left:0;
+}
+
+
+.long {width:100%;}
+.wide {height:100%;}
+
+.debug {
+	border: 1px solid red;
+}
+
+.hidden {
+	display:none;
+}
+
+div.stick {
+	width:1px;height:1px;overflow:hidden;
+}
+tr.stick td{
+	height:1px;overflow:hidden;
+}

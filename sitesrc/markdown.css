@@ -1,7 +1,8 @@
 
 .markdown-body {
-    font-size: 14px;
+    font-size: 12px;
     line-height: 1.6;
+    color: <?=$gray ?>;
 }
 
 .markdown-body>*:first-child {
@@ -57,14 +58,6 @@
 
 .markdown-body p, .markdown-body blockquote, .markdown-body ul, .markdown-body ol, .markdown-body dl, .markdown-body li, .markdown-body table, .markdown-body pre {
     margin: 15px 0;
-}
-
-.markdown-body hr {
-    background: transparent url('../../images/modules/pulls/dirty-shade.png') repeat-x 0 0;
-    border: 0 none;
-    color: #ccc;
-    height: 4px;
-    padding: 0;
 }
 
 .markdown-body>h2:first-child, .markdown-body>h1:first-child, .markdown-body>h1:first-child+h2 {

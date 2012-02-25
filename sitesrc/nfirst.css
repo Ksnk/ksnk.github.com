@@ -1,0 +1,21 @@
+
+#nfirst {
+/*	border-bottom: 1px solid rgb(165,163,136);*/
+	font-size:11px;
+}
+
+#nfirst .title {
+	text-align:left;
+	line-height:36px;
+	color: <?=$red?>;
+	font-size:20px;
+	margin:20px 0;
+}
+#nfirst a{
+	color:<?=$gray?> ;
+	text-decoration:underline;
+}
+
+#nfirst a:hover{
+	color:<?=$red?>;
+}
