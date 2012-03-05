@@ -34,8 +34,7 @@
 <ul class="oglav">
     <li><a href="#preprocessor">Preprocessor</a></li>
     <li><a href="#fly">Fly</a></li>
-    <li><a href="#">Preprocessor</a></li>
-    <li><a href="#">Preprocessor</a></li>
+    <li><a href="#Backup">Backup-script</a></li>
 </ul>
 
 </div>
@@ -43,9 +42,13 @@
 <!-- тестовый блок новостей-->
     <div id="news_b">
         <div class="news_title">Новости</div>
-        <h3>25/02/2012</h3>
+        <h3>05/03/2012</h3>
 
-<p>Cделана попытка портировать страничку на github. К сожалению, только plain html возможен, так что ативные элементы будем прикручивать со стороны.</p>
+<p>Закончена черновая отладка <a href="http://github.com/Ksnk/Backup-script">Backup-script</a>. Проект дожил до стадии "бета".</p>
+
+<h3>25/02/2012</h3>
+
+<p>Cделана попытка портировать страничку на github. К сожалению, только plain html возможен, так что активные элементы будем прикручивать со стороны.</p>
 
 <p>За счет предобработки можно попытаться автоматизировать постинг новостей на сайт.</p>
 
@@ -63,8 +66,7 @@
     <ul class="ulmenu">
         <li><a href="#Preprocessor">Preprocessor</a></li>
         <li><a href="#Fly">Fly</a></li>
-        <li><a href="#">Preprocessor</a></li>
-        <li><a href="#">Preprocessor</a></li>
+        <li><a href="#Backup">Backup-script</a></li>
     </ul>
 </div>
     <div id="nfirst">
@@ -79,6 +81,13 @@
         <div class="markdown-body" style="margin:0 auto 100px auto;">
         <p>Проекты имеют отношение к javascript и PHP. Практическии все они проходят этап сборки, когда из нескольких разных проектов собирается один новый.
 Это позволяет не плодить одинаковые файлы в разных проектах и частично перекрывает надобность в submodule'ях у git'а, SASS и других утилит-хелперов</p>
+
+<h2><a href="http://github.com/Ksnk/Backup-script">Backup-script</a></h2>
+
+<p><a name="Backup"></a>
+Скрипт для работы с sql-dump сделанных любым sql-дампером. Ну и сам может создавать, конечно. Скрипт выпускается в нескольких "билдах".
+Билд "<a href="http://ksnk.github.com/backup-script/allinone.tar.gz">все в одном</a>" - предствляет собой web-утилиту, которую можно загрузить на сайт и восстановить базу. Создаваемый дамп в чем-то даже лучше sypexdumper'овских, так как работает с forein keys корректнее.
+ Билд "<a href="http://ksnk.github.com/backup-script/simpleclass.tar.gz">simpleclass</a>" представляет собой собственно класс, который используется утилитой для работы с дампами. Его можно воткнуть в свою систему и использовать.</p>
 
 <h2><a href="http://github.com/Ksnk/Preprocessor">Preprocessor</a></h2>
 
