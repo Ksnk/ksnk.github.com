@@ -19,12 +19,17 @@ Cделана попытка портировать страничку на gith
 ## [Backup-script](http://github.com/Ksnk/Backup-script) ##
 <a name="Backup"></a>
 Скрипт для работы с sql-dump сделанных любым sql-дампером. Ну и сам может создавать, конечно. Скрипт выпускается в нескольких "билдах".
-Билд "[все в одном](http://ksnk.github.com/backup-script/allinone.tar.gz)" - предствляет собой web-утилиту, которую можно загрузить на сайт и восстановить базу. Создаваемый дамп в чем-то даже лучше sypexdumper'овских, так как работает с forein keys корректнее.
- Билд "[simpleclass](http://ksnk.github.com/backup-script/simpleclass.tar.gz)" представляет собой собственно класс, который используется утилитой для работы с дампами. Его можно воткнуть в свою систему и использовать.
+* "[все в одном](http://ksnk.github.com/backup-script/allinone.tar.gz)" - предствляет собой web-утилиту, которую можно загрузить на сайт и восстановить базу. Создаваемый дамп в чем-то даже лучше sypexdumper'овских, так как работает с forein keys корректнее.
+
+* "[simpleclass](http://ksnk.github.com/backup-script/simpleclass.tar.gz)" представляет собой собственно класс, который используется утилитой для работы с дампами. Его можно воткнуть в свою систему и использовать.
 
 ## [Preprocessor](http://github.com/Ksnk/Preprocessor) ##
 <a name="preprocessor"></a>
 Собственно это сборщик и есть. Язык, на котором описана модификация исходников - тот-же самый PHP, только в asp-like тегах. Список файлов определяется в XML файле. доступ к этому файлу открыт во время препроцессинга исходников...
+
+Сборка проекта для 2-х разных применений.
+* [standalone](http://ksnk.github.com/preprocessor/preprocessor.tar.gz) - сборка, готовая утилита для сборки проектов
+* [phing](http://ksnk.github.com/preprocessor/preprocessor.phing.tar.gz) - сборка в виде задачи для PHING.
 
 
 ## [Fly](http://github.com/Ksnk/Fly) ##
