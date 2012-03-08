@@ -35,6 +35,7 @@
     <li><a href="#preprocessor">Preprocessor</a></li>
     <li><a href="#fly">Fly</a></li>
     <li><a href="#Backup">Backup-script</a></li>
+    <li><a href="#templater">Templater</a></li>
 </ul>
 
 </div>
@@ -67,6 +68,7 @@
         <li><a href="#Preprocessor">Preprocessor</a></li>
         <li><a href="#Fly">Fly</a></li>
         <li><a href="#Backup">Backup-script</a></li>
+        <li><a href="#templater">Templater</a></li>
     </ul>
 </div>
     <div id="nfirst">
@@ -80,7 +82,9 @@
     <div class="para">
         <div class="markdown-body" style="margin:0 auto 100px auto;">
         <p>Проекты имеют отношение к javascript и PHP. Практическии все они проходят этап <a href="#preprocessor">сборки</a>, когда из нескольких разных проектов собирается один новый.
-Это позволяет не плодить одинаковые файлы в разных проектах и частично перекрывает надобность в submodule'ях у git'а, SASS и других утилит-хелперов</p>
+Это позволяет не плодить одинаковые файлы в разных проектах и частично перекрывает надобность в submodule'ях у git'а, SASS и других утилит-хелперов.</p>
+
+<p>Значительно затрудняется отладка и позиционирование на номере строки в случае ошибки, так что злоупотреблять препроцессином на активно отлаживаемом коде не очень разумно.</p>
 
 <h2><a href="http://github.com/Ksnk/Backup-script">Backup-script</a></h2>
 
@@ -103,6 +107,11 @@
 <li><p><a href="http://ksnk.github.com/preprocessor/preprocessor.tar.gz">standalone</a> - сборка, готовая утилита для сборки проектов</p></li>
 <li><p><a href="http://ksnk.github.com/preprocessor/preprocessor.phing.tar.gz">phing</a> - сборка в виде задачи для PHING.</p></li>
 </ul>
+
+<h2><a href="http://github.com/Ksnk/templater">Templater</a></h2>
+
+<p><a name="templater"></a>
+Шаблонизатор. На основе Jinja2 (клон Django-шаблонов с японской спецификой :) ) синтаксиса  В принципе, особых преимуществ перед Twig у него нет, однако он существенно меньше и не менее крут.</p>
 
 <h2><a href="http://github.com/Ksnk/Fly">Fly</a></h2>
 

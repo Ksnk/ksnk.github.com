@@ -36,6 +36,9 @@ Cделана попытка портировать страничку на gith
 
 * [phing](http://ksnk.github.com/preprocessor/preprocessor.phing.tar.gz) - сборка в виде задачи для PHING.
 
+## [Templater](http://github.com/Ksnk/templater) ##
+<a name="templater"></a>
+Шаблонизатор. На основе Jinja2 (клон Django-шаблонов с японской спецификой :) ) синтаксиса  В принципе, особых преимуществ перед Twig у него нет, однако он существенно меньше и не менее крут.
 
 ## [Fly](http://github.com/Ksnk/Fly) ##
 <a name="fly"></a>
