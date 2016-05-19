@@ -10,27 +10,27 @@
 	<script type='text/javascript' src='js/snow.js'></script>
 	<script type='text/javascript' >
 		// **********************************************************************
-		// ** здесь конфигурация скрипта ...
+		// ** Р·РґРµСЃСЊ РєРѕРЅС„РёРіСѓСЂР°С†РёСЏ СЃРєСЂРёРїС‚Р° ...
 		// **********************************************************************
-		// новая фича массива - случайный элемент
+		// РЅРѕРІР°СЏ С„РёС‡Р° РјР°СЃСЃРёРІР° - СЃР»СѓС‡Р°Р№РЅС‹Р№ СЌР»РµРјРµРЅС‚
 		random=function (a) {return a[Math.floor(Math.random()*a.length)]};
 
         Engine=new a_engine([new air(),new wind()],{link:'css/winter.css'})
-        // debug('начинаем снег')
-		// добавляем снег.
+        // debug('РЅР°С‡РёРЅР°РµРј СЃРЅРµРі')
+		// РґРѕР±Р°РІР»СЏРµРј СЃРЅРµРі.
 			for (var i=0;i<70;i++)
-				Engine.add(new snow({name:'снежинка',img:random(
+				Engine.add(new snow({name:'СЃРЅРµР¶РёРЅРєР°',img:random(
 				   ['images/winter/flake0.gif',
 			        'images/winter/flake1.gif',
 			        'images/winter/flake2.gif',
 			        'images/winter/flake3.gif',
 			        'images/winter/flake4.gif'])}))
-			// добавляем тучи.
+			// РґРѕР±Р°РІР»СЏРµРј С‚СѓС‡Рё.
 			for (var i=0;i<10;i++)
-				Engine.add(new cloud({name:'туча',img:random(
+				Engine.add(new cloud({name:'С‚СѓС‡Р°',img:random(
 				   ['images/cloud.gif',
 			        'images/cloud1.gif']),speed:{x:1+3*Math.random(),y:0} }))
-		// делаем автовыпадение снега по загрузке страницы...
+		// РґРµР»Р°РµРј Р°РІС‚РѕРІС‹РїР°РґРµРЅРёРµ СЃРЅРµРіР° РїРѕ Р·Р°РіСЂСѓР·РєРµ СЃС‚СЂР°РЅРёС†С‹...
 		Engine.add_Handler(window, 'load','paintWhenReady');
 	</script>
 </head>

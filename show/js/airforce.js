@@ -1,20 +1,20 @@
 // **********************************************************************
-// **  простое применение классов из aengine.js
+// **  РїСЂРѕСЃС‚РѕРµ РїСЂРёРјРµРЅРµРЅРёРµ РєР»Р°СЃСЃРѕРІ РёР· aengine.js
 // **********************************************************************
 
-// элемент - вертолет
+// СЌР»РµРјРµРЅС‚ - РІРµСЂС‚РѕР»РµС‚
 helicopter = newClass(a_item,{
-    name:'вертолет',
+    name:'РІРµСЂС‚РѕР»РµС‚',
 	speed :{x:0,y:0},
     img:'images/b2.gif',
     mass:3,
-    waittill:0, // счетчик принятия решения
+    waittill:0, // СЃС‡РµС‚С‡РёРє РїСЂРёРЅСЏС‚РёСЏ СЂРµС€РµРЅРёСЏ
     self_act: function (e) {
 		if (this.waittill>0) this.waittill--;
-		else if(this.speed) { // принимаем решение
+		else if(this.speed) { // РїСЂРёРЅРёРјР°РµРј СЂРµС€РµРЅРёРµ
 			this.speed.x=Math.random()*8-4;
 			this.speed.y=Math.random()*8-4;
-			this.waittill=Math.floor(50+Math.random()*100) ; // 2.5-7 секунд
+			this.waittill=Math.floor(50+Math.random()*100) ; // 2.5-7 СЃРµРєСѓРЅРґ
 		}
     },
 	draw: function(w,s) {
@@ -27,34 +27,34 @@ helicopter = newClass(a_item,{
 		this.constructor.prototype.draw.call(this,w,s);
 	}
 });
-// наводится на цель
+// РЅР°РІРѕРґРёС‚СЃСЏ РЅР° С†РµР»СЊ
 stinger = newClass(a_item,{
 	speed :{x:0,y:0},
     img:'images/pulya03.gif', //'images/pulya12.gif'
     img2:'images/09.gif',
     mass:1,
     visibility:'hidden',
-    waittill:0, // счетчик принятия решения
-    state:0, // летим-наводимся - 1 взрываемся - 2 отдыхаем 0
+    waittill:0, // СЃС‡РµС‚С‡РёРє РїСЂРёРЅСЏС‚РёСЏ СЂРµС€РµРЅРёСЏ
+    state:0, // Р»РµС‚РёРј-РЅР°РІРѕРґРёРјСЃСЏ - 1 РІР·СЂС‹РІР°РµРјСЃСЏ - 2 РѕС‚РґС‹С…Р°РµРј 0
     self_act: function (e) {
 		if (this.waittill>0) this.waittill--;
-		else switch(this.state){ // принимаем решение
-			case 0: //становимся в позу и полетели
+		else switch(this.state){ // РїСЂРёРЅРёРјР°РµРј СЂРµС€РµРЅРёРµ
+			case 0: //СЃС‚Р°РЅРѕРІРёРјСЃСЏ РІ РїРѕР·Сѓ Рё РїРѕР»РµС‚РµР»Рё
 			    with(this.pos){x=0;y=0}
 			    with(this.speed){x=0;y=0}
-				this.state=1; // взводим таймер взрыва
-				this.waittill=400; // 20 секунд резерва горючего
+				this.state=1; // РІР·РІРѕРґРёРј С‚Р°Р№РјРµСЂ РІР·СЂС‹РІР°
+				this.waittill=400; // 20 СЃРµРєСѓРЅРґ СЂРµР·РµСЂРІР° РіРѕСЂСЋС‡РµРіРѕ
 				break;
-			case 1: //не долетели - взрываемся.
+			case 1: //РЅРµ РґРѕР»РµС‚РµР»Рё - РІР·СЂС‹РІР°РµРјСЃСЏ.
 				this.makeboom(); break ;
-			case 2:	// ждем у моря погоды
+			case 2:	// Р¶РґРµРј Сѓ РјРѕСЂСЏ РїРѕРіРѕРґС‹
 				this.pos.x=-1000;this.pos.y=-1000; this.state=0;
 		    	with (preloads[this.img]) {
 					this.elm.src=src;
 					this.elm.style.width=width+'px';
 					this.elm.style.height=height+'px';
 				}
-				this.waittill=60; // 3 сек
+				this.waittill=60; // 3 СЃРµРє
 				break;
 		}
     },
@@ -77,7 +77,7 @@ stinger = newClass(a_item,{
 		var disp=Math.sqrt(dx*dx+dy*dy);
 		if (disp<5) this.makeboom();
 		else k=0.9/disp  ;
-		return {x:dx*k,y:dy*k};   // наводимся точно на цель, без упреждения
+		return {x:dx*k,y:dy*k};   // РЅР°РІРѕРґРёРјСЃСЏ С‚РѕС‡РЅРѕ РЅР° С†РµР»СЊ, Р±РµР· СѓРїСЂРµР¶РґРµРЅРёСЏ
     },
 
 	draw: function(w,s) {
@@ -95,7 +95,7 @@ stinger = newClass(a_item,{
 	}
 });
 
-/** более продвинутый ракет, с наведением по "предполагаемой точке" */
+/** Р±РѕР»РµРµ РїСЂРѕРґРІРёРЅСѓС‚С‹Р№ СЂР°РєРµС‚, СЃ РЅР°РІРµРґРµРЅРёРµРј РїРѕ "РїСЂРµРґРїРѕР»Р°РіР°РµРјРѕР№ С‚РѕС‡РєРµ" */
 stinger1 = newClass(stinger,{
     img:'images/pulya12.gif', //'images/pulya12.gif'
 
@@ -104,20 +104,20 @@ stinger1 = newClass(stinger,{
         if (!item.pos) return null;
         var dx=this.pos.x-item.pos.x,
             dy=this.pos.y-item.pos.y;
-        var disp=Math.sqrt(dx*dx+dy*dy),k=0; // расстояние до цели.
+        var disp=Math.sqrt(dx*dx+dy*dy),k=0; // СЂР°СЃСЃС‚РѕСЏРЅРёРµ РґРѕ С†РµР»Рё.
         if (disp<5) this.makeboom();
         else {
-            // полетное время - в
+            // РїРѕР»РµС‚РЅРѕРµ РІСЂРµРјСЏ - РІ
             var t=disp/8,
                 ddx=item.pos.x+item.speed.x* t,
-                ddy=item.pos.y+item.speed.y* t; // ddx,ddy - новые координаты цели
+                ddy=item.pos.y+item.speed.y* t; // ddx,ddy - РЅРѕРІС‹Рµ РєРѕРѕСЂРґРёРЅР°С‚С‹ С†РµР»Рё
             dx=this.pos.x-ddx;
             dy=this.pos.y-ddy;
-            disp=Math.sqrt(dx*dx+dy*dy); // расстояние до предполагаемой точки.
+            disp=Math.sqrt(dx*dx+dy*dy); // СЂР°СЃСЃС‚РѕСЏРЅРёРµ РґРѕ РїСЂРµРґРїРѕР»Р°РіР°РµРјРѕР№ С‚РѕС‡РєРё.
            // debug(item.pos,item.speed,ddx,ddy,dx,dy,disp, t,'-----');
-            k=0.9/disp  ; // k - скорость
+            k=0.9/disp  ; // k - СЃРєРѕСЂРѕСЃС‚СЊ
         }
-        return {x:dx*k,y:dy*k};   // наводимся точно на цель, без упреждения
+        return {x:dx*k,y:dy*k};   // РЅР°РІРѕРґРёРјСЃСЏ С‚РѕС‡РЅРѕ РЅР° С†РµР»СЊ, Р±РµР· СѓРїСЂРµР¶РґРµРЅРёСЏ
     }
 
 });

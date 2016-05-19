@@ -6,7 +6,7 @@
             <meta http-equiv='Content-Type' content='text/html; charset=windows-1251' />
 <script type='text/javascript'>
 // **********************************************************************
-// ** на случай возможной отладки. Невизуальная функция...
+// ** РЅР° СЃР»СѓС‡Р°Р№ РІРѕР·РјРѕР¶РЅРѕР№ РѕС‚Р»Р°РґРєРё. РќРµРІРёР·СѓР°Р»СЊРЅР°СЏ С„СѓРЅРєС†РёСЏ...
 // **********************************************************************
 var debug_string=''
 function debug(s) {
@@ -21,7 +21,7 @@ function debug(s) {
             <script type='text/javascript' src='js/airforce.js'></script>
 
 <script type='text/javascript'>
-// функция, выдающая свойства элемента, используется при отладке
+// С„СѓРЅРєС†РёСЏ, РІС‹РґР°СЋС‰Р°СЏ СЃРІРѕР№СЃС‚РІР° СЌР»РµРјРµРЅС‚Р°, РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїСЂРё РѕС‚Р»Р°РґРєРµ
 function prop(a) {
 	var s = '';
 	for(var i in a) {
@@ -37,23 +37,23 @@ function prop(a) {
 	return s;
 }
 
-// функция генерации случайного элемента массива
+// С„СѓРЅРєС†РёСЏ РіРµРЅРµСЂР°С†РёРё СЃР»СѓС‡Р°Р№РЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р° РјР°СЃСЃРёРІР°
 function random(a) {return a[Math.floor(Math.random()*a.length)]}
 
-// поиск элемента по имени
+// РїРѕРёСЃРє СЌР»РµРјРµРЅС‚Р° РїРѕ РёРјРµРЅРё
 function _i(e) { return (document.getElementById(e)
 				|| document.getElementsByName(e)[0]) }
 
 // ***********************************************************************
-// *** наследник a_engine'а с возможностью вывода отладочной информации
+// *** РЅР°СЃР»РµРґРЅРёРє a_engine'Р° СЃ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊСЋ РІС‹РІРѕРґР° РѕС‚Р»Р°РґРѕС‡РЅРѕР№ РёРЅС„РѕСЂРјР°С†РёРё
 // ***********************************************************************
-//  интегрируемся в HTML со структурой
-//   id=debug - приемник отладочной информации
-//   id=info  - приемник информации с trowinfo
-//   id=throw_info - кнопка, по которой информация сбрасывается
-//   id=step_button - кнопка, вызывающая процедуру step
-//   id=start_stop - кнопка, по которой стартует анимация
-//  и т.д. и т.п.
+//  РёРЅС‚РµРіСЂРёСЂСѓРµРјСЃСЏ РІ HTML СЃРѕ СЃС‚СЂСѓРєС‚СѓСЂРѕР№
+//   id=debug - РїСЂРёРµРјРЅРёРє РѕС‚Р»Р°РґРѕС‡РЅРѕР№ РёРЅС„РѕСЂРјР°С†РёРё
+//   id=info  - РїСЂРёРµРјРЅРёРє РёРЅС„РѕСЂРјР°С†РёРё СЃ trowinfo
+//   id=throw_info - РєРЅРѕРїРєР°, РїРѕ РєРѕС‚РѕСЂРѕР№ РёРЅС„РѕСЂРјР°С†РёСЏ СЃР±СЂР°СЃС‹РІР°РµС‚СЃСЏ
+//   id=step_button - РєРЅРѕРїРєР°, РІС‹Р·С‹РІР°СЋС‰Р°СЏ РїСЂРѕС†РµРґСѓСЂСѓ step
+//   id=start_stop - РєРЅРѕРїРєР°, РїРѕ РєРѕС‚РѕСЂРѕР№ СЃС‚Р°СЂС‚СѓРµС‚ Р°РЅРёРјР°С†РёСЏ
+//  Рё С‚.Рґ. Рё С‚.Рї.
 
 test_Engine=newClass(a_engine,{
 	constructor: function (a,b){
@@ -61,12 +61,12 @@ test_Engine=newClass(a_engine,{
         this.add_Handler(window, 'load')
 	} ,
 
-//  утверждается, что функция будет запущена при готовом body
+//  СѓС‚РІРµСЂР¶РґР°РµС‚СЃСЏ, С‡С‚Рѕ С„СѓРЅРєС†РёСЏ Р±СѓРґРµС‚ Р·Р°РїСѓС‰РµРЅР° РїСЂРё РіРѕС‚РѕРІРѕРј body
 	load: function() {
         if (this.handle_cursor) this.cursor_handle();
-		var th = this, // Еще немного магии JavaScript...
+		var th = this, // Р•С‰Рµ РЅРµРјРЅРѕРіРѕ РјР°РіРёРё JavaScript...
 			elm;
-	// установка визуальной функции дебага, перехват старой, невизуальной
+	// СѓСЃС‚Р°РЅРѕРІРєР° РІРёР·СѓР°Р»СЊРЅРѕР№ С„СѓРЅРєС†РёРё РґРµР±Р°РіР°, РїРµСЂРµС…РІР°С‚ СЃС‚Р°СЂРѕР№, РЅРµРІРёР·СѓР°Р»СЊРЅРѕР№
 	    if (elm=_i('debug')) {
 	    	elm.innerHTML=debug();
 			debug=function() {
@@ -105,7 +105,7 @@ test_Engine=newClass(a_engine,{
                 document.location.hash=this.value;
 				document.location.reload();
 			}.bind(elm));
-			elm.remove(0);// удаляем первый элемент
+			elm.remove(0);// СѓРґР°Р»СЏРµРј РїРµСЂРІС‹Р№ СЌР»РµРјРµРЅС‚
 			for(var i in this.chemes) {
 				var opt=document.createElement('option');
 				opt.value=i;
@@ -126,8 +126,8 @@ test_Engine=newClass(a_engine,{
 	  		    _i('descr').innerHTML=chemes[cheme].descr||chemes[cheme].text||cheme
         }
         elm=null;
-// установка обработчиков событий
-// обработчик клавиатуры
+// СѓСЃС‚Р°РЅРѕРІРєР° РѕР±СЂР°Р±РѕС‚С‡РёРєРѕРІ СЃРѕР±С‹С‚РёР№
+// РѕР±СЂР°Р±РѕС‚С‡РёРє РєР»Р°РІРёР°С‚СѓСЂС‹
         this.add_Handler(window.HTMLElement? window : document.body,'keydown',(function(e) {
 			//debug('key: '+e.ctrlKey +'--' +e.keyCode)
 			if (e.ctrlKey && (e.keyCode == 39)) {
@@ -135,10 +135,10 @@ test_Engine=newClass(a_engine,{
 				return false;
 			}
 		}).bindEH(this));
-// обработчик мышки
+// РѕР±СЂР°Р±РѕС‚С‡РёРє РјС‹С€РєРё
 // drag&drop
         var mouseup_func=function(e) {
-			if(th.m_item) { // делаем Дроп
+			if(th.m_item) { // РґРµР»Р°РµРј Р”СЂРѕРї
 				th.m_item.speed=th.m_item.savspeed; th.m_item=null;
                 th.clear_handlers();
                 //alert(1);
@@ -155,13 +155,13 @@ test_Engine=newClass(a_engine,{
 			var o = (window.event) ? e.srcElement : e.target;
 			var o_prev=null;
             if(o.id=='cheme') return;
-			// нашЪ объект - тот, кто вставлен непосредственно в seasons_block
+			// РЅР°С€РЄ РѕР±СЉРµРєС‚ - С‚РѕС‚, РєС‚Рѕ РІСЃС‚Р°РІР»РµРЅ РЅРµРїРѕСЃСЂРµРґСЃС‚РІРµРЅРЅРѕ РІ seasons_block
 			while (o && (o.id!='seasons_block'))
 			{
 				o_prev=o; o = o.parentNode;
 			}
 			if(o_prev && o) {
-			// Ткнули в наш блок
+			// РўРєРЅСѓР»Рё РІ РЅР°С€ Р±Р»РѕРє
 				for (var i=0;i<th.a_items.length;i++) {
 					if (th.a_items[i].elm)
 					if (o_prev==th.a_items[i].elm) {
@@ -183,7 +183,7 @@ test_Engine=newClass(a_engine,{
 		this.add_Handler(this.mousetgt,'mousedown', mouse_func);
   		elm=null
 	} ,
-// выдать информацию о происходящих событиях
+// РІС‹РґР°С‚СЊ РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ РїСЂРѕРёСЃС…РѕРґСЏС‰РёС… СЃРѕР±С‹С‚РёСЏС…
 	throwinfo: function () {
 		var text='<table border=1 >'+
 			'<tr><th><\/th><th colspan=2>window<\/th><th colspan=2>scroll<\/th><\/tr>'+
@@ -196,7 +196,7 @@ test_Engine=newClass(a_engine,{
 		for(var i=0;i<this.a_items.length;i++) {
 			var a=this.a_items[i];
 			text+='<tr><th>'+i+':'+a.name+'<\/th>';
-			// финт ушами для автоматизации перебора
+			// С„РёРЅС‚ СѓС€Р°РјРё РґР»СЏ Р°РІС‚РѕРјР°С‚РёР·Р°С†РёРё РїРµСЂРµР±РѕСЂР°
 			for(ii in {pos:1,ww:1,speed:1}) {
 				if (a[ii]) with(a[ii])
 					text+='<td>'+x.toFixed(4)+'<\/td><td>'+y.toFixed(4)+'<\/td>'
@@ -214,10 +214,10 @@ test_Engine=newClass(a_engine,{
 
 		this.chemes=ch;
 		//debug(this.cheme)
-		// инициализация нужной схемы
+		// РёРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РЅСѓР¶РЅРѕР№ СЃС…РµРјС‹
 		with(this) {
 			if (!this.chemes[this.cheme])
-				for(var i in this.chemes) { this.cheme=i ; break ;} // выбрали первую в списке
+				for(var i in this.chemes) { this.cheme=i ; break ;} // РІС‹Р±СЂР°Р»Рё РїРµСЂРІСѓСЋ РІ СЃРїРёСЃРєРµ
 			this.chemes[this.cheme].init(this);
 		}
 	}
@@ -225,34 +225,34 @@ test_Engine=newClass(a_engine,{
 // *************************************************************************
 Engine=new test_Engine(undefined,{link:'css/winter.css'})
 Engine.havechemes({
-// описание всех схем анимации
+// РѕРїРёСЃР°РЅРёРµ РІСЃРµС… СЃС…РµРј Р°РЅРёРјР°С†РёРё
 	cloud:{
-		text:"снег идет, облака летят",
+		text:"СЃРЅРµРі РёРґРµС‚, РѕР±Р»Р°РєР° Р»РµС‚СЏС‚",
 		init: function(Engine) {
 			Engine.add([new air(),new wind()] );
-			debug('начинаем снег')
-			// добавляем снег.
+			debug('РЅР°С‡РёРЅР°РµРј СЃРЅРµРі')
+			// РґРѕР±Р°РІР»СЏРµРј СЃРЅРµРі.
 			for (var i=0;i<70;i++)
-				Engine.add(new snow({name:'снежинка',img:random(
+				Engine.add(new snow({name:'СЃРЅРµР¶РёРЅРєР°',img:random(
 				   ['images/winter/flake0.gif',
 			        'images/winter/flake1.gif',
 			        'images/winter/flake2.gif',
 			        'images/winter/flake3.gif',
 			        'images/winter/flake4.gif'])}))
-			// добавляем тучи.
+			// РґРѕР±Р°РІР»СЏРµРј С‚СѓС‡Рё.
 			for (var i=0;i<10;i++)
-				Engine.add(new cloud({name:'туча',img:random(
+				Engine.add(new cloud({name:'С‚СѓС‡Р°',img:random(
 				   ['images/cloud.gif',
 			        'images/cloud1.gif']),speed:{x:1+3*Math.random(),y:0} }))
 		}},
 
 	planets: {
-		text:"планета с 3 спутниками",
+		text:"РїР»Р°РЅРµС‚Р° СЃ 3 СЃРїСѓС‚РЅРёРєР°РјРё",
 		init:function(Engine) {
 			var speed = 3,center={x:400,y:300}, rad=200;
 			Engine.add([
 			   new planet({img:'images/sun.gif', pos:{x:center.x,y:center.y},
-			   	mass:2000 }) // пуп !!!
+			   	mass:2000 }) // РїСѓРї !!!
 			  ,new sputnik({img:'images/planet0.gif', pos:{x:center.x+1*rad,y:center.y},
 			  		speed:{x:0,y:-speed-3}})
 			  ,new sputnik({img:'images/saturn.gif', pos:{x:center.x+2*rad,y:center.y},
@@ -263,10 +263,10 @@ Engine.havechemes({
 		}}    ,
 
 	gravitation0: {
-		text:"2 планеты одинаковой массы",
-		descr:"крутятся вечно",
+		text:"2 РїР»Р°РЅРµС‚С‹ РѕРґРёРЅР°РєРѕРІРѕР№ РјР°СЃСЃС‹",
+		descr:"РєСЂСѓС‚СЏС‚СЃСЏ РІРµС‡РЅРѕ",
 		init:function(Engine) {
-			var speed = 3,center={x:400,y:300}, rad=200; // 2 точки
+			var speed = 3,center={x:400,y:300}, rad=200; // 2 С‚РѕС‡РєРё
 			Engine.add([
 			   new planet({img:'images/planet0.gif',pos:{x:center.x-rad,y:center.y},
 			   	speed:{x:0,y:speed}  })
@@ -276,10 +276,10 @@ Engine.havechemes({
 		}} ,
 
 	gravitationX:{
-		text:"4 планеты одинаковой массы",
-		descr:"через некоторе время - из-за погрешностей округления - разлетаются",
+		text:"4 РїР»Р°РЅРµС‚С‹ РѕРґРёРЅР°РєРѕРІРѕР№ РјР°СЃСЃС‹",
+		descr:"С‡РµСЂРµР· РЅРµРєРѕС‚РѕСЂРµ РІСЂРµРјСЏ - РёР·-Р·Р° РїРѕРіСЂРµС€РЅРѕСЃС‚РµР№ РѕРєСЂСѓРіР»РµРЅРёСЏ - СЂР°Р·Р»РµС‚Р°СЋС‚СЃСЏ",
 		init:function(Engine) {
-			var speed = 6,center={x:400,y:300}, rad=100; // 4 точки
+			var speed = 6,center={x:400,y:300}, rad=100; // 4 С‚РѕС‡РєРё
 			Engine.add([
 			   new planet({img:'images/planet0.gif', pos:{x:center.x-rad,y:center.y},
 			   	speed:{x:0,y:speed}  })
@@ -292,8 +292,8 @@ Engine.havechemes({
 			] );
 		}},
 	latex: {
-		text:"модель на резинках",
-		descr:"шарики оталкиваются, все связаны по кругу",
+		text:"РјРѕРґРµР»СЊ РЅР° СЂРµР·РёРЅРєР°С…",
+		descr:"С€Р°СЂРёРєРё РѕС‚Р°Р»РєРёРІР°СЋС‚СЃСЏ, РІСЃРµ СЃРІСЏР·Р°РЅС‹ РїРѕ РєСЂСѓРіСѓ",
 		init:function(Engine) {
 			var speed = 3,center={x:400,y:200}, rad=100;
 			var a=[
@@ -308,13 +308,13 @@ Engine.havechemes({
 			Engine.add(a );
 		}},
 	fly: {
-		text:"привязанная к курсору цепочка",
-		descr:"шарики и курсор отталкиваются, связанные ",
+		text:"РїСЂРёРІСЏР·Р°РЅРЅР°СЏ Рє РєСѓСЂСЃРѕСЂСѓ С†РµРїРѕС‡РєР°",
+		descr:"С€Р°СЂРёРєРё Рё РєСѓСЂСЃРѕСЂ РѕС‚С‚Р°Р»РєРёРІР°СЋС‚СЃСЏ, СЃРІСЏР·Р°РЅРЅС‹Рµ ",
 		init:function(Engine) {
 			var speed = 3,center={x:400,y:200}, rad=100;
 			var a=[
 			   new air({grav:0.5,resistance:0.05,turbo:{x:0.1,y:0.1}})
-			  ,new curs({name:'курсор',lat_len:25,latex:0.1,pos:center})
+			  ,new curs({name:'РєСѓСЂСЃРѕСЂ',lat_len:25,latex:0.1,pos:center})
 			  ]
 			for (var i=0;i<8;i++) {
 			  a.push(new point({name:'pdtyj',img:'images/24.gif',lat_len:25,latex:0.1,
@@ -325,28 +325,28 @@ Engine.havechemes({
 		 }
 		},
 	helicopter: {
-		text:"болтающийся по экрану геликоптер",
-		descr :"анимация объектов с собственным поведением.",
+		text:"Р±РѕР»С‚Р°СЋС‰РёР№СЃСЏ РїРѕ СЌРєСЂР°РЅСѓ РіРµР»РёРєРѕРїС‚РµСЂ",
+		descr :"Р°РЅРёРјР°С†РёСЏ РѕР±СЉРµРєС‚РѕРІ СЃ СЃРѕР±СЃС‚РІРµРЅРЅС‹Рј РїРѕРІРµРґРµРЅРёРµРј.",
 		init:function(Engine) {
 			var center={x:400,y:200},helic=new helicopter ({pos:center});
 			Engine.add([helic,
 						new air({grav:0,resistance:0.05,turbo:{x:0.1,y:0.1}}),
 						new wind({k:3}),
-						new stinger ({goal:helic,name:'ракета1',pos:{x:0,y:0}})
-            //            new stinger ({goal:helic,name:'ракета1',pos:{x:0,y:0}})
+						new stinger ({goal:helic,name:'СЂР°РєРµС‚Р°1',pos:{x:0,y:0}})
+            //            new stinger ({goal:helic,name:'СЂР°РєРµС‚Р°1',pos:{x:0,y:0}})
 						]);
 		}}
     ,
     helicopter2: {
-        text:"болтающийся по экрану геликоптер(+)",
-        descr :"анимация объектов с собственным поведением.",
+        text:"Р±РѕР»С‚Р°СЋС‰РёР№СЃСЏ РїРѕ СЌРєСЂР°РЅСѓ РіРµР»РёРєРѕРїС‚РµСЂ(+)",
+        descr :"Р°РЅРёРјР°С†РёСЏ РѕР±СЉРµРєС‚РѕРІ СЃ СЃРѕР±СЃС‚РІРµРЅРЅС‹Рј РїРѕРІРµРґРµРЅРёРµРј.",
         init:function(Engine) {
             var center={x:400,y:200},helic=new helicopter ({pos:center});
             Engine.add([helic,
                 new air({grav:0,resistance:0.05,turbo:{x:0.1,y:0.1}}),
                 new wind({k:3}),
-                new stinger1 ({goal:helic,name:'ракета1',pos:{x:0,y:0}})
-                //            new stinger ({goal:helic,name:'ракета1',pos:{x:0,y:0}})
+                new stinger1 ({goal:helic,name:'СЂР°РєРµС‚Р°1',pos:{x:0,y:0}})
+                //            new stinger ({goal:helic,name:'СЂР°РєРµС‚Р°1',pos:{x:0,y:0}})
             ]);
         }}
 
@@ -361,9 +361,9 @@ input {width:60px;}
 
 </head>
     <body>
-<!-- стенд отладки для рисовачки        -->
+<!-- СЃС‚РµРЅРґ РѕС‚Р»Р°РґРєРё РґР»СЏ СЂРёСЃРѕРІР°С‡РєРё        -->
 <div align="center" style="width:100%">
-	<fieldset><legend> Стенд </legend>
+	<fieldset><legend> РЎС‚РµРЅРґ </legend>
 	<table ><tr>
 		<td >
 			<input type='button' id="start_stop" value='Start'/>
@@ -373,7 +373,7 @@ input {width:60px;}
 			<input type='button' name="throw_info" value='info' />
 	    </td><td>
 			<select id='cheme' >
-			    <option >Кина нет и не будет!</option>
+			    <option >РљРёРЅР° РЅРµС‚ Рё РЅРµ Р±СѓРґРµС‚!</option>
 			</select>
 		</td>
 	</tr></table>
