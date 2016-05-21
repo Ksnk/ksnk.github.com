@@ -3,15 +3,16 @@
     <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='ru'>
         <head>
             <title>test</title>
-            <meta http-equiv='Content-Type' content='text/html; charset=windows-1251' />
+            <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 <script type='text/javascript'>
 // **********************************************************************
 // ** на случай возможной отладки. Невизуальная функция...
 // **********************************************************************
-var debug_string=''
+
 function debug(s) {
-	if(s)debug_string+= s+'<hr>' ; else return debug_string;
+	if(s)debug.debug_string+= s+'<hr>' ; else return debug.debug_string;
 }
+debug.debug_string='';
 </script>
             <script type='text/javascript' src='js/Oop.js'></script>
             <script type='text/javascript' src='js/aengine.js'></script>
@@ -192,17 +193,17 @@ test_Engine=newClass(a_engine,{
 			(this.scroll?'<td>'+this.scroll.x+'<\/td><td>'+this.scroll.y+'<\/td>'
 			            :'<td colspan=2><\/td>')+
 			'<\/tr><tr><th>N<\/th><th colspan=2>pos<\/th>'+
-			'<th colspan=2>ww<\/th><th colspan=2>speed<\/th><\/tr>';
+			'<th colspan=3>speed<\/th><\/tr>';
 		for(var i=0;i<this.a_items.length;i++) {
 			var a=this.a_items[i];
 			text+='<tr><th>'+i+':'+a.name+'<\/th>';
 			// финт ушами для автоматизации перебора
-			for(ii in {pos:1,ww:1,speed:1}) {
-				if (a[ii]) with(a[ii])
-					text+='<td>'+x.toFixed(4)+'<\/td><td>'+y.toFixed(4)+'<\/td>'
-				else
-					text+='<td colspan=2>&nbsp;<\/td>';
-			}
+            if(a.pos && typeof(a.pos.x)!='undefined')
+                text+='<td>'+ a.pos.x.toFixed(4)+'<\/td><td>'+a.pos.y.toFixed(4)+'<\/td>';
+            else text+='<td colspan="2"><\/td>';
+            if(a.speed && typeof(a.speed.x)!='undefined')
+                text+='<td>'+ a.speed.x.toFixed(4)+'<\/td><td>'+a.speed.y.toFixed(4)+'<\/td><td>'+a.dist(a.speed).toFixed(4)+'<\/td>';
+            else text+='<td colspan="3"><\/td>';
 			text+='<\/tr>';
 		}
 		text+='<\/table>';
@@ -215,22 +216,22 @@ test_Engine=newClass(a_engine,{
 		this.chemes=ch;
 		//debug(this.cheme)
 		// инициализация нужной схемы
-		with(this) {
+		//with(this) {
 			if (!this.chemes[this.cheme])
 				for(var i in this.chemes) { this.cheme=i ; break ;} // выбрали первую в списке
 			this.chemes[this.cheme].init(this);
-		}
+		//}
 	}
 })
 // *************************************************************************
-Engine=new test_Engine(undefined,{link:'css/winter.css'})
+Engine=new test_Engine(undefined,{link:'css/winter.css'});
 Engine.havechemes({
 // описание всех схем анимации
 	cloud:{
 		text:"снег идет, облака летят",
 		init: function(Engine) {
 			Engine.add([new air(),new wind()] );
-			debug('начинаем снег')
+			debug('начинаем снег');
 			// добавляем снег.
 			for (var i=0;i<70;i++)
 				Engine.add(new snow({name:'снежинка',img:random(
@@ -337,16 +338,17 @@ Engine.havechemes({
 						]);
 		}}
     ,
-    helicopter2: {
-        text:"болтающийся по экрану геликоптер(+)",
-        descr :"анимация объектов с собственным поведением.",
+    helicopter1: {
+        text:"болтающийся по экрану геликоптер(++)",
+        descr :"тригонометрия. нет атмосферы, прямолинейное движение",
         init:function(Engine) {
-            var center={x:400,y:200},helic=new helicopter ({pos:center});
-            Engine.add([helic,
-                new air({grav:0,resistance:0.05,turbo:{x:0.1,y:0.1}}),
-                new wind({k:3}),
-                new stinger1 ({goal:helic,name:'ракета1',pos:{x:0,y:0}})
-                //            new stinger ({goal:helic,name:'ракета1',pos:{x:0,y:0}})
+            var center={x:0,y:450},helic=new helicopter1 ({pos:center});
+            Engine.add([helic
+                //,new air({grav:0,resistance:0.1,turbo:{x:0.0,y:0.0}})
+                //new wind({k:3}),
+                ,new bullet ({goal:helic,posX:{x:0,y:0}})
+                ,new bullet ({goal:helic,posX:{x:400,y:0}}),
+                ,new bullet ({goal:helic,posX:{x:800,y:0}})
             ]);
         }}
 

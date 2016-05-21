@@ -46,7 +46,7 @@ air = newClass(a_item,{
     name:'атмосфера',
     turbo:{x:4,y:4}, // коэффициент действия сил турбуляции
     grav : 1 , // сила притяжения
-    resistance: 0.5,
+    resistance: 0.5, // сила сопротивления атмосферы.
 	act: function (item) {
         if (item.speed && item.mass)
         	return{x:         -item.speed.x*this.resistance+this.turbo.x*(Math.random()-0.5),
