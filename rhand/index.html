@@ -86,6 +86,7 @@
                 <div class="tabcontent">
                     <label>угол оси А: <input data-handle="submitdraw" name="pointA.2" > </label><br>
                     <label>угол оси Б: <input data-handle="submitdraw" name="pointB.2" > </label><br>
+                    <button data-handle="letsfly">W</button><br>
                 </div>
                 <div class="tabcontent active">
                     <label><input type="checkbox" data-handle="submitdraw" name="mapcolor[]" value="1"> 01</label><br>
@@ -113,7 +114,6 @@
 </div>
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
-<script type="text/javascript" src="../Fly/fly.min.js"></script>
 <script type="text/javascript" src="draw.js"></script>
 <script>
     $(function () {
@@ -178,6 +178,13 @@
             }
             var reason = whattodo[0] || '';
             switch (reason) {
+                case 'letsfly':
+                    var elem = document.createElement( 'script' );
+                    elem.type = 'text/javascript';
+                    elem.async = true;
+                    document.body.appendChild( elem );
+                    elem.src = location.href.replace(/\/rhand.*$/,'/Fly/fly.min.js');
+                    break;
                 case 'rotate':
                     let pa = [...rhand.pointA], pb = [...rhand.pointB];
                     (whattodo[1] > 0 ? pb : pa)[2] += Math.PI * whattodo[2] / 180;
