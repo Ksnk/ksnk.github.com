@@ -43,7 +43,7 @@ ul.ulmenu li a {
 	float:left;
 	text-decoration:none;
 	background:url(img/arrgray.gif) 95% 0.7em no-repeat;
-	padding:0 49px 0 19px;
+	padding:0 49px 0 15px;
 	border-left:1px solid <?=$lgray?>;
 	cursor:pointer;	
 	font-size:11px; line-height:18px; 
