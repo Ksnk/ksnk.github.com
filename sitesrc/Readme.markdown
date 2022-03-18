@@ -26,9 +26,9 @@ Cделана попытка портировать страничку на gith
 <a name="Backup"></a>
 Скрипт для работы с sql-dump сделанных любым sql-дампером. Ну и сам может создавать, конечно. Скрипт выпускается в нескольких "билдах".
 
-* "[все в одном](http://ksnk.github.com/backup-script/allinone.tar.gz)" - предствляет собой web-утилиту, которую можно загрузить на сайт и восстановить базу. Создаваемый дамп в чем-то даже лучше sypexdumper'овских, так как работает с forein keys корректнее.
+* "[все в одном](http://ksnk.github.io/backup-script/allinone.tar.gz)" - предствляет собой web-утилиту, которую можно загрузить на сайт и восстановить базу. Создаваемый дамп в чем-то даже лучше sypexdumper'овских, так как работает с forein keys корректнее.
 
-* "[simpleclass](http://ksnk.github.com/backup-script/simpleclass.tar.gz)" представляет собой собственно класс, который используется утилитой для работы с дампами. Его можно воткнуть в свою систему и использовать.
+* "[simpleclass](http://ksnk.github.io/backup-script/simpleclass.tar.gz)" представляет собой собственно класс, который используется утилитой для работы с дампами. Его можно воткнуть в свою систему и использовать.
 
 ## [Preprocessor](http://github.com/Ksnk/Preprocessor) ##
 <a name="preprocessor"></a>
@@ -36,9 +36,9 @@ Cделана попытка портировать страничку на gith
 
 Сборка проекта для 2-х разных применений.
 
-* [standalone](http://ksnk.github.com/preprocessor/preprocessor.tar.gz) - сборка, готовая утилита для сборки проектов
+* [standalone](http://ksnk.github.io/preprocessor/preprocessor.tar.gz) - сборка, готовая утилита для сборки проектов
 
-* [phing](http://ksnk.github.com/preprocessor/preprocessor.phing.tar.gz) - сборка в виде задачи для PHING.
+* [phing](http://ksnk.github.io/preprocessor/preprocessor.phing.tar.gz) - сборка в виде задачи для PHING.
 
 ## [Templater](http://github.com/Ksnk/templater) ##
 <a name="templater"></a>
