@@ -50,12 +50,15 @@ window.rhand = {
         return Math.sqrt(dx * dx + dy * dy);
     },
 
-    // по указанным углам расчитываем конечные точки тяг манипулятора
-    calculate: function () {
-        let x = this.calc_silent(this.pointA, this.pointB);
-        this.finA = x[0];
-        this.finB = x[1];
-        this.finC = x[2];
+    /**
+     * нормировать значение угла
+     * @param b
+     * @returns {*}
+     */
+    norm: function(b){
+        while(b>2*Math.PI) b-=2*Math.PI;
+        while(b<0) b+=2*Math.PI;
+        return b;
     },
 
     // достроить треугольник на отрезке fa-fb c длинами la-lb, 1-слева 0-справа
@@ -67,7 +70,7 @@ window.rhand = {
             if (dy < 0) {
                 b = Math.PI / 2;
             } else {
-                b = -Math.PI / 2
+                b = 3*Math.PI / 2
             }
         } else {
             b = Math.atan(dy / dx); // угол наклона основы
@@ -75,7 +78,7 @@ window.rhand = {
                 b+=Math.PI;
             }
         }
-        return b;
+        return this.norm(b);
     },
     /**
      * достраиваем треугольник на отрезка fa-fb. со стороны order
@@ -151,20 +154,22 @@ window.rhand = {
         //canvas.setAttribute("width",Math.round(zoom*(maxx-minx)+this.border*2));
         let ctx = canvas.getContext("2d");
 
-        this.calculate();
+        let x = this.calc_silent(this.pointA, this.pointB);
+        this.finA = x[0];
+        this.finB = x[1];
+        this.finC = x[2];
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-
         let colors = [
-            [1, "rgb(177,100,185,0.3)"],
-            [2, "rgb(100,185,185,0.3)"],
-            [4, "rgb(100,185,104,0.3)"],
-            [8, "rgb(185,100,117,0.3)"],
+            [2, "rgb(177,100,185,0.3)"],
+            [1, "rgb(100,185,185,0.3)"],
+            [8, "rgb(100,185,104,0.3)"],
+            [4, "rgb(185,100,117,0.3)"],
         ];
         let m, c, colormap = [];
 
         if (this.mapcolor > 0) {
-            for (let x = -20; x < 80; x++) for (let y = -60; y < 80; y++) {
+            for (let x = -8; x < 69; x++) for (let y = -51; y < 63; y++) {
                 if ((m = (this.map[x][y] & this.mapcolor)) > 0) {
                     if (!!(c = colormap[m])) {
                         circle.call(this, [x * 5, y * 5],
@@ -197,19 +202,45 @@ window.rhand = {
     mapit: function () {
         let pa = [...this.pointA], pb = [...this.pointB];
         this.map = [];
-        for (let x = -20; x < 80; x++) {
+        for (let x = -8; x < 69; x++) {
             this.map[x] = [];
-            for (let y = -60; y < 80; y++) {
+            for (let y = -51; y < 63; y++) {
                 this.map[x][y] = 0;
 
                 let z = [5 * x , 5 * y ], o1 = 1, o2 = 0;
                 for (var i = 0; i < 4; i++) {
                     if (i == 2) o1 = 1 - o1;
                     if (i & 1) o2 = 1 - o2;
-                    this.buildTriangle(pa, z, this.len[0], this.len[2], o1);
-                    this.buildTriangle(pb, z, this.len[1], this.len[3], o2);
-                    let zz = this.calc_silent(pa, pb);
-                    if (this.disp(zz[2], z) < 2) {
+                    let fa=this.buildTriangle(pa, z, this.len[0], this.len[2], o1),
+                        fb=this.buildTriangle(pb, z, this.len[1], this.len[3], 1-o2);
+                    if(isNaN(fb[0]) ||isNaN(fa[0])) continue;
+                    // угол <180 ?
+                    let a=this.angle(fa,z),b=this.angle(fb,z);
+                    if (Math.PI<this.norm(Math.PI-a+b)) {
+                        this.map[x][y] |= 1 << (o1 * 2 + o2);
+                    }
+                }
+            }
+        }
+    },
+    diffit: function () {
+        let pa = [...this.pointA], pb = [...this.pointB];
+        this.map = [];
+        for (let x = -6; x < 70; x++) { // -40..340 -- -5..68
+            this.map[x] = [];
+            for (let y = -50; y < 70; y++) { //
+                this.map[x][y] = 0;
+
+                let z = [5 * x , 5 * y ], o1 = 1, o2 = 0;
+                for (var i = 0; i < 4; i++) {
+                    if (i == 2) o1 = 1 - o1;
+                    if (i & 1) o2 = 1 - o2;
+                    let fa=this.buildTriangle(pa, z, this.len[0], this.len[2], o1),
+                        fb=this.buildTriangle(pb, z, this.len[1], this.len[3], 1-o2);
+                    if(isNaN(fb[0]) ||isNaN(fa[0])) continue;
+                    // угол <180 ?
+                    let a=this.angle(fa,z),b=this.angle(fb,z);
+                    if (Math.PI<this.norm(Math.PI-a+b)) {
                         this.map[x][y] |= 1 << (o1 * 2 + o2);
                     }
                 }
@@ -252,10 +283,11 @@ window.rhand = {
             for (var i = 0; i < 4; i++) {
                 if (i > 1) o1 = 1 - o1;
                 if (i & 1) o2 = 1 - o2;
-                this.buildTriangle(this.pointA, aa, this.len[0], this.len[2], o1);
-                this.buildTriangle(this.pointB, aa, this.len[1], this.len[3], o2);
-                z = this.calc_silent(this.pointA, this.pointB);
-                if (this.disp(z[2], aa) < 2) {
+                let fa=this.buildTriangle(this.pointA, aa, this.len[0], this.len[2], o1),
+                    fb=this.buildTriangle(this.pointB, aa, this.len[1], this.len[3], o2);
+                if(isNaN(fb[0]) ||isNaN(fa[0])) continue;
+                let a=this.angle(fa,aa),b=this.angle(fb,aa);
+                if (Math.PI<this.norm(Math.PI-a+b)) {
                     order[0] = o1;
                     order[1] = o2;
                     //this.mapit(aa,[o1,o2]);
@@ -268,7 +300,8 @@ window.rhand = {
             }
 
             //console.log(z);
-            log.push([this.pointA[2], this.pointB[2]]);
+            if(found)
+                log.push([this.pointA[2], this.pointB[2]]);
         }
         this.pointA[2] = olda, this.pointB[2] = oldb;
         //console.log(log);
