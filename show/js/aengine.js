@@ -303,9 +303,8 @@ a_item = newClass(null, {
         var gamma={x: a.x,y: a.y};
         this.norm(gamma,1);
         var r = Math.asin(gamma.y);
-        if(a.x<0 && a.y<0) r+=Math.PI;
-        else if(a.x<0 && a.y>0) r=Math.PI-r;
-        else if(a.x>0 && a.y<0) r=Math.PI-r;
+        if(a.x<0) r=Math.PI-r;
+        else if(a.x>0 && a.y<0) r=2*Math.PI+r;
         return r;
     },
 

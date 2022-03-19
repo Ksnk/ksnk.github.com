@@ -36,8 +36,8 @@ helicopter1 = newClass(helicopter,{
     self_act: function (e) {}
 });
 
-// наводится на цель
-stinger = newClass(a_item,{
+// предок взрывающегося снаряда
+bang = newClass(a_item,{
 	speed :{x:0,y:0},
     img:'images/pulya03.gif', //'images/pulya12.gif'
     img2:'images/09.gif',
@@ -45,45 +45,6 @@ stinger = newClass(a_item,{
     visibility:'hidden',
     waittill:120, // счетчик принятия решения - пусть цель разгонится
     state:0, // летим-наводимся - 1 взрываемся - 2 отдыхаем 0
-
-    calc_vector:function(e){
-        if (this.state!=1) return {x:0,y:0};
-        if (!this.goal) return null;
-        if(this.speed){
-            this.norm(this.speed,2.5);
-        }
-        var dx=this.goal.pos.x-this.pos.x,
-            dy=this.goal.pos.y-this.pos.y;
-        var disp=Math.sqrt(dx*dx+dy*dy);
-        if (disp<5) this.makeboom();
-        else k=0.2/disp  ;
-       // this.speed=this.norm({x:dx,y:dy},2.5);
-        e.x=dx*k;e.y=dy*k;   // наводимся точно на цель, без упреждения
-    },
-    self_act: function (e) {
-        if(this.state==1)this.calc_vector(e);
-		if (this.waittill>0) this.waittill--;
-		else switch(this.state){ // принимаем решение
-			case 0: //становимся в позу и полетели
-			    with(this.pos){x=400;y=0}
-			    with(this.speed){x=0;y=0}
-				this.state=1; // взводим таймер взрыва
-				this.waittill=400; // 20 секунд резерва горючего
-                this.calc_vector(e);
-				break;
-			case 1: //не долетели - взрываемся.
-				this.makeboom(); break ;
-			case 2:	// ждем у моря погоды
-				this.pos.x=-1000;this.pos.y=-1000; this.state=0;
-		    	with (preloads[this.img]) {
-					this.elm.src=src;
-					this.elm.style.width=width+'px';
-					this.elm.style.height=height+'px';
-				}
-				this.waittill=60; // 3 сек
-				break;
-		}
-    },
 
     makeboom: function () {
     	with (preloads[this.img2]) {
@@ -112,8 +73,50 @@ stinger = newClass(a_item,{
 	}
 });
 
-bullet = newClass(stinger,{
-    speed :{x:0,y:0},
+stinger = newClass(bang,{
+
+    calc_vector:function(e){
+        if (this.state!=1) return {x:0,y:0};
+        if (!this.goal) return null;
+        if(this.speed){
+            this.norm(this.speed,2.5);
+        }
+        var dx=this.goal.pos.x-this.pos.x,
+            dy=this.goal.pos.y-this.pos.y;
+        var disp=Math.sqrt(dx*dx+dy*dy);
+        if (disp<5) this.makeboom();
+        else k=0.2/disp  ;
+        // this.speed=this.norm({x:dx,y:dy},2.5);
+        e.x=dx*k;e.y=dy*k;   // наводимся точно на цель, без упреждения
+    },
+    self_act: function (e) {
+        if(this.state==1)this.calc_vector(e);
+        if (this.waittill>0) this.waittill--;
+        else switch(this.state){ // принимаем решение
+            case 0: //становимся в позу и полетели
+                this.pos.x=400;this.pos.y=0;
+                this.speed.x=0;this.speed.y=0;
+                this.state=1; // взводим таймер взрыва
+                this.waittill=400; // 20 секунд резерва горючего
+                this.calc_vector(e);
+                break;
+            case 1: //не долетели - взрываемся.
+                this.makeboom(); break ;
+            case 2:	// ждем у моря погоды
+                this.pos.x=-1000;this.pos.y=-1000; this.state=0;
+                with (preloads[this.img]) {
+                    this.elm.src=src;
+                    this.elm.style.width=width+'px';
+                    this.elm.style.height=height+'px';
+                }
+                this.waittill=60; // 3 сек
+                break;
+        }
+    }
+
+});
+
+bullet = newClass(bang,{
     name:'пуля',
     baseSpeed:4, // скорость движения
     img:'images/pulya12.gif', //'images/pulya12.gif'
@@ -160,7 +163,7 @@ bullet = newClass(stinger,{
                     break;
             }
         }
-    },
-    self_act: function (e) {}
+    }
 
 });
+

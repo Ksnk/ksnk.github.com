@@ -58,26 +58,43 @@ window.rhand = {
         this.finC = x[2];
     },
 
-    // достроить треугольник на отрезке fa-fb c длинами la-la, 1-слева 0-справа
+    // достроить треугольник на отрезке fa-fb c длинами la-lb, 1-слева 0-справа
+    angle: function(fa,fb){
+        let
+            dx = fa[0] - fb[0],
+            dy = fa[1] - fb[1], b;
+        if (Math.abs(dx) < 0.00001) {
+            if (dy < 0) {
+                b = Math.PI / 2;
+            } else {
+                b = -Math.PI / 2
+            }
+        } else {
+            b = Math.atan(dy / dx); // угол наклона основы
+            if(dx>0){
+                b+=Math.PI;
+            }
+        }
+        return b;
+    },
+    /**
+     * достраиваем треугольник на отрезка fa-fb. со стороны order
+     * скрытый эффект - дописываем угол наклона в первую точку
+     * @param fa
+     * @param fb
+     * @param la
+     * @param lb
+     * @param order
+     * @returns {*[]}
+     */
     buildTriangle: function (fa, fb, la, lb, order) {
-        // расчет положения активной точки
         let
             dx = fa[0] - fb[0],
             dy = fa[1] - fb[1],
-            b = Math.atan(dy / dx);
-        if (Math.abs(dy) < 3 && Math.abs(dx) < 3) {
-            b = NaN;
-        }
-        let
+            b=this.angle(fa,fb),
             d = Math.sqrt(dx * dx + dy * dy),
-            a = Math.acos(d / (la + lb));
+            a = Math.acos(d  / (la + lb));
         fa[2] = b + (order > 0 ? a : -a);
-        if (dy > 0 && dx > 0) {
-            fa[2] -= Math.PI;
-        } else if (dy < 0 && dx > 0) {
-            fa[2] += Math.PI;
-        }
-
         return [
             fa[0] + la * Math.cos(fa[2]),
             fa[1] + la * Math.sin(fa[2]),
@@ -185,7 +202,7 @@ window.rhand = {
             for (let y = -60; y < 80; y++) {
                 this.map[x][y] = 0;
 
-                let z = [5 * x + 2, 5 * y + 2], o1 = 1, o2 = 0;
+                let z = [5 * x , 5 * y ], o1 = 1, o2 = 0;
                 for (var i = 0; i < 4; i++) {
                     if (i == 2) o1 = 1 - o1;
                     if (i & 1) o2 = 1 - o2;
