@@ -11,7 +11,7 @@ span[data-handle] {
   cursor: pointer;
 }
 
-.mirrorY { transform: scale(1, -1); }
+.mirrorY { transform: scale(-1, 1); }
 
 .svgicon {
   display: inline-block;
@@ -19,6 +19,14 @@ span[data-handle] {
   width: 1em;
   height: 1em;
   margin: 0 0 0 0.2em;
+}
+
+fieldset label.text {
+  width:12em;
+  display: inline-block;
+}
+fieldset label.text input{
+  float: right; width:10em;
 }
 /**
     табуляция
