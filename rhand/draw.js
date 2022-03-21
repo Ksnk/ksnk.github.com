@@ -239,6 +239,46 @@ window.rhand = {
             }
         }
     },
+    checkPoints: function(p)
+    {
+        var i,count = p.length, points = new Array();
+        //если закончен расчёт, тикаем
+        if(count==0 || bEnd) return;
+        //обходим точки
+        for(i=0;i<count;++i)
+        {
+            //если достигли конца, то тикаем
+            if(p[i].i == endPoint.i && p[i].j == endPoint.j)
+            {
+                bEnd = true;
+                return;
+            }
+            //var x = 0;
+            //var y = 0;
+            //проверяем окружные 8 клеток
+            for( y=-1;y<=1;++y)
+                for( x=-1;x<=1;++x)
+                    if(!(x==0&&y==0))
+                        //проверка на выход за пределы поля
+                        if(checkPointLimit(p[i].i+y,p[i].j+x))
+                            if(mas[p[i].i+y][p[i].j+x] ==0)
+                                //проверка на препятствия
+                                if(checkPointObstacle(p[i].i+y, p[i].j+x,p[i].i, p[i].j))
+                                    //проверка значения
+                                    if(checkPointValue (p[i].i+y,p[i].j+x,  mas[p[i].i][p[i].j]+((Math.abs(x)==Math.abs(y))?1.6:1), points))
+                                        //если надо, рисуем волны
+                                        if(showPriority && typeOfDrawing == 1)
+                                        {
+                                            var ar = new Array();
+                                            ar[0]={i:p[i].i+y, j:p[i].j+x};
+                                            delay+=10;
+                                            timer = setTimeout( function(ar ) {return function(){self.drawPointsAsynchron(ar)}}(ar), delay);
+                                        }
+        }
+        //повторяем для новых клеток
+        this.checkPoints(points);
+    },
+
     diffit: function () {
         let pa = [...this.pointA], pb = [...this.pointB];
         this.map = [];
@@ -320,6 +360,19 @@ window.rhand = {
                 log.push([this.pointA[2], this.pointB[2]]);
         }
         this.pointA[2] = olda, this.pointB[2] = oldb;
+        //console.log(log);
+        return log;
+    },
+
+    /**
+     * расчитать маршрут
+     * @param angle
+     */
+    buildTrace: function (angle) {
+        let log=[];
+        // выбираем точку перехода
+
+
         //console.log(log);
         return log;
     }
