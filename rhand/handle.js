@@ -22,7 +22,7 @@ $(function () {
         if (data.match(/^[{\[].*[}\]]$/))
             return JSON.parse(data);
         else
-            return data.split(',');
+            return data.split(/\s*,\s*/);
     }
 
     function play(trace) {
@@ -41,6 +41,21 @@ $(function () {
             cur++;
 
         }, 50);
+    }
+
+    function _get(addr){
+        let undef,name=addr.split('.'),r=rhand;
+        while(name.length>0){
+            if(undef==(r=r[name.shift()])) return;
+        }
+        return r;
+    }
+    function _set(addr, val){
+        let undef,name=addr.split('.'),r=rhand;
+        while(name.length>1){
+            if(undef==(r=r[name.shift()])) return;
+        }
+        r[name]=val;
     }
 
     /**
@@ -67,6 +82,15 @@ $(function () {
                 elem.async = true;
                 document.body.appendChild( elem );
                 elem.src = location.href.replace(/\/rhand.*$/,'/Fly/fly.js');
+                break;
+            case 'pin':
+                // забрать имеющиеся значения манипулятора и поставить в нужные значения
+                if(whattodo[1]=='angle') {
+                    _set(whattodo[2],[rhand.pointA[2],rhand.pointB[2]]);
+                } else {
+                    _set(whattodo[2],[rhand.finC[0],rhand.finC[1]]);
+                }
+                handle(['updatectrl']);
                 break;
             case 'rotate':
                 let pa = [...rhand.pointA], pb = [...rhand.pointB];
@@ -109,24 +133,19 @@ $(function () {
                 $('input[data-handle]').each(function(){
                     let
                         h=parseData($(this).attr('data-handle')),
-                        name = $(this).attr('name').split('[]'), multy=name.length > 1;
-                    name=name[0].split('.');
-                    let r=rhand;
-                    while(name.length>1){
-                        r=r[name.shift()];
-                    }
-                    name=name[0];
+                        name = $(this).attr('name').split('[]'), multy=name.length > 1,
+                        v=_get(name[0]);
+
                     if($(this).is('input:text')){
-                        if(undef!=r[name]){
-                            if(h[1]=='grad'){
-                                $(this).val(180*(r[name])/Math.PI);
-                            } else {
-                                $(this).val(r[name]);
-                            }
+                       if(h[1]=='grad'){
+                            $(this).val(180*v/Math.PI);
+                        } else {
+                            $(this).val(v);
                         }
+
                     } else if($(this).is('input:checkbox')){
                         if(multy){
-                            $(this)[r[name] & $(this).val()?'attr':'removeAttr']("checked","checked");
+                            $(this)[v & $(this).val()?'attr':'removeAttr']("checked","checked");
                         }
                     }
                 })
@@ -144,6 +163,13 @@ $(function () {
             case 'mapclick':
                 let point = rhand.fromscreen([handle.event.offsetX, handle.event.offsetY]);
                 play(rhand.moveTo(point));
+                break;
+
+            case 'load':
+                rhand.unserialize(localStorage.getItem('rhand'));
+                break;
+            case 'store':
+                localStorage.setItem('rhand',rhand.serialize());
                 break;
         }
         return false; // стандартный результат - прекращение обработки события
@@ -184,6 +210,13 @@ $(function () {
         }
         return false;
     });
+    window.addEventListener('beforeunload', function(e) {
+        handle(['store']);
+        e.preventDefault();
+        //e.returnValue = '';
+        return true;
+    });
+    handle(['load']);
     window.rhand.mapit();
     draw();
     handle(['updatectrl']);

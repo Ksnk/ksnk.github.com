@@ -3,26 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <title>Расчет манипулятора</title>
-    <link href="style.css" type="text/css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<svg xmlns="http://www.w3.org/2000/svg" style="display: none" fill="currentColor">
-    <symbol id="icon-rolldn" viewBox="0 0 20 20">
+<svg fill="currentColor" style="display: none" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="icon-rollup" viewBox="0 0 20 20">
+        <g fill="#000000" transform="translate(-384.000000, -144.000000)">
+            <path d="M391.5,157 C389.014719,157 387,154.985281 387,152.5 C387,152.331018 387.009314,152.164211 387.027464,152 L385.018945,152 C385.00639,152.165053 385,152.33178 385,152.5 C385,156.089851 387.910149,159 391.5,159 C395.089851,159 398,156.089851 398,152.5 C398,149.078368 395.356198,146.27423 392,146.018945 L392,148.027464 C394.249941,148.27615 396,150.183701 396,152.5 C396,154.985281 393.985281,157 391.5,157 L391.5,157 Z M388,147 L392,150 L392,144 L388,147 L388,147 Z M388,147"
+            />
+        </g>
+    </symbol>
+    <!--<symbol id="icon-rolldn" viewBox="0 0 20 20">
         <g transform="translate(-432.000000, -432.000000)" fill="#000000">
             <path d="M438.972188,442 L438.972188,433 L447.922128,433 L444.938815,436 C446.430471,437 448.419347,439.5 447.922128,442 C447.424909,445 445.436034,447 440.961064,447 C435.491657,447 434,442.5 434,442 C436.983313,444.5 438.972188,445 440.961064,445 C442.949939,445 443.944377,443.5 443.944377,442 C443.944377,441 443.447158,440 441.955502,439 L438.972188,442 L438.972188,442 Z M438.972188,442"
-                  id="Shape copy"
                   transform="translate(441.000000, 440.000000) scale(-1, 1) translate(-441.000000, -440.000000) "></path>
         </g>
-    </symbol>
-    <symbol id="icon-rollup" viewBox="0 0 20 20">
-        <g transform="translate(-480.000000, -432.000000)" fill="#000000">
-            <path d="M485.972188,442 L485.972188,433 L494.922128,433 L491.938815,436 C493.430471,437 495.419347,439.5 494.922128,442 C494.424909,445 492.436034,447 487.961064,447 C482.491657,447 481,442.5 481,442 C483.983313,444.5 485.972188,445 487.961064,445 C489.949939,445 490.944377,443.5 490.944377,442 C490.944377,441 490.447158,440 488.955502,439 L485.972188,442 L485.972188,442 Z M485.972188,442"
-                  id="Shape"></path>
+    </symbol>-->
+    <symbol id="icon-pinit" viewBox="0 0 20 20">
+        <g fill="#000000" transform="translate(-192.000000, -192.000000)">
+            <path d="M201,205.917042 C203.512502,205.49553 205.495527,203.512505 205.917042,201 L203,201 L203,199 L205.917042,199 C205.495527,196.487495 203.512502,194.50447 201,194.082958 L201,197 L199,197 L199,194.082958 C196.487498,194.50447 194.504473,196.487495 194.082958,199 L197,199 L197,201 L194.082958,201 C194.504473,203.512505 196.487498,205.49553 199,205.917042 L199,203 L201,203 Z M200,208 C195.581722,208 192,204.418278 192,200 C192,195.581722 195.581722,192 200,192 C204.418278,192 208,195.581722 208,200 C208,204.418278 204.418278,208 200,208 Z M200,208"
+            />
         </g>
     </symbol>
+
     <!--
     <symbol id="icon-ribbon" viewBox="0 0 20 20">
-        <g xmlns="http://www.w3.org/2000/svg" id="Icons with numbers" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Icons with numbers" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
             <g id="Group" transform="translate(-672.000000, -432.000000)" fill="#000000">
                 <path d="M676,433 C676,432.447715 676.447715,432 677,432 L683,432 C683.552285,432 684,432.447715 684,433 L684,448 L680,442.970215 L676,448 Z M677,434 L677,445 L680,441.038574 L683,445 L683,434 C683,433.447715 682.552285,433 682,433 L678,433 C677.447715,433 677,433.447715 677,434 Z M677,434" id="Rectangle 216 copy"/>
             </g>
@@ -74,48 +80,96 @@
             <td colspan="2">
 
                 <div id="map" style="width:100%;height:580px;overflow:hidden;">
-                    <canvas id="canvas" width="660" height="580" data-handle="mapclick"
-                            style="background-color:#444"></canvas>
+                    <canvas data-handle="mapclick" height="580" id="canvas" style="background-color:#444"
+                            width="660"></canvas>
                 </div>
             </td>
             <td valign="top">
                 <div class="tab">
-                    <button class="tablinks" data-handle="tab,0">Настройки манипулятора</button>
-                    <button class="tablinks active" data-handle="tab,1">Карта доступности</button>
-                </div>
-                <div class="tabcontent">
-                    <label>угол оси А: <input data-handle="submitdraw,grad" name="pointA.2" > </label><br>
-                    <label>угол оси Б: <input data-handle="submitdraw,grad" name="pointB.2" > </label><br>
-                    <button data-handle="letsfly">W</button><br>
+                    <button class="tablinks active" data-handle="tab,0">Настройки</button>
+                    <button class="tablinks" data-handle="tab,1">Программа</button>
                 </div>
                 <div class="tabcontent active">
-                    <label><input type="checkbox" data-handle="submitdraw" name="mapcolor[]" value="1"> 00</label><br>
-                    <label><input type="checkbox" data-handle="submitdraw" name="mapcolor[]" value="2"> 01</label><br>
-                    <label><input type="checkbox" data-handle="submitdraw" name="mapcolor[]" value="4"> 10</label><br>
-                    <label><input type="checkbox" data-handle="submitdraw" name="mapcolor[]" value="8"> 11</label>
+                    <fieldset><legend>Текущее состояние</legend>
+                        <label> ось А: <input data-handle="submitdraw,grad" name="pointA.2"> </label><br>
+                        <label> ось Б: <input data-handle="submitdraw,grad" name="pointB.2"> </label><br>
+                        <label>X: <input data-handle="submitdraw" disabled="disabled" name="finC.0"> </label><br>
+                        <label>Y: <input data-handle="submitdraw" disabled="disabled" name="finC.1"> </label><br>
+                        <button data-handle="letsfly">W</button>
+                    </fieldset>
+                    <fieldset><legend>Слои карты</legend>
+                        <label><input data-handle="submitdraw" name="mapcolor[]" type="checkbox" value="1"> 00</label><br>
+                    <label><input data-handle="submitdraw" name="mapcolor[]" type="checkbox" value="2"> 01</label><br>
+                    <label><input data-handle="submitdraw" name="mapcolor[]" type="checkbox" value="4"> 10</label><br>
+                    <label><input data-handle="submitdraw" name="mapcolor[]" type="checkbox" value="8"> 11</label>
+                    </fieldset>
+                    <br>Расчет маршрута<br>
+                    <fieldset><legend>Начало</legend>
+                    <label> ось А: <input data-handle="submitdraw,grad" name="startA.0"> </label>
+                    <span data-handle="pin, angle, startA"><svg class="svgicon"><use
+                            xlink:href="#icon-pinit"/></svg></span><br>
+                    <label> ось Б: <input data-handle="submitdraw,grad" name="startA.1"> </label>
+                    </fieldset>
+                    <fieldset><legend>Координата финиша</legend>
+                    <label>x: <input data-handle="submitdraw" name="finXY.0"> </label> <span
+                        data-handle="pin, coord, finXY"><svg class="svgicon"><use
+                        xlink:href="#icon-pinit"/></svg></span><br>
+                    <label>y: <input data-handle="submitdraw" name="finXY.1"> </label>
+                        <button data-handle="letsfly">С</button></fieldset>
+                    <fieldset><legend>или Углы финиша</legend>
+
+                        <label>ось А: <input data-handle="submitdraw,grad" name="fin_A.0"> </label>
+                    <span data-handle="pin, angle, fin_A"><svg class="svgicon"><use
+                            xlink:href="#icon-pinit"/></svg></span><br>
+                    <label>ось Б: <input data-handle="submitdraw,grad" name="fin_A.1"> </label>
+                    <button data-handle="letsfly">С</button>
+                    </fieldset>
+                </div>
+                <div class="tabcontent ">
+                    Начальное состояние:<br>
+                    <label>угол оси А: <input data-handle="submitdraw,grad" name="startA.0"> </label>
+                    <span data-handle="pin, angle, startA"><svg class="svgicon"><use
+                            xlink:href="#icon-pinit"/></svg></span><br>
+                    <label>угол оси Б: <input data-handle="submitdraw,grad" name="startA.1"> </label><br>
+                    Координата финиша<br>
+                    <label>x: <input data-handle="submitdraw" name="finXY.0"> </label> <span
+                        data-handle="pin, coord, finXY"><svg class="svgicon"><use
+                        xlink:href="#icon-pinit"/></svg></span><br>
+                    <label>y: <input data-handle="submitdraw" name="finXY.1"> </label>
+                    <button data-handle="letsfly">С</button>
+                    <br><br>
+                    <label>угол А: <input data-handle="submitdraw,grad" name="fin_A.0"> </label>
+                    <span data-handle="pin, angle, fin_A"><svg class="svgicon"><use
+                            xlink:href="#icon-pinit"/></svg></span><br>
+                    <label>угол Б: <input data-handle="submitdraw,grad" name="fin_A.1"> </label>
+                    <button data-handle="letsfly">С</button>
+                    <br>
+
                 </div>
             </td>
             <td></td>
         </tr>
         <tr class="unselectable">
             <td>
-                <span class="pressHold" data-handle="rotate,0,1"><svg class="svgicon"><use
+                <span class="pressHold" data-handle="rotate,0,1"><svg class="svgicon "><use
                         xlink:href="#icon-rollup"/></svg></span>
-                <span class="pressHold" data-handle="rotate,0,-1"><svg class="svgicon"><use xlink:href="#icon-rolldn"/></svg></span>
+                <span class="pressHold" data-handle="rotate,0,-1"><svg class="svgicon mirrorY"><use
+                        xlink:href="#icon-rollup"/></svg></span>
             </td>
             <td align="right">
-                <span class="pressHold" data-handle="rotate,1,1"><svg class="svgicon"><use
+                <span class="pressHold" data-handle="rotate,1,1"><svg class="svgicon "><use
                         xlink:href="#icon-rollup"/></svg></span>
-                <span class="pressHold" data-handle="rotate,1,-1"><svg class="svgicon"><use xlink:href="#icon-rolldn"/></svg></span>
+                <span class="pressHold" data-handle="rotate,1,-1"><svg class="svgicon mirrorY"><use
+                        xlink:href="#icon-rollup"/></svg></span>
             </td>
             <td></td>
         </tr>
     </table>
 </div>
 
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
-<script type="text/javascript" src="draw.js"></script>
-<script type="text/javascript" src="handle.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js" type="text/javascript"></script>
+<script src="draw.js" type="text/javascript"></script>
+<script src="handle.js" type="text/javascript"></script>
 
 </body>
 </html>

@@ -1,8 +1,8 @@
 window.rhand = {
 
     // состояние шаговых двигателей
-    pointA: [0, 0, Math.PI * (40 / 180)], // x,y, angle
-    pointB: [300, 0, Math.PI * (90 / 180)], // x,y, angle
+    pointA: [-150 , 0, Math.PI * (40 / 180)], // x,y, angle
+    pointB: [150, 0, Math.PI * (90 / 180)], // x,y, angle
     // состояние тяг
     finA: [], finB: [],
     // состояние активного манипулятора
@@ -15,11 +15,27 @@ window.rhand = {
     // габариты окна
     screen: [660, 760],
     // точка центра внимания
-    zoompoint: [180, 440],
+    zoompoint: [180+150, 440],
 
     //
     map: false,
     mapcolor: 1,
+
+    startA:[0,0],
+    finXY:[0,0],
+    fin_A:[0,0],
+
+    store_names:['fin_A','finXY','startA','pointA','pointB','len', 'mapcolor'],
+
+    serialize:function(){
+        let ret={};
+        for(let a in this.store_names) ret[this.store_names[a]]=this[this.store_names[a]];
+        return JSON.stringify(ret);
+    },
+    unserialize:function(obj){
+        obj=JSON.parse(obj);
+        for(let a in obj) if(this.hasOwnProperty(a)) this[a]=obj[a];
+    },
 
     /**
      * конвертировать координаты экрана в координаты модели
@@ -169,7 +185,7 @@ window.rhand = {
         let m, c, colormap = [];
 
         if (this.mapcolor > 0) {
-            for (let x = -8; x < 69; x++) for (let y = -51; y < 63; y++) {
+            for (let x = -8-30; x < 69-30; x++) for (let y = -51; y < 63; y++) {
                 if ((m = (this.map[x][y] & this.mapcolor)) > 0) {
                     if (!!(c = colormap[m])) {
                         circle.call(this, [x * 5, y * 5],
@@ -202,7 +218,7 @@ window.rhand = {
     mapit: function () {
         let pa = [...this.pointA], pb = [...this.pointB];
         this.map = [];
-        for (let x = -8; x < 69; x++) {
+        for (let x = -8-30; x < 69-30; x++) {
             this.map[x] = [];
             for (let y = -51; y < 63; y++) {
                 this.map[x][y] = 0;

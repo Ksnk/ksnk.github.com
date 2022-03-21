@@ -11,6 +11,8 @@ span[data-handle] {
   cursor: pointer;
 }
 
+.mirrorY { transform: scale(1, -1); }
+
 .svgicon {
   display: inline-block;
   fill: currentColor;
