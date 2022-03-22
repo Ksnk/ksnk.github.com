@@ -1,5 +1,8 @@
 $(function () {
-    // отложенный draw
+
+    /**
+     * отложенный draw - заявка на перерисовку. Можно частить, все равно не должно тормозить
+     */
     function draw() {
         if (!draw._TO) {
             draw._TO = window.requestAnimationFrame(function () {
@@ -25,6 +28,10 @@ $(function () {
             return data.split(/\s*,\s*/);
     }
 
+    /**
+     * анимировать перемещение манипулятора
+     * @param {{x:int,y:int}[]}trace
+     */
     function play(trace) {
         let cur = 0;
         if (!!play.i) clearInterval(play.i);
@@ -43,6 +50,12 @@ $(function () {
         }, 50);
     }
 
+    /**
+     * выдать значение по адресной последовательности
+     * @param addr
+     * @returns {any}
+     * @private
+     */
     function _get(addr){
         let undef,name=addr.split('.'),r=rhand;
         while(name.length>0){
@@ -50,6 +63,13 @@ $(function () {
         }
         return r;
     }
+
+    /**
+     * по адресной последовательности присвоить значение
+     * @param addr
+     * @param val
+     * @private
+     */
     function _set(addr, val){
         let undef,name=addr.split('.'),r=rhand;
         while(name.length>1){
@@ -66,7 +86,7 @@ $(function () {
      *  -- несколько команд в одном флаконе, удобно для ajax
      */
     window.handle = function (whattodo) {
-        var undef;
+        var pa,pb,undef;
         if (whattodo && whattodo[0] && whattodo[0].constructor && whattodo[0].constructor === Array) {
             // нам передан массив массивов
             for (var x in whattodo) {
@@ -93,7 +113,7 @@ $(function () {
                 handle(['updatectrl']);
                 break;
             case 'rotate':
-                let pa = [...rhand.pointA], pb = [...rhand.pointB];
+                pa = [...rhand.pointA]; pb = [...rhand.pointB];
                 (whattodo[1] > 0 ? pb : pa)[2] += Math.PI * whattodo[2] / 180;
                 let x = rhand.calc_silent(pa, pb);
                 if (!isNaN(x[2][0])) {
@@ -122,6 +142,7 @@ $(function () {
                     if (!multy) {
                         r[name] = 0+i.val();
                         if(whattodo[1]==='grad'){
+                            if(r[name]<0)r[name]+=360;
                             r[name]*=Math.PI/180;
                         }
                     }
@@ -138,7 +159,7 @@ $(function () {
 
                     if($(this).is('input:text')){
                        if(h[1]=='grad'){
-                            $(this).val(180*v/Math.PI);
+                            $(this).val(180*rhand.norm(v)/Math.PI);
                         } else {
                             $(this).val(v);
                         }
@@ -170,6 +191,12 @@ $(function () {
                 break;
             case 'store':
                 localStorage.setItem('rhand',rhand.serialize());
+                break;
+
+            case 'calc':
+                // расчет маршрута с точки startA
+                // до точки finA
+                play(rhand.buildtrace());
                 break;
         }
         return false; // стандартный результат - прекращение обработки события

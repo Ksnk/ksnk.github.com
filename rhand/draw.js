@@ -135,9 +135,18 @@ window.rhand = {
                 pa[1] + this.len[0] * Math.sin(pa[2])],
             fb = [pb[0] + this.len[1] * Math.cos(pb[2]),
                 pb[1] + this.len[1] * Math.sin(pb[2])],
-            x = this.buildTriangle(fa, fb, this.len[2], this.len[3], 1);
+            x = this.buildTriangle(fa, fb, this.len[2], this.len[3], 1), o1=0,o2=0;
         // расчет положения активной точки
-        return [fa, fb, x];
+        let xx = this.buildTriangle(x, pa, this.len[2], this.len[0], o1),
+            yy = this.buildTriangle(x, pb, this.len[3], this.len[1], o2);
+        if (this.disp(xx, fa) < 2) {
+            o1 = 1 - o1;
+        }
+
+        if (this.disp(yy, fb) > 2) {
+            o2 = 1 - o2;
+        }
+        return [fa, fb, x, 1 << (o1 * 2 + o2)];
     },
 
     // рисовать манипулятор
@@ -261,12 +270,14 @@ window.rhand = {
                 map[x][y] = -1;
             }
         }
-        let p=[a];map[a[0]][a[1]]=0;
+        let p=[[Math.round(a[0]/5), Math.round(a[1]/5)]],
+            fin=[Math.round(b[0]/5), Math.round(b[1]/5)]
+        map[p[0][0]][p[0][1]]=0;
         while(p.length>0){
             var points = [];
             //обходим точки
             for (let i = 0; i < p.length; ++i) {
-                if (p[i][0] == b[0] && p[i][1] == b[1]) {
+                if (p[i][0] == fin[0] && p[i][1] == fin[1]) {
                     points=[];
                     break;
                 }
@@ -276,7 +287,9 @@ window.rhand = {
                 for (let y = -1; y <= 1; ++y)
                     for (let x = -1; x <= 1; ++x)
                         if (!(x == 0 && y == 0))
-                            if ((this.map[p[i][0] + x][p[i][1] + y] & c)>0) {
+                            if (    p[i][0] + x>this.realmap_border[0] && p[i][0] + x<this.realmap_border[1]
+                                &&  p[i][1] + y>this.realmap_border[2] && p[i][1] + y<this.realmap_border[3]
+                                && (this.map[p[i][0] + x][p[i][1] + y] & c)>0) {
                                 let v=map[p[i][0] + x][p[i][1] + y],
                                     newv=map[p[i][0]][p[i][1]]+
                                         ((Math.abs(x) == Math.abs(y)) ? 1.4 : 1);
@@ -287,47 +300,116 @@ window.rhand = {
                                     map[p[i][0] + x][p[i][1] + y]=newv;
                                 }
                             }
-
             }
             //повторяем для новых клеток
             p=points;
         }
-        if(map[b[0]][b[1]]<0){
+        if(map[fin[0]][fin[1]]<0){
             return false;
         } else {
             // разворачиваем путь в обратную сторону
-            for (let y = -1; y <= 1; ++y)
-                for (let x = -1; x <= 1; ++x)
-                    if (!(x == 0 && y == 0)){
-
-                    }
-        }
-
-    },
-
-    diffit: function () {
-        let pa = [...this.pointA], pb = [...this.pointB];
-        this.map = [];
-        for (let x = -6; x < 70; x++) { // -40..340 -- -5..68
-            this.map[x] = [];
-            for (let y = -50; y < 70; y++) { //
-                this.map[x][y] = 0;
-
-                let z = [5 * x , 5 * y ], o1 = 1, o2 = 0;
-                for (var i = 0; i < 4; i++) {
-                    if (i == 2) o1 = 1 - o1;
-                    if (i & 1) o2 = 1 - o2;
-                    let fa=this.buildTriangle(pa, z, this.len[0], this.len[2], o1),
-                        fb=this.buildTriangle(pb, z, this.len[1], this.len[3], 1-o2);
-                    if(isNaN(fb[0]) ||isNaN(fa[0])) continue;
-                    // угол <180 ?
-                    let a=this.angle(fa,z),b=this.angle(fb,z);
-                    if (Math.PI<this.norm(Math.PI-a+b)) {
-                        this.map[x][y] |= 1 << (o1 * 2 + o2);
+            let min, v=map[fin[0]][fin[1]], p=[fin[0],fin[1]], trace=[];
+            while(v>0) {
+                trace.unshift([p[0]*5,p[1]*5]);
+                min=false;
+                for (let y = -1; y <= 1; ++y)for (let x = -1; x <= 1; ++x) if (!(x == 0 && y == 0)) {
+                    if(v>map[p[0]+x][p[1]+y] && map[p[0]+x][p[1]+y]>=0) {
+                        v=map[p[0]+x][p[1]+y];
+                        min=[p[0]+x,p[1]+y];
                     }
                 }
+                if(!min){
+                    return false;
+                }
+                p=min;
+            }
+            trace.shift().unshift(a);
+            trace.pop().push(b);
+            return trace;
+        }
+    },
+
+    /**
+     * рассчитать маршрут
+     * @param angle
+     */
+    buildtrace: function(){
+        // точка старта
+        let pa=[...this.pointA],pb=[...this.pointB];
+        pa[2]=this.startA[0];pb[2]=this.startA[1];
+        let z=this.calc_silent(pa, pb),o1=z[3];
+
+        pa[2]=this.fin_A[0];pb[2]=this.fin_A[1];
+        let zz=this.calc_silent(pa, pb),o2=zz[3];
+        //console.log(z,zz);
+        let ret=[[this.startA[0],this.startA[1]]];
+
+        function filltrace(a,b,o){
+            let trace=this.checkPoints(a,b,o);
+            for (var i = 1; i < trace.length; i++) {
+                let fa=this.buildTriangle(pa, trace[i], this.len[0], this.len[2], (o>2),
+                    fb=this.buildTriangle(pb, trace[i], this.len[1], this.len[3], (o==1 || o==4)) );
+                if(isNaN(fb[0]) ||isNaN(fa[0])) {
+                    console.log('Opps!'); return;
+                }
+                ret.push([pa[2],pb[2]]);
             }
         }
+        if(o1==2 && o2==1 ){
+            // идем в точку перемены ноги
+            filltrace.call(this,z[2],[163,3],o1);
+            ret.push([329*Math.PI/180,317*Math.PI/180]);//
+            filltrace.call(this,[144.79410546393675, -5.846948808652186],zz[2],o2);
+        } else if(o1==2 && o2==4 ) {
+            filltrace.call(this,z[2],[0,300],o1);
+            ret.push([65*Math.PI/180,127*Math.PI/180]);//
+            filltrace.call(this,[1.4884354808920364,304.25890781468934],zz[2],o2);
+        } else if(o1==2 && o2==8 ) {
+            filltrace.call(this,z[2],[0,300],o1);
+            ret.push([72*Math.PI/180,106*Math.PI/180]);//
+            filltrace.call(this,[1.3934036819667739,299.95885670410246],zz[2],o2);
+
+        } else if(o1==1 && o2==2 ) {
+            filltrace.call(this,z[2],[0,300],o1);
+            ret.push([49*Math.PI/180,115*Math.PI/180]);//
+            filltrace.call(this,[-13.02662012067897,297.6406611234078],zz[2],o2);
+        } else if(o1==1 && o2==4 ) {
+            filltrace.call(this,z[2],[0,300],o1);
+            ret.push([62*Math.PI/180,130*Math.PI/180]);//
+            filltrace.call(this,[13.833508703078948,297.7696318248984],zz[2],o2);
+        } else if(o1==1 && o2==8 ) {
+            filltrace.call(this,z[2],[0,300],o1);
+            ret.push([72*Math.PI/180,106*Math.PI/180]);//
+            filltrace.call(this,[1.3934036819667739,299.95885670410246],zz[2],o2);
+
+        } else if(o1==4 && o2==2 ) {
+            filltrace.call(this,z[2],[0,300],o1);
+            ret.push([49*Math.PI/180,115*Math.PI/180]);//
+            filltrace.call(this,[-13.02662012067897,297.6406611234078],zz[2],o2);
+        } else if(o1==4 && o2==1 ) {
+            filltrace.call(this,z[2],[0,300],o1);
+            ret.push([62*Math.PI/180,130*Math.PI/180]);//
+            filltrace.call(this,[13.833508703078948,297.7696318248984],zz[2],o2);
+        } else if(o1==4 && o2==8 ) {
+            filltrace.call(this,z[2],[0,300],o1);
+            ret.push([72*Math.PI/180,106*Math.PI/180]);//
+            filltrace.call(this,[1.3934036819667739,299.95885670410246],zz[2],o2);
+
+        } else if(o1==8 && o2==2 ) {
+            filltrace.call(this,z[2],[0,300],o1);
+            ret.push([49*Math.PI/180,115*Math.PI/180]);//
+            filltrace.call(this,[-13.02662012067897,297.6406611234078],zz[2],o2);
+        } else if(o1==8 && o2==1 ) {
+            filltrace.call(this,z[2],[0,300],o1);
+            ret.push([62*Math.PI/180,130*Math.PI/180]);//
+            filltrace.call(this,[13.833508703078948,297.7696318248984],zz[2],o2);
+        } else if(o1==8 && o2==8 ) {
+            filltrace.call(this,z[2],[0,300],o1);
+            ret.push([72*Math.PI/180,106*Math.PI/180]);//
+            filltrace.call(this,[1.3934036819667739,299.95885670410246],zz[2],o2);
+        }
+        console.log(ret);
+        return ret;
     },
 
     /**
@@ -337,17 +419,14 @@ window.rhand = {
      */
     moveTo: function (a) {
         let z = this.calc_silent(this.pointA, this.pointB),
-            log = [], order = [0, 0];
-        // cчитаем порядок
-        let x = this.buildTriangle(z[2], this.pointA, this.len[2], this.len[0], order[0]),
-            y = this.buildTriangle(z[2], this.pointB, this.len[3], this.len[1], order[1]);
-        if (this.disp(x, z[0]) < 2) {
-            order[0] = 1 - order[0];
+            log = [], order = [0,0];
+        if(z[3]==2){
+            order=[0,1];
+        } else if(z[3]==4){
+            order=[1,0];
+        } else if(z[3]==8){
+            order=[1,1];
         }
-        if (this.disp(y, z[1]) < 2) {
-            order[1] = 1 - order[1];
-        }
-        //this.mapit(z, order);
 
         // двигаемся по 5 см от точки z[2] до точки a
         let d = this.disp(a, z[2]), dst = 10,
@@ -390,16 +469,4 @@ window.rhand = {
         return log;
     },
 
-    /**
-     * расчитать маршрут
-     * @param angle
-     */
-    buildTrace: function (angle) {
-        let log=[];
-        // выбираем точку перехода
-
-
-        //console.log(log);
-        return log;
-    }
 };
