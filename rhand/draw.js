@@ -17,6 +17,8 @@ window.rhand = {
     // точка центра внимания
     zoompoint: [180+150, 440],
 
+    realmap_border:[-38,39,-51, 63],
+
     //
     map: false,
     mapcolor: 1,
@@ -185,7 +187,7 @@ window.rhand = {
         let m, c, colormap = [];
 
         if (this.mapcolor > 0) {
-            for (let x = -8-30; x < 69-30; x++) for (let y = -51; y < 63; y++) {
+            for (let x = this.realmap_border[0]; x < this.realmap_border[1]; x++) for (let y = this.realmap_border[2]; y < this.realmap_border[3]; y++) {
                 if ((m = (this.map[x][y] & this.mapcolor)) > 0) {
                     if (!!(c = colormap[m])) {
                         circle.call(this, [x * 5, y * 5],
@@ -215,12 +217,15 @@ window.rhand = {
         circle.call(this, this.finC, {color: "green", fillStyle: "yellow"});
     },
 
+    /**
+     * разметить карту
+     */
     mapit: function () {
         let pa = [...this.pointA], pb = [...this.pointB];
         this.map = [];
-        for (let x = -8-30; x < 69-30; x++) {
+        for (let x = this.realmap_border[0]; x < this.realmap_border[1]; x++) {
             this.map[x] = [];
-            for (let y = -51; y < 63; y++) {
+            for (let y = this.realmap_border[2]; y < this.realmap_border[3]; y++) {
                 this.map[x][y] = 0;
 
                 let z = [5 * x , 5 * y ], o1 = 1, o2 = 0;
@@ -239,44 +244,65 @@ window.rhand = {
             }
         }
     },
-    checkPoints: function(p)
+
+    /**
+     * построить маршрут от точки a до точки b с порядком с
+     * @param {any[]} a
+     * @param {any[]} b
+     * @param {int} c
+     */
+    checkPoints: function(a,b, c)
     {
-        var i,count = p.length, points = new Array();
-        //если закончен расчёт, тикаем
-        if(count==0 || bEnd) return;
-        //обходим точки
-        for(i=0;i<count;++i)
-        {
-            //если достигли конца, то тикаем
-            if(p[i].i == endPoint.i && p[i].j == endPoint.j)
-            {
-                bEnd = true;
-                return;
+        // сюда будем бросать длины переходов
+        var map=[];
+        for (let x = this.realmap_border[0]; x < this.realmap_border[1]; x++) {
+            map[x] = [];
+            for (let y = this.realmap_border[2]; y < this.realmap_border[3]; y++) {
+                map[x][y] = -1;
             }
-            //var x = 0;
-            //var y = 0;
-            //проверяем окружные 8 клеток
-            for( y=-1;y<=1;++y)
-                for( x=-1;x<=1;++x)
-                    if(!(x==0&&y==0))
-                        //проверка на выход за пределы поля
-                        if(checkPointLimit(p[i].i+y,p[i].j+x))
-                            if(mas[p[i].i+y][p[i].j+x] ==0)
-                                //проверка на препятствия
-                                if(checkPointObstacle(p[i].i+y, p[i].j+x,p[i].i, p[i].j))
-                                    //проверка значения
-                                    if(checkPointValue (p[i].i+y,p[i].j+x,  mas[p[i].i][p[i].j]+((Math.abs(x)==Math.abs(y))?1.6:1), points))
-                                        //если надо, рисуем волны
-                                        if(showPriority && typeOfDrawing == 1)
-                                        {
-                                            var ar = new Array();
-                                            ar[0]={i:p[i].i+y, j:p[i].j+x};
-                                            delay+=10;
-                                            timer = setTimeout( function(ar ) {return function(){self.drawPointsAsynchron(ar)}}(ar), delay);
-                                        }
         }
-        //повторяем для новых клеток
-        this.checkPoints(points);
+        let p=[a];map[a[0]][a[1]]=0;
+        while(p.length>0){
+            var points = [];
+            //обходим точки
+            for (let i = 0; i < p.length; ++i) {
+                if (p[i][0] == b[0] && p[i][1] == b[1]) {
+                    points=[];
+                    break;
+                }
+                //var x = 0;
+                //var y = 0;
+                //проверяем окружные 8 клеток
+                for (let y = -1; y <= 1; ++y)
+                    for (let x = -1; x <= 1; ++x)
+                        if (!(x == 0 && y == 0))
+                            if ((this.map[p[i][0] + x][p[i][1] + y] & c)>0) {
+                                let v=map[p[i][0] + x][p[i][1] + y],
+                                    newv=map[p[i][0]][p[i][1]]+
+                                        ((Math.abs(x) == Math.abs(y)) ? 1.4 : 1);
+                                if(v<0) {
+                                    points.push([p[i][0] + x, p[i][1] + y]);
+                                }
+                                if(v<0 || v>newv){
+                                    map[p[i][0] + x][p[i][1] + y]=newv;
+                                }
+                            }
+
+            }
+            //повторяем для новых клеток
+            p=points;
+        }
+        if(map[b[0]][b[1]]<0){
+            return false;
+        } else {
+            // разворачиваем путь в обратную сторону
+            for (let y = -1; y <= 1; ++y)
+                for (let x = -1; x <= 1; ++x)
+                    if (!(x == 0 && y == 0)){
+
+                    }
+        }
+
     },
 
     diffit: function () {
