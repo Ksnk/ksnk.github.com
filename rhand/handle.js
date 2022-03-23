@@ -3,11 +3,13 @@ $(function () {
     /**
      * отложенный draw - заявка на перерисовку. Можно частить, все равно не должно тормозить
      */
-    function draw() {
+    function draw(after) {
         if (!draw._TO) {
             draw._TO = window.requestAnimationFrame(function () {
                 draw._TO = false;
                 window.rhand.draw();
+                handle(['updatectrl']);
+
             });
         }
     }
@@ -30,7 +32,7 @@ $(function () {
 
     /**
      * анимировать перемещение манипулятора
-     * @param {{x:int,y:int}[]}trace
+     * @param {{x:number,y:number}[]}trace
      */
     function play(trace) {
         let cur = 0;
@@ -137,6 +139,12 @@ $(function () {
                         } else {
                             r[name] &= ~i[0].value;
                         }
+                    } else {
+                        if (i[0].checked) {
+                            r[name] = i[0].value;
+                        } else {
+                            r[name] = null;
+                        }
                     }
                 } else if (i.is('input:text')) {
                     if (!multy) {
@@ -167,6 +175,8 @@ $(function () {
                     } else if($(this).is('input:checkbox')){
                         if(multy){
                             $(this)[v & $(this).val()?'attr':'removeAttr']("checked","checked");
+                        } else {
+                            $(this)[$(this).val()==v?'attr':'removeAttr']("checked","checked");
                         }
                     }
                 })
@@ -196,7 +206,16 @@ $(function () {
             case 'calc':
                 // расчет маршрута с точки startA
                 // до точки finA
-                play(rhand.buildtrace());
+                let trace=rhand.buildtrace();
+                play(trace);
+
+                $('#programm>tr').remove();
+                for(let i=0;i<trace.length;i++) {
+                    if(trace[i])
+                    $('#programm>tbody').append('<tr data-data="'+JSON.stringify(trace[i])+
+                        '"><td>'+rhand.norm(trace[i][0])+'</td><td>'+rhand.norm(trace[i][1])+'</td><td></td><td></td></tr>');
+                }
+
                 break;
         }
         return false; // стандартный результат - прекращение обработки события
@@ -213,6 +232,16 @@ $(function () {
         handle.event = e;
         return handle.call(this, data);
     });
+    // визуализация шагов программы
+    $('#programm').on('mouseover', function(e){
+        let data=$(e.target).parents('tr').eq(0).data('data');
+        if(data && data[0] && data[1]){
+            rhand.pointA[2] = data[0];
+            rhand.pointB[2] = data[1];
+            draw('updatectrl');
+            //handle(['updatectrl']);
+        }
+    })
 
     // реакция на pressHold событие. Непрерывная генерация событий
     var timeout = false, interval = false;

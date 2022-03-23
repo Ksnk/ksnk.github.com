@@ -11,7 +11,20 @@ span[data-handle] {
   cursor: pointer;
 }
 
-.mirrorY { transform: scale(-1, 1); }
+#programm {
+  td {
+    font-size: 0.8em;
+  }
+
+}
+
+#programm tr:hover {
+  background: #DDDDDD;
+}
+
+.mirrorY {
+  transform: scale(-1, 1);
+}
 
 .svgicon {
   display: inline-block;
@@ -22,19 +35,22 @@ span[data-handle] {
 }
 
 fieldset label.text {
-  width:12em;
+  width: 12em;
   display: inline-block;
 }
-fieldset label.text input{
-  float: right; width:10em;
+
+fieldset label.text input {
+  float: right;
+  width: 10em;
 }
+
 /**
     табуляция
  */
 .tab {
-    overflow: hidden;
-    border: 1px solid #ccc;
-    background-color: #f1f1f1;
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
 
 
   /* Style the buttons that are used to open the tab content */
@@ -58,6 +74,7 @@ fieldset label.text input{
     background-color: #ccc;
   }
 }
+
 /* Style the tab content */
 .tabcontent {
   display: none;
@@ -65,7 +82,9 @@ fieldset label.text input{
   border: 1px solid #ccc;
   border-top: none;
 }
+
 .tabcontent.active {
   display: block;
 }
+
 

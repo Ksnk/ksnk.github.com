@@ -12,6 +12,14 @@ span[data-handle] {
   cursor: pointer;
 }
 
+#programm td {
+  font-size: 0.8em;
+}
+
+#programm tr:hover {
+  background: #DDDDDD;
+}
+
 .mirrorY {
   transform: scale(-1, 1);
 }
