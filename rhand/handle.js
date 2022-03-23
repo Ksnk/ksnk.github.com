@@ -14,6 +14,15 @@ $(function () {
         }
     }
 
+    function drawTrace(){
+        $('#programm tr:not(:first)').remove();
+        for(let i=0;i<rhand.trace.length;i++) {
+            if(rhand.trace[i])
+                $('#programm tbody').append('<tr data-data="'+JSON.stringify(rhand.trace[i])+
+                    '"><td>'+rhand.tograd(rhand.norm(rhand.trace[i][0]))+'</td><td>'+rhand.tograd(rhand.norm(rhand.trace[i][1]))+'</td><td></td><td></td></tr>');
+        }
+    }
+
     /**
      * вспомогательная функция парсинга данных из атрибута разметки.
      * Удобно для ручного заполнения, работает с Реактом
@@ -116,10 +125,10 @@ $(function () {
                 break;
             case 'rotate':
                 pa = [...rhand.pointA]; pb = [...rhand.pointB];
-                (whattodo[1] > 0 ? pb : pa)[2] += Math.PI * whattodo[2] / 180;
+                (whattodo[1] > 0 ? pb : pa)[2] += rhand.torad(whattodo[2]);
                 let x = rhand.calc_silent(pa, pb);
                 if (!isNaN(x[2][0])) {
-                    window.rhand[whattodo[1] > 0 ? 'pointB' : 'pointA'][2] += Math.PI * whattodo[2] / 180;
+                    window.rhand[whattodo[1] > 0 ? 'pointB' : 'pointA'][2] += rhand.torad(whattodo[2]);
                     draw();
                 }
                 break;
@@ -150,8 +159,7 @@ $(function () {
                     if (!multy) {
                         r[name] = 0+i.val();
                         if(whattodo[1]==='grad'){
-                            if(r[name]<0)r[name]+=360;
-                            r[name]*=Math.PI/180;
+                            r[name]=rhand.torad(r[name]);
                         }
                     }
                 }
@@ -167,7 +175,7 @@ $(function () {
 
                     if($(this).is('input:text')){
                        if(h[1]=='grad'){
-                            $(this).val(180*rhand.norm(v)/Math.PI);
+                            $(this).val(rhand.tograd(v));
                         } else {
                             $(this).val(v);
                         }
@@ -206,16 +214,9 @@ $(function () {
             case 'calc':
                 // расчет маршрута с точки startA
                 // до точки finA
-                let trace=rhand.buildtrace();
-                play(trace);
-
-                $('#programm>tr').remove();
-                for(let i=0;i<trace.length;i++) {
-                    if(trace[i])
-                    $('#programm>tbody').append('<tr data-data="'+JSON.stringify(trace[i])+
-                        '"><td>'+rhand.norm(trace[i][0])+'</td><td>'+rhand.norm(trace[i][1])+'</td><td></td><td></td></tr>');
-                }
-
+                rhand.trace=rhand.buildtrace();
+                play(rhand.trace);
+                drawTrace();
                 break;
         }
         return false; // стандартный результат - прекращение обработки события
@@ -233,7 +234,8 @@ $(function () {
         return handle.call(this, data);
     });
     // визуализация шагов программы
-    $('#programm').on('mouseover', function(e){
+    let look4keys=false;
+    $('#programm').on('mouseover',function(e){
         let data=$(e.target).parents('tr').eq(0).data('data');
         if(data && data[0] && data[1]){
             rhand.pointA[2] = data[0];
@@ -241,6 +243,33 @@ $(function () {
             draw('updatectrl');
             //handle(['updatectrl']);
         }
+    });
+    $('#programm').hover(function(e){
+        look4keys=true;
+    }, function(){
+        look4keys=false;
+    })
+    $(document).on('keydown', function(e){
+        if(look4keys){
+            let move=false;
+            if(!!e.originalEvent.key){
+                if(e.originalEvent.key=='ArrowDown')
+                    move=1;
+                else if(e.originalEvent.key=='ArrowUp')
+                    move=-1;
+            }
+            if(false!==move){
+                let that=$('#programm'),parent=that.parent(),h=$('tr:eq(1)', that).height();
+                if(move>0){
+                    parent.scrollTop(parent.scrollTop()+h);
+                } else {
+                    parent.scrollTop(parent.scrollTop()-h);
+                }
+            }
+            //console.log(e);
+            return false;
+        }
+        //return false;
     })
 
     // реакция на pressHold событие. Непрерывная генерация событий
@@ -275,5 +304,6 @@ $(function () {
     handle(['load']);
     window.rhand.mapit();
     draw();
+    drawTrace();
     handle(['updatectrl']);
 })

@@ -1,8 +1,8 @@
 window.rhand = {
 
     // состояние шаговых двигателей
-    pointA: [-150, 0, Math.PI * (40 / 180)], // x,y, angle
-    pointB: [150, 0, Math.PI * (90 / 180)], // x,y, angle
+    pointA: [-150, 0, 40*Math.PI/180], // x,y, angle
+    pointB: [150, 0, 90*Math.PI/180], // x,y, angle
     // состояние тяг
     finA: [], finB: [],
     // состояние активного манипулятора
@@ -24,6 +24,8 @@ window.rhand = {
     mapcolor: 1,
     mapauto: 0,
 
+    trace:[],
+
     startA: [0, 0],
     finXY: [0, 0],
     fin_A: [0, 0],
@@ -31,7 +33,7 @@ window.rhand = {
     /**
      * механика сохранения
      */
-    store_names: ['fin_A', 'finXY', 'startA', 'pointA', 'pointB',  'mapcolor', 'mapauto'],
+    store_names: ['fin_A', 'finXY', 'startA', 'pointA', 'pointB',  'mapcolor', 'mapauto', 'trace'],
 
     serialize: function () {
         let ret = {};
@@ -61,6 +63,13 @@ window.rhand = {
         return [x[0] + this.zoompoint[0], this.screen[1] - (x[1] + this.zoompoint[1])];
     },
 
+
+    tograd: function(a){
+        return 180*this.norm(a)/Math.PI;
+    },
+    torad: function(a){
+        return this.norm(a*Math.PI/180);
+    },
     /**
      * расстояние между точками
      * @param fa
@@ -110,7 +119,6 @@ window.rhand = {
 
     /**
      * достраиваем треугольник на отрезка fa-fb. со стороны order
-     * скрытый эффект - дописываем угол наклона в первую точку
      * @param fa
      * @param fb
      * @param la
@@ -124,12 +132,12 @@ window.rhand = {
             dy = fa[1] - fb[1],
             b = this.angle(fa, fb),
             d = Math.sqrt(dx * dx + dy * dy),
-            a = Math.acos(d / (la + lb));
-        fa[2] = b + (order > 0 ? a : -a);
+            a = Math.acos(d / (la + lb)),
+            aa = b + (order > 0 ? a : -a);
         return [
-            fa[0] + la * Math.cos(fa[2]),
-            fa[1] + la * Math.sin(fa[2]),
-            fa[2]
+            fa[0] + la * Math.cos(aa),
+            fa[1] + la * Math.sin(aa),
+            aa
         ];
     },
 
@@ -375,14 +383,14 @@ window.rhand = {
                     console.log('Opps!');
                     return;
                 }
-                ret.push([pa[2], pb[2]]);
+                ret.push([fa[2], fb[2]]);
             }
         }
 
         if (o1 == 2 && o2 == 1) {
             // идем в точку перемены ноги
             filltrace.call(this, z[2], [163, 3], o1);
-            ret.push([329 * Math.PI / 180, 317 * Math.PI / 180]);//
+            ret.push([this.torad(329), this.torad(317)]);//
             filltrace.call(this, [144.79410546393675, -5.846948808652186], zz[2], o2);
         } else if (o1 == 2 && o2 == 4) {
             filltrace.call(this, z[2], [0, 305], o1);
@@ -413,8 +421,10 @@ window.rhand = {
             filltrace.call(this, [1.3934036819667739, 299.95885670410246], zz[2], o2);
 
         } else if (o1 == 4 && o2 == 2) {
+            // Идем через [0, 305]
             filltrace.call(this, z[2], [0, 305], o1);
-            ret.push([49 * Math.PI / 180, 115 * Math.PI / 180]);//
+            // сменить обе ноги
+            ret.push([this.torad(63.27), this.torad(115.64)]);//
             filltrace.call(this, [-13.02662012067897, 297.6406611234078], zz[2], o2);
         } else if (o1 == 4 && o2 == 1) {
             filltrace.call(this, z[2], [0, 305], o1);
@@ -469,12 +479,12 @@ window.rhand = {
                 aa = a;
             }
             // перебираем возможные порядки решения
-            let o1 = order[0], o2 = order[1], found = false;
+            let fa,fb,o1 = order[0], o2 = order[1], found = false;
             for (var i = 0; i < 4; i++) {
                 if (i > 1) o1 = 1 - o1;
                 if (i & 1) o2 = 1 - o2;
-                let fa = this.buildTriangle(this.pointA, aa, this.len[0], this.len[2], o1),
-                    fb = this.buildTriangle(this.pointB, aa, this.len[3], this.len[1], o2);
+                fa = this.buildTriangle(this.pointA, aa, this.len[0], this.len[2], o1);
+                fb = this.buildTriangle(this.pointB, aa, this.len[3], this.len[1], o2);
                 if (isNaN(fb[0]) || isNaN(fa[0])) continue;
                 let a = this.angle(fa, aa), b = this.angle(fb, aa);
                 console.log([o1,o2]);
@@ -492,10 +502,10 @@ window.rhand = {
 
             //console.log(z);
             if (found)
-                log.push([this.pointA[2], this.pointB[2]]);
+                log.push([fa[2], fb[2]]);
         }
-        this.pointA[2] = olda;
-        this.pointB[2] = oldb;
+       // this.pointA[2] = olda;
+       // this.pointB[2] = oldb;
         //console.log(log);
         return log;
     },
