@@ -344,7 +344,7 @@ window.rhand = {
             }
             if(trace.length>0)trace.shift();
             if(trace.length>0)trace.pop();
-            trace.unshift(a);
+            trace.unshift(a);trace[0].push(map[fin[0]][fin[1]]);
             trace.push(b);
             return trace;
         }
@@ -365,7 +365,7 @@ window.rhand = {
         pb[2] = this.fin_A[1];
         let zz = this.calc_silent(pa, pb), o2 = zz[3];
         //console.log(z,zz);
-        let ret = [[this.startA[0], this.startA[1]]];
+        let ret = [[this.startA[0], this.startA[1]]], mpoint;
 
         let maneur_points = [
             [157, 0, 8 + 2],
@@ -375,7 +375,7 @@ window.rhand = {
         ];
 
         function filltrace(a, b, o) {
-            let trace = this.checkPoints(a, b, o);
+            let trace = this.checkPoints(a, b, o);//, v=trace[0][3];
             for (var i = 1; i < trace.length; i++) {
                 let fa = this.buildTriangle(pa, trace[i], this.len[0], this.len[2], (o > 2),
                     fb = this.buildTriangle(pb, trace[i], this.len[1], this.len[3], (o == 1 || o == 4)));
@@ -386,67 +386,117 @@ window.rhand = {
                 ret.push([fa[2], fb[2]]);
             }
         }
+        function calc(a) {
+            let
+                fa = [pa[0] + this.len[0] * Math.cos(a[0]),
+                    pa[1] + this.len[0] * Math.sin(a[0])],
+                fb = [pb[0] + this.len[1] * Math.cos(a[1]),
+                    pb[1] + this.len[1] * Math.sin(a[1])];
+            return this.buildTriangle(fa, fb, this.len[2], this.len[3], 1);
+        }
 
-        if (o1 == 2 && o2 == 1) {
-            // идем в точку перемены ноги
-            filltrace.call(this, z[2], [163, 3], o1);
-            ret.push([this.torad(329), this.torad(317)]);//
-            filltrace.call(this, [144.79410546393675, -5.846948808652186], zz[2], o2);
+        if (o1 == 1 && o2 == 1) {
+            if((z[2][1]>127) === (zz[2][1]>127)) {
+                filltrace.call(this, z[2], zz[2], o1);
+            } else if (z[2][1]>127) {
+                filltrace.call(this, z[2], [0, 305], o1);
+                ret.push((mpoint = [this.torad(61.35), this.torad(115.6)]));
+                filltrace.call(this,  calc.call(this,mpoint),[152,3], 2);
+                ret.push((mpoint=[this.torad(331.4), this.torad(318.6)]));//
+                filltrace.call(this, calc.call(this,mpoint), zz[2], o1);
+            } else if (zz[2][1]>127) {
+                filltrace.call(this, z[2], [149, -1], o1);
+                ret.push((mpoint = [this.torad(333), this.torad(309)]));
+                filltrace.call(this,  calc.call(this,mpoint),[0, 305], 2);
+                ret.push((mpoint=[this.torad(62.3), this.torad(116.7)]));//
+                filltrace.call(this, calc.call(this,mpoint), zz[2], o1);
+            }
+        } else if (o1 == 1 && o2 == 2) {
+            if(z[2][1]>127) {
+                filltrace.call(this, z[2], [0, 305], o1);
+                ret.push((mpoint = [this.torad(61.35), this.torad(115.6)]));
+            } else {
+                filltrace.call(this, z[2], [148,-1], o1);
+                ret.push((mpoint = [this.torad(333.21), this.torad(299.6)]));
+            }
+            filltrace.call(this,  calc.call(this,mpoint), zz[2], o2);
+        } else if (o1 == 1 && o2 == 4) {
+            if(z[2][1]>127) {
+                filltrace.call(this, z[2], [0, 305], o1);
+                ret.push((mpoint = [this.torad(61.35), this.torad(115.6)]));
+            } else {
+                filltrace.call(this, z[2], [-148,-1], o1);
+                ret.push((mpoint = [this.torad(243.8), this.torad(206.97)]));
+            }
+            filltrace.call(this, calc.call(this,mpoint), zz[2], o2);
+        } else if (o1 == 1 && o2 == 8) {
+            if(z[2][1]>127) {
+                filltrace.call(this, z[2], [0, 305], o1);
+                ret.push((mpoint = [this.torad(64.35), this.torad(115.64)]));
+            } else {
+                filltrace.call(this, z[2], [-148,-1], o1);
+                ret.push((mpoint = [this.torad(243.8), this.torad(206.97)]));
+                filltrace.call(this, calc.call(this,mpoint), [-187,0], 4);
+                ret.push((mpoint = [this.torad(263.8), this.torad(179.6)]));
+            }
+            filltrace.call(this, calc.call(this,mpoint), zz[2], o2);
+
+        } else if (o1 == 2 && o2 == 1) {
+            // меняем 1 ногу правую
+            filltrace.call(this, z[2], [153, 3], o1);
+            ret.push((mpoint=[this.torad(329), this.torad(317)]));
+            filltrace.call(this, calc.call(this,mpoint), zz[2], o2);
         } else if (o1 == 2 && o2 == 4) {
+            // меняем 1 ногу левую
             filltrace.call(this, z[2], [0, 305], o1);
-            ret.push([65 * Math.PI / 180, 127 * Math.PI / 180]);//
-            filltrace.call(this, [1.4884354808920364, 304.25890781468934], zz[2], o2);
+            ret.push((mpoint=[this.torad(64.35), this.torad(116.7)]));//
+            filltrace.call(this, calc.call(this,mpoint), zz[2], o2);
         } else if (o1 == 2 && o2 == 8) {
             filltrace.call(this, z[2], [0, 305], o1);
-            ret.push([72 * Math.PI / 180, 106 * Math.PI / 180]);//
-            filltrace.call(this, [1.3934036819667739, 299.95885670410246], zz[2], o2);
-
-        } else if (o1 == 1 && o2 == 1) {
-            filltrace.call(this, z[2], [0, 305], o1);
-            ret.push([63 * Math.PI / 180, 125 * Math.PI / 180]);
-            filltrace.call(this, z[2], [163, 3], 4);
-            ret.push([329 * Math.PI / 180, 317 * Math.PI / 180]);//
-            filltrace.call(this, [144.79410546393675, -5.846948808652186], zz[2], o1);
-        } else if (o1 == 1 && o2 == 2) {
-            filltrace.call(this, z[2], [0, 305], o1);
-            ret.push([49 * Math.PI / 180, 115 * Math.PI / 180]);//
-            filltrace.call(this, [-13.02662012067897, 297.6406611234078], zz[2], o2);
-        } else if (o1 == 1 && o2 == 4) {
-            filltrace.call(this, z[2], [0, 305], o1);
-            ret.push([62 * Math.PI / 180, 130 * Math.PI / 180]);//
-            filltrace.call(this, [13.833508703078948, 297.7696318248984], zz[2], o2);
-        } else if (o1 == 1 && o2 == 8) {
-            filltrace.call(this, z[2], [0, 305], o1);
-            ret.push([72 * Math.PI / 180, 106 * Math.PI / 180]);//
-            filltrace.call(this, [1.3934036819667739, 299.95885670410246], zz[2], o2);
+            ret.push((mpoint=[this.torad(64.35), this.torad(115.64)]));//
+            filltrace.call(this, calc.call(this,mpoint), zz[2], o2);
 
         } else if (o1 == 4 && o2 == 2) {
             // Идем через [0, 305]
             filltrace.call(this, z[2], [0, 305], o1);
             // сменить обе ноги
-            ret.push([this.torad(63.27), this.torad(115.64)]);//
-            filltrace.call(this, [-13.02662012067897, 297.6406611234078], zz[2], o2);
+            ret.push((mpoint=[this.torad(63.27), this.torad(115.64)]));//
+            filltrace.call(this, calc.call(this,mpoint), zz[2], o2);
         } else if (o1 == 4 && o2 == 1) {
-            filltrace.call(this, z[2], [0, 305], o1);
-            ret.push([62 * Math.PI / 180, 130 * Math.PI / 180]);//
-            filltrace.call(this, [13.833508703078948, 297.7696318248984], zz[2], o2);
+            if(zz[2][1]>127) {
+                filltrace.call(this, z[2], [0, 305], o1);
+                ret.push((mpoint=[this.torad(62), this.torad(130)]));//
+            } else {
+                filltrace.call(this, z[2], [-153, 0], o1);
+                ret.push((mpoint=[this.torad(269), this.torad(208)]));//
+            }
+            filltrace.call(this, calc.call(this,mpoint), zz[2], o2);
         } else if (o1 == 4 && o2 == 8) {
             filltrace.call(this, z[2], [0, 305], o1);
-            ret.push([72 * Math.PI / 180, 106 * Math.PI / 180]);//
-            filltrace.call(this, [1.3934036819667739, 299.95885670410246], zz[2], o2);
+            ret.push((mpoint=[this.torad(66), this.torad(115)]));//
+            filltrace.call(this, calc.call(this,mpoint), zz[2], o2);
 
+        } else if (o1 == 8 && o2 == 1) {
+            if(zz[2][1]>127) {
+                filltrace.call(this, z[2], [0, 305], o1);
+                ret.push((mpoint=[this.torad(62), this.torad(130)]));//
+            } else {
+                filltrace.call(this, z[2], [187, -1], o1);
+                ret.push((mpoint=[this.torad(358), this.torad(275)]));//
+                filltrace.call(this, calc.call(this,mpoint), [153, 0], 2);
+                ret.push((mpoint=[this.torad(333), this.torad(271)]));//
+            }
+            filltrace.call(this, calc.call(this,mpoint), zz[2], o2);
         } else if (o1 == 8 && o2 == 2) { //0,305 - 69.37-60, 114.32-117
             filltrace.call(this, z[2], [0, 305], o1);
-            ret.push([60 * Math.PI / 180, 114.32 * Math.PI / 180]);//
-            filltrace.call(this, [-13.02662012067897, 297.6406611234078], zz[2], o2);
-        } else if (o1 == 8 && o2 == 1) {
+            ret.push((mpoint=[this.torad(60), this.torad(114.32)]));//
+            filltrace.call(this, calc.call(this,mpoint), zz[2], o2);
+        } else if (o1 == 8 && o2 == 4) {
             filltrace.call(this, z[2], [0, 305], o1);
-            ret.push([62 * Math.PI / 180, 130 * Math.PI / 180]);//
-            filltrace.call(this, [6.85, 301.39], zz[2], o2);
-        } else if (o1 == 8 && o2 == 8) {
-            filltrace.call(this, z[2], [0, 305], o1);
-            ret.push([72 * Math.PI / 180, 106 * Math.PI / 180]);//
-            filltrace.call(this, [1.3934036819667739, 299.95885670410246], zz[2], o2);
+            ret.push((mpoint=[this.torad(66), this.torad(116.32)]));//
+            filltrace.call(this, calc.call(this,mpoint), zz[2], o2);
+        } else {
+            filltrace.call(this, z[2], zz[2], o1);
         }
         console.log(ret);
         return ret;
