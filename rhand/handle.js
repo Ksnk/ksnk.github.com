@@ -3,14 +3,24 @@ $(function () {
     /**
      * отложенный draw - заявка на перерисовку. Можно частить, все равно не должно тормозить
      */
-    function draw(after) {
+    function draw() {
         if (!draw._TO) {
             draw._TO = window.requestAnimationFrame(function () {
                 draw._TO = false;
                 window.rhand.draw();
-                handle(['updatectrl']);
-
+                updatectrl();
             });
+        }
+    }
+    /**
+     * отложенный updatectrl
+     */
+    function updatectrl() {
+        if (!updatectrl._TO) {
+            updatectrl._TO = setTimeout(function () {
+                updatectrl._TO = false;
+                handle(['updatectrl']);
+            },100);
         }
     }
 
@@ -50,7 +60,7 @@ $(function () {
             if (cur >= trace.length) {
                 clearInterval(play.i);
                 play.i = false;
-                handle(['updatectrl']);
+                updatectrl();
                 return;
             }
             rhand.pointA[2] = trace[cur][0];
@@ -121,7 +131,7 @@ $(function () {
                 } else {
                     _set(whattodo[2],[rhand.finC[0],rhand.finC[1]]);
                 }
-                handle(['updatectrl']);
+                updatectrl();
                 break;
             case 'rotate':
                 pa = [...rhand.pointA]; pb = [...rhand.pointB];
@@ -240,8 +250,7 @@ $(function () {
         if(data && data[0] && data[1]){
             rhand.pointA[2] = data[0];
             rhand.pointB[2] = data[1];
-            draw('updatectrl');
-            //handle(['updatectrl']);
+            draw();
         }
     });
     $('#programm').hover(function(e){
@@ -285,12 +294,12 @@ $(function () {
                 }, 50);
             }, 300);
             handle.call(that, data);
-            handle(['updatectrl']);
+            updatectrl();
             // генерируем
         } else {
             clearTimeout(timeout);
             clearInterval(interval);
-            handle(['updatectrl']);
+            updatectrl();
             // прекращаем
         }
         return false;
@@ -305,5 +314,4 @@ $(function () {
     window.rhand.mapit();
     draw();
     drawTrace();
-    handle(['updatectrl']);
 })
