@@ -478,10 +478,12 @@ window.rhand = {
                     return;
                 }
                 if(!!olda){
-                    if(fa[2]>Math.PI && olda[0]<Math.PI) olda[0]+=2*Math.PI;
-                    if(fa[2]<Math.PI && olda[0]>Math.PI) olda[0]-=2*Math.PI;
-                    if(fb[2]>Math.PI && olda[1]<Math.PI) olda[1]+=2*Math.PI;
-                    if(fb[2]<Math.PI && olda[1]>Math.PI) olda[1]-=2*Math.PI;
+                    if(Math.abs(fa[2]-olda[0])>Math.PI) {
+                        olda[0]+=(fa[2]>olda[0]?2:2)*Math.PI;
+                    }
+                    if(Math.abs(fb[2]-olda[1])>Math.PI) {
+                        olda[1]+=(fb[2]>olda[1]?2:2)*Math.PI;
+                    }
                     ret.push([(fa[2]+olda[0])/2, (fb[2]+olda[1])/2]);
                     olda=false;
                 }
