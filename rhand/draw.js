@@ -272,7 +272,7 @@ window.rhand = {
                 }
             }
         }
-        // отметить все двойные точки слева 2048 - можно рулить ногой B - _*
+        // отметить все двойные точки слева 2048 - можно рулить ногой A - _*
         for (let y = this.realmap_border[2]; y < this.realmap_border[3]; y++) {
             for (let x = this.realmap_border[0]; x < this.realmap_border[1]; x++) {
                 if(this.map[x][y]!=0 && this.map[x][y]!=8) {
@@ -283,7 +283,7 @@ window.rhand = {
                 }
             }
         }
-        // отметить все двойные точки справа 2048 - можно рулить ногой A - *_
+        // отметить все двойные точки справа 2048 - можно рулить ногой B - *_
         for (let y = this.realmap_border[2]; y < this.realmap_border[3]; y++) {
             for (let x = this.realmap_border[1]-1; x > this.realmap_border[0]; x--) {
                 if(this.map[x][y]!=0 && this.map[x][y]!=8) {

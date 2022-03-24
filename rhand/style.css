@@ -16,8 +16,12 @@ span[data-handle] {
   font-size: 0.8em;
 }
 
-#programm tr:hover {
+#programm tr.active {
   background: #DDDDDD;
+}
+
+#programm tr:hover {
+  background: #f3f3f3;
 }
 
 .mirrorY {
