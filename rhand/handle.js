@@ -245,18 +245,21 @@ $(function () {
     });
     // визуализация шагов программы
     let look4keys=false;
-    $('#programm').on('mouseover click',function(e){
-        let x=$('tr.active',this);
-        if(e.type=='mouseover' && x.length>0 && look4keys) return;
-        let tr=$(e.target).parents('tr').eq(0),
-            data=tr.data('data');
-        x.not(tr).removeClass('active');
-        tr.addClass('active');
+
+    function show(tr){
+        let data=tr.data('data');
         if(data && data[0] && data[1]){
             rhand.pointA[2] = data[0];
             rhand.pointB[2] = data[1];
             draw();
         }
+    }
+    $('#programm').on('click',function(e){
+        let x=$('tr.active',this),
+            tr=$(e.target).parents('tr').eq(0);
+        x.not(tr).removeClass('active');
+        tr.addClass('active');
+        show(tr);
     });
     $('#programm').hover(function(e){
         look4keys=true;
@@ -283,12 +286,7 @@ $(function () {
                 if(move>0){ y=x.next();} else {y=x.prev();}
                 if(y.length>0){
                     x.removeClass('active');y.addClass('active');
-                    data=y.data('data');
-                    if(data && data[0] && data[1]){
-                        rhand.pointA[2] = data[0];
-                        rhand.pointB[2] = data[1];
-                        draw();
-                    }
+                    show(y);
                 }
             }
             //console.log(e);

@@ -414,8 +414,8 @@ window.rhand = {
                 })) {
                     break;
                 }
-                if(minpoint[0]==30 && minpoint[1]==0) continue;
-                if(minpoint[0]==-30 && minpoint[1]==0) continue;
+                if(maxpoint[0]==30 && maxpoint[1]==0) continue;
+                if(maxpoint[0]==-30 && maxpoint[1]==0) continue;
                 trace.unshift([5*maxpoint[0],5*maxpoint[1],maxpoint[2]]);
             }
 
