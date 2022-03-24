@@ -14,7 +14,7 @@ window.rhand = {
     zoom: 1,
     // габариты окна
     screen: [660, 760],
-    // точка центра внимания
+    // точка центра 0x0
     zoompoint: [180 + 150, 440],
 
     realmap_border: [-38, 39, -51, 63],
@@ -63,13 +63,18 @@ window.rhand = {
         return [x[0] + this.zoompoint[0], this.screen[1] - (x[1] + this.zoompoint[1])];
     },
 
-
+    /**
+     * радианы в градусы, градусы в радианы
+     * @param a
+     * @returns {number}
+     */
     tograd: function(a){
         return 180*this.norm(a)/Math.PI;
     },
     torad: function(a){
         return this.norm(a*Math.PI/180);
     },
+
     /**
      * расстояние между точками
      * @param fa
@@ -82,7 +87,7 @@ window.rhand = {
     },
 
     /**
-     * нормировать значение угла
+     * нормировать значение угла -> 0..2*PI
      * @param b
      * @returns {*}
      */
@@ -153,7 +158,8 @@ window.rhand = {
                 pa[1] + this.len[0] * Math.sin(pa[2])],
             fb = [pb[0] + this.len[1] * Math.cos(pb[2]),
                 pb[1] + this.len[1] * Math.sin(pb[2])],
-            x = this.buildTriangle(fa, fb, this.len[2], this.len[3], 1), o1 = 0, o2 = 0;
+            x = this.buildTriangle(fa, fb, this.len[2], this.len[3], 1),
+            o1 = 0, o2 = 0;
         // расчет положения активной точки
         let xx = this.buildTriangle(x, pa, this.len[2], this.len[0], o1),
             yy = this.buildTriangle(x, pb, this.len[3], this.len[1], o2);

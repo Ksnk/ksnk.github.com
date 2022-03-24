@@ -4,7 +4,7 @@ $(function () {
      * отложенный draw - заявка на перерисовку. Можно частить, все равно не должно тормозить
      */
     function draw() {
-        if (!draw._TO) {
+        if (!draw._TO && !draw._internal) {
             draw._TO = window.requestAnimationFrame(function () {
                 draw._TO = false;
                 window.rhand.draw();
@@ -19,7 +19,9 @@ $(function () {
         if (!updatectrl._TO) {
             updatectrl._TO = setTimeout(function () {
                 updatectrl._TO = false;
+                draw._internal=true;
                 handle(['updatectrl']);
+                draw._internal=false;
             },100);
         }
     }
@@ -238,6 +240,7 @@ $(function () {
         if (that.is('select') && e.type !== 'change') return;
         if ($(e.target).is('form') && e.type !== 'submit') return;
         if (that.is('.pressHold')) return;
+        // if (e.type !== 'click') return;
         // if (e.type !== 'click') return;
         var data = parseData(that.attr('data-handle'));
         handle.event = e;
