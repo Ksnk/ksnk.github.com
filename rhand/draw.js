@@ -272,62 +272,139 @@ window.rhand = {
                 }
             }
         }
+        // отметить все двойные точки слева
+        for (let y = this.realmap_border[2]; y < this.realmap_border[3]; y++) {
+            for (let x = this.realmap_border[0]; x < this.realmap_border[1]; x++) {
+                if(this.map[x][y]!=0 && this.map[x][y]!=8) {
+                    this.map[x][y] |= 1024;
+                }
+                if(this.map[x][y]!=0){
+                    break;
+                }
+            }
+        }
+        // отметить все двойные точки справа
+        for (let y = this.realmap_border[2]; y < this.realmap_border[3]; y++) {
+            for (let x = this.realmap_border[1]-1; x > this.realmap_border[0]; x--) {
+                if(this.map[x][y]!=0 && this.map[x][y]!=8) {
+                    this.map[x][y] |= 1024;
+                }
+                if(this.map[x][y]!=0){
+                    break;
+                }
+            }
+        }
+        // отметить ocu
+        this.map[-30][0] |= 1024;
+        this.map[30][0] |= 1024;
+
     },
 
     /**
      * построить маршрут от точки a до точки b с порядком с
      * @param {any[]} a
+     * @param {number} o1
      * @param {any[]} b
-     * @param {number} c
+     * @param {number} o2
      */
-    checkPoints: function (a, b, c) {
+    checkPoints: function (a, o1 , b, o2) {
         // сюда будем бросать длины переходов
-        var map = [];
+        var map = [], trace=[], minpoint=[],minlength=100000,finish=false;
         for (let x = this.realmap_border[0]; x < this.realmap_border[1]; x++) {
             map[x] = [];
             for (let y = this.realmap_border[2]; y < this.realmap_border[3]; y++) {
-                map[x][y] = -1;
+                map[x][y] = [];
+                map[x][y][1]=0;
+                map[x][y][2]=0;
+                map[x][y][4]=0;
+                map[x][y][8]=0;
             }
         }
-        let p = [[Math.round(a[0] / 5), Math.round(a[1] / 5)]],
-            fin = [Math.round(b[0] / 5), Math.round(b[1] / 5)]
-        map[p[0][0]][p[0][1]] = 0;
-        while (p.length > 0) {
+
+        function traceroll(xx,yy,c){
+            let min, v = map[xx][yy][c];
+            while (v > 1) {
+                trace.unshift([xx * 5, yy * 5],c);
+                min = false;
+                for (let y = -1; y <= 1; ++y) for (let x = -1; x <= 1; ++x) if (!(x == 0 && y == 0)) {
+                    if (v > map[xx + x][yy + y] && map[xx + x][yy + y] >= 0) {
+                        v = map[xx + x][yy + y];
+                        min = [xx + x, yy + y];
+                    }
+                }
+                if (!min) {
+                    return false;
+                }
+                p = min;
+            }
+        }
+
+        /**
+         *
+         * @param oldv
+         * @param x
+         * @param y
+         * @param c
+         * @param disp
+         * @returns {boolean}
+         */
+        function check(oldv,x,y,c, disp){
+            let v = map[x][y][c],
+                newv = oldv +
+                    (oldv < 0 ? -1 : 1) * disp;
+            if (v === 0 || (oldv < 0 ? v < newv : v > newv)) {
+                map[x][y][c] = newv;
+                points.push([x, y, c]);
+            }
+            if (v!==0 && (oldv < 0) === (v > 0)) {
+                let newmin=Math.abs(newv-v);
+                if(minlength>newmin){
+                    minpoint=[x,y,c];
+                    minlength=newmin;
+                }
+                // встретили точку противоположного знака - финиш
+                return true;
+            }
+            return false;
+        }
+
+        let p = [[Math.round(a[0] / 5), Math.round(a[1] / 5),o1],
+                [Math.round(b[0] / 5), Math.round(b[1] / 5),o2]];
+        map[p[0][0]][p[0][1]][p[0][2]] = 1;
+        map[p[1][0]][p[1][1]][p[1][2]] = -1;
+        while (!finish && p.length > 0) {
             var points = [];
             //обходим точки
             for (let i = 0; i < p.length; ++i) {
-                if (p[i][0] == fin[0] && p[i][1] == fin[1]) {
-                    points = [];
-                    break;
-                }
-                //var x = 0;
-                //var y = 0;
-                //проверяем окружные 8 клеток
-                for (let y = -1; y <= 1; ++y)
+                // 8 соседних клеток
+                let oldv=map[p[i][0]][p[i][1]][p[i][2]];
+                for (let y = -1; y <= 1; ++y) {
                     for (let x = -1; x <= 1; ++x)
                         if (!(x == 0 && y == 0))
                             if (p[i][0] + x > this.realmap_border[0] && p[i][0] + x < this.realmap_border[1]
                                 && p[i][1] + y > this.realmap_border[2] && p[i][1] + y < this.realmap_border[3]
-                                && (this.map[p[i][0] + x][p[i][1] + y] & c) > 0) {
-                                let v = map[p[i][0] + x][p[i][1] + y],
-                                    newv = map[p[i][0]][p[i][1]] +
-                                        ((Math.abs(x) == Math.abs(y)) ? 1.4 : 1);
-                                if (v < 0) {
-                                    points.push([p[i][0] + x, p[i][1] + y]);
-                                }
-                                if (v < 0 || v > newv) {
-                                    map[p[i][0] + x][p[i][1] + y] = newv;
-                                }
+                                && (this.map[p[i][0] + x][p[i][1] + y] & p[i][2]) > 0) {
+                                finish=check(oldv,p[i][0] + x,p[i][1] + y,p[i][2],(Math.abs(x) == Math.abs(y)) ? 1.4 : 1);
                             }
+                }
+                // проверка точек перехода
+                if((1024 & this.map[p[i][0] ][p[i][1]]) > 0){
+                    for(let ii=0;ii<4;ii++) {
+                        let c = 1 << ii;
+                        if (c != p[i][2] && (c & this.map[p[i][0]][p[i][1]]) > 0) {
+                            finish=check(oldv, p[i][0], p[i][1], c, 1);
+                        }
+                    }
+                }
             }
             //повторяем для новых клеток
             p = points;
         }
-        if (map[fin[0]][fin[1]] < 0) {
+        if (p.length==0) {
             return false;
         } else {
             // разворачиваем путь в обратную сторону
-            let min, v = map[fin[0]][fin[1]], p = [fin[0], fin[1]], trace = [];
+            let min, v = map[fin[0]][fin[1]], p = [fin[0], fin[1]];
             while (v > 0) {
                 trace.unshift([p[0] * 5, p[1] * 5]);
                 min = false;
@@ -367,18 +444,11 @@ window.rhand = {
         //console.log(z,zz);
         let ret = [[this.startA[0], this.startA[1]]], mpoint;
 
-        let maneur_points = [
-            [157, 0, 8 + 2],
-            [147, 0, 1 + 4],
-            [-157, 0, 8 + 4],
-            [-147, 0, 1 + 2]
-        ];
-
-        function filltrace(a, b, o) {
-            let trace = this.checkPoints(a, b, o);//, v=trace[0][3];
+        function filltrace(a,o1, b, o2) {
+            let trace = this.checkPoints(a, o1, b, o2);//, v=trace[0][3];
             for (var i = 1; i < trace.length; i++) {
-                let fa = this.buildTriangle(pa, trace[i], this.len[0], this.len[2], (o > 2),
-                    fb = this.buildTriangle(pb, trace[i], this.len[1], this.len[3], (o == 1 || o == 4)));
+                let fa = this.buildTriangle(pa, trace[i], this.len[0], this.len[2], (trace[i][2] > 2),
+                    fb = this.buildTriangle(pb, trace[i], this.len[1], this.len[3], (trace[i][2] == 1 || trace[i][2] == 4)));
                 if (isNaN(fb[0]) || isNaN(fa[0])) {
                     console.log('Opps!');
                     return;
@@ -394,8 +464,9 @@ window.rhand = {
                     pb[1] + this.len[1] * Math.sin(a[1])];
             return this.buildTriangle(fa, fb, this.len[2], this.len[3], 1);
         }
+        filltrace.call(this, z[2],o1, zz[2], o2);
 
-        if (o1 == 1 && o2 == 1) {
+ /*       if (o1 == 1 && o2 == 1) {
             if((z[2][1]>127) === (zz[2][1]>127)) {
                 filltrace.call(this, z[2], zz[2], o1);
             } else if (z[2][1]>127) {
@@ -497,7 +568,7 @@ window.rhand = {
             filltrace.call(this, calc.call(this,mpoint), zz[2], o2);
         } else {
             filltrace.call(this, z[2], zz[2], o1);
-        }
+        }*/
         console.log(ret);
         return ret;
     },
