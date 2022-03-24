@@ -309,7 +309,7 @@ window.rhand = {
      */
     checkPoints: function (a, o1 , b, o2) {
         // сюда будем бросать длины переходов
-        var map = [], trace=[], minpoint=[],minlength=100000,finish=false;
+        var map = [], trace=[], minpoint=false,minlength=100000,finish=false;
         for (let x = this.realmap_border[0]; x < this.realmap_border[1]; x++) {
             map[x] = [];
             for (let y = this.realmap_border[2]; y < this.realmap_border[3]; y++) {
@@ -339,90 +339,100 @@ window.rhand = {
             }
         }
 
-        /**
-         *
-         * @param oldv
-         * @param x
-         * @param y
-         * @param c
-         * @param disp
-         * @returns {boolean}
-         */
-        function check(oldv,x,y,c, disp){
-            let v = map[x][y][c],
-                newv = oldv +
-                    (oldv < 0 ? -1 : 1) * disp;
-            if (v === 0 || (oldv < 0 ? v < newv : v > newv)) {
-                map[x][y][c] = newv;
-                points.push([x, y, c]);
+        // посмотреть вокруг точки
+        function lookaround(xx,yy,cc, callback){
+            for (let y = -1; y <= 1; ++y) {
+                for (let x = -1; x <= 1; ++x)
+                    if (!(x == 0 && y == 0))
+                        if (xx + x > this.realmap_border[0] && xx + x < this.realmap_border[1]
+                            && yy + y > this.realmap_border[2] && yy + y < this.realmap_border[3]
+                            && (this.map[xx + x][yy + y] & cc) > 0) {
+                            callback.call(this,xx + x,yy + y,cc,(Math.abs(x) == Math.abs(y)) ? 1.4 : 1);
+                        }
             }
-            if (v!==0 && (oldv < 0) === (v > 0)) {
-                let newmin=Math.abs(newv-v);
-                if(minlength>newmin){
-                    minpoint=[x,y,c];
-                    minlength=newmin;
+            // проверка точек перехода
+            if((1024 & this.map[xx][yy]) > 0){
+                for(let ii=0;ii<4;ii++) {
+                    let c = 1 << ii;
+                    if (c != cc && (c & this.map[xx][yy]) > 0) {
+                        callback.call(this,xx, yy, c, 1);
+                    }
                 }
-                // встретили точку противоположного знака - финиш
-                return true;
             }
-            return false;
         }
 
         let p = [[Math.round(a[0] / 5), Math.round(a[1] / 5),o1],
                 [Math.round(b[0] / 5), Math.round(b[1] / 5),o2]];
         map[p[0][0]][p[0][1]][p[0][2]] = 1;
         map[p[1][0]][p[1][1]][p[1][2]] = -1;
+        let cnt=0;
+        //p=[p[0]];
         while (!finish && p.length > 0) {
             var points = [];
             //обходим точки
             for (let i = 0; i < p.length; ++i) {
                 // 8 соседних клеток
                 let oldv=map[p[i][0]][p[i][1]][p[i][2]];
-                for (let y = -1; y <= 1; ++y) {
-                    for (let x = -1; x <= 1; ++x)
-                        if (!(x == 0 && y == 0))
-                            if (p[i][0] + x > this.realmap_border[0] && p[i][0] + x < this.realmap_border[1]
-                                && p[i][1] + y > this.realmap_border[2] && p[i][1] + y < this.realmap_border[3]
-                                && (this.map[p[i][0] + x][p[i][1] + y] & p[i][2]) > 0) {
-                                finish=check(oldv,p[i][0] + x,p[i][1] + y,p[i][2],(Math.abs(x) == Math.abs(y)) ? 1.4 : 1);
-                            }
-                }
-                // проверка точек перехода
-                if((1024 & this.map[p[i][0] ][p[i][1]]) > 0){
-                    for(let ii=0;ii<4;ii++) {
-                        let c = 1 << ii;
-                        if (c != p[i][2] && (c & this.map[p[i][0]][p[i][1]]) > 0) {
-                            finish=check(oldv, p[i][0], p[i][1], c, 1);
-                        }
+                lookaround.call(this, p[i][0],p[i][1],p[i][2], function(x,y,c, disp){
+                    let v = map[x][y][c],
+                        newv = oldv +
+                            (oldv < 0 ? -1 : 1) * disp;
+                    if (v === 0 || (oldv < 0 ? v < newv : v > newv)) {
+                        map[x][y][c] = newv;
+                        points.push([x, y, c]);
                     }
-                }
+                    if (v!==0 && (oldv < 0) === (v > 0)) {
+                        let newmin=Math.abs(newv-v);
+                        if(minlength>newmin){
+                            minpoint=[x,y,c];
+                            minlength=newmin;
+                        }
+                        // встретили точку противоположного знака - финиш
+                        finish=true;
+                    }
+                })
             }
             //повторяем для новых клеток
-            p = points;
+            p = points;console.log(cnt++,points.length); // 400 max
         }
-        if (p.length==0) {
+        if (minpoint===false) {
             return false;
         } else {
-            // разворачиваем путь в обратную сторону
-            let min, v = map[fin[0]][fin[1]], p = [fin[0], fin[1]];
-            while (v > 0) {
-                trace.unshift([p[0] * 5, p[1] * 5]);
-                min = false;
-                for (let y = -1; y <= 1; ++y) for (let x = -1; x <= 1; ++x) if (!(x == 0 && y == 0)) {
-                    if (v > map[p[0] + x][p[1] + y] && map[p[0] + x][p[1] + y] >= 0) {
-                        v = map[p[0] + x][p[1] + y];
-                        min = [p[0] + x, p[1] + y];
+            let v=map[minpoint[0]][minpoint[1]][minpoint[2]];
+            if(v>0){
+                // сворачиваем трассу
+                let min=1000000,min_pt=minpoint;
+                while(min!=1) {
+                    lookaround.call(this, min_pt[0], min_pt[1], min_pt[2], function (x, y, c, disp) {
+                        if (0 < map[x][y][c] && min > map[x][y][c]) {
+                            min = map[x][y][c];
+                            min_pt = [x, y, c];
+                        }
+                    });
+                    trace.unshift([5*min_pt[0],5*min_pt[1],min_pt[2]]);
+                }
+                //ищем минимальное отрицательное
+                min=-1000000;min_pt=[];
+                lookaround.call(this, minpoint[0], minpoint[1], minpoint[2], function(x,y,c, disp){
+                    if(0>map[x][y][c] && min<map[x][y][c]){
+                        min=map[x][y][c];
+                        min_pt=[x,y,c];
                     }
+                });
+                min=-1000000;
+                while(min!=-1) {
+                    lookaround.call(this, min_pt[0], min_pt[1], min_pt[2], function (x, y, c, disp) {
+                        if (0 > map[x][y][c] && min < map[x][y][c]) {
+                            min = map[x][y][c];
+                            min_pt = [x, y, c];
+                        }
+                    });
+                    trace.push([5*min_pt[0],5*min_pt[1],min_pt[2]]);
                 }
-                if (!min) {
-                    return false;
-                }
-                p = min;
             }
             if(trace.length>0)trace.shift();
             if(trace.length>0)trace.pop();
-            trace.unshift(a);trace[0].push(map[fin[0]][fin[1]]);
-            trace.push(b);
+            trace.unshift(a.push(o1));trace.push(b.push(o2));
             return trace;
         }
     },
