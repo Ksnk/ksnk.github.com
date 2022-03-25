@@ -1,8 +1,8 @@
 window.rhand = {
 
     // состояние шаговых двигателей
-    pointA: [-150, 0, 40*Math.PI/180], // x,y, angle
-    pointB: [150, 0, 90*Math.PI/180], // x,y, angle
+    pointA: [-150, 0, 40 * Math.PI / 180], // x,y, angle
+    pointB: [150, 0, 90 * Math.PI / 180], // x,y, angle
     // состояние тяг
     finA: [], finB: [],
     // состояние активного манипулятора
@@ -24,7 +24,7 @@ window.rhand = {
     mapcolor: 1,
     mapauto: 0,
 
-    trace:[],
+    trace: [],
 
     startA: [0, 0],
     finXY: [0, 0],
@@ -33,7 +33,7 @@ window.rhand = {
     /**
      * механика сохранения
      */
-    store_names: ['fin_A', 'finXY', 'startA', 'pointA', 'pointB',  'mapcolor', 'mapauto', 'trace'],
+    store_names: ['fin_A', 'finXY', 'startA', 'pointA', 'pointB', 'mapcolor', 'mapauto', 'trace'],
 
     serialize: function () {
         let ret = {};
@@ -68,11 +68,11 @@ window.rhand = {
      * @param a
      * @returns {number}
      */
-    tograd: function(a){
-        return 180*this.norm(a)/Math.PI;
+    tograd: function (a) {
+        return 180 * this.norm(a) / Math.PI;
     },
-    torad: function(a){
-        return this.norm(a*Math.PI/180);
+    torad: function (a) {
+        return this.norm(a * Math.PI / 180);
     },
 
     /**
@@ -124,12 +124,12 @@ window.rhand = {
 
     /**
      * достраиваем треугольник на отрезка fa-fb. со стороны order
-     * @param fa
-     * @param fb
-     * @param la
-     * @param lb
-     * @param order
-     * @returns {*[]}
+     * @param {number[]}fa
+     * @param {number[]}fb
+     * @param {number} la
+     * @param {number} lb
+     * @param {number} order
+     * @returns {*[]} -x,y,a -  x,y координаты достраиваемой вершины, а - угол треугольника при вершине fa
      */
     buildTriangle: function (fa, fb, la, lb, order) {
         let
@@ -150,7 +150,7 @@ window.rhand = {
      * вычисление положения манипулятора по состоянию активных тяг
      * @param {*[]} pa - стартовые координаты и угол первого двигателя
      * @param {*[]} pb - стартовые координаты и угол второго двигателя
-     * @returns {[*[], *[], *[]]}
+     * @returns {[*[], *[], *[], number]} 0- fa,1- fb - точки пассивных осей; 3-координата АЭ, 4 - порядок манипулятора
      */
     calc_silent: function (pa, pb) {
         let
@@ -220,8 +220,8 @@ window.rhand = {
         let m, c, colormap = [];
 
         if (this.mapcolor > 0 || this.mapauto) {
-            let mapcolor=this.mapcolor ;
-            if(this.mapauto)mapcolor |=x[3];
+            let mapcolor = this.mapcolor;
+            if (this.mapauto) mapcolor |= x[3];
             for (let x = this.realmap_border[0]; x < this.realmap_border[1]; x++) for (let y = this.realmap_border[2]; y < this.realmap_border[3]; y++) {
                 if ((m = (this.map[x][y] & mapcolor)) > 0) {
                     if (!!(c = colormap[m])) {
@@ -265,7 +265,7 @@ window.rhand = {
 
                 let z = [5 * x, 5 * y], o1 = 1, o2 = 0;
                 for (var i = 0; i < 4; i++) {
-                    if (i == 2) o1 = 1 - o1;
+                    if (i === 2) o1 = 1 - o1;
                     if (i & 1) o2 = 1 - o2;
                     let fa = this.buildTriangle(pa, z, this.len[0], this.len[2], o1),
                         fb = this.buildTriangle(pb, z, this.len[1], this.len[3], 1 - o2);
@@ -278,91 +278,92 @@ window.rhand = {
                 }
             }
         }
-        // отметить все двойные точки слева 2048 - можно рулить ногой A - _*
+        // отметить все двойные точки слева; 2048 - можно рулить ногой A - _*
         for (let y = this.realmap_border[2]; y < this.realmap_border[3]; y++) {
             for (let x = this.realmap_border[0]; x < this.realmap_border[1]; x++) {
-                if(this.map[x][y]!=0 && this.map[x][y]!=8) {
+                if (this.map[x][y] != 0 && this.map[x][y] != 8) {
                     this.map[x][y] |= 2048;
                 }
-                if(this.map[x][y]!=0){
+                if (this.map[x][y] != 0) {
                     break;
                 }
             }
         }
-        // отметить все двойные точки справа 2048 - можно рулить ногой B - *_
+        // отметить все двойные точки справа; 1024 - можно рулить ногой B - *_
         for (let y = this.realmap_border[2]; y < this.realmap_border[3]; y++) {
-            for (let x = this.realmap_border[1]-1; x > this.realmap_border[0]; x--) {
-                if(this.map[x][y]!=0 && this.map[x][y]!=8) {
+            for (let x = this.realmap_border[1] - 1; x > this.realmap_border[0]; x--) {
+                if (this.map[x][y] != 0 && this.map[x][y] != 8) {
                     this.map[x][y] |= 1024;
                 }
-                if(this.map[x][y]!=0){
+                if (this.map[x][y] != 0) {
                     break;
                 }
             }
         }
         // отметить ocu
-        this.map[-30][0] |= 1024+15;
-        this.map[30][0] |= 2048+15;
+        this.map[-30][0] |= 1024 + 15;
+        this.map[30][0] |= 2048 + 15;
 
     },
 
     /**
      * построить маршрут от точки a до точки b с порядком с
+     * волновой алгоритм
      * @param {any[]} a
      * @param {number} o1
      * @param {any[]} b
      * @param {number} o2
      */
-    checkPoints: function (a, o1 , b, o2) {
+    checkPoints: function (a, o1, b, o2) {
         // сюда будем бросать длины переходов
-        var map = [], trace=[], minpoint=false,minlength=100000,finish=false;
+        var map = [], trace = [], minpoint = false, minlength = 100000, finish = false;
         for (let x = this.realmap_border[0]; x < this.realmap_border[1]; x++) {
             map[x] = [];
             for (let y = this.realmap_border[2]; y < this.realmap_border[3]; y++) {
                 map[x][y] = [];
-                map[x][y][1]=0;
-                map[x][y][2]=0;
-                map[x][y][4]=0;
-                map[x][y][8]=0;
+                map[x][y][1] = 0;
+                map[x][y][2] = 0;
+                map[x][y][4] = 0;
+                map[x][y][8] = 0;
             }
         }
 
         // посмотреть вокруг точки
-        function lookaround(xx,yy,cc, callback){
-            let res=false;
+        function lookaround(xx, yy, cc, callback) {
+            let res = false;
             for (let y = -1; y <= 1; ++y) {
                 for (let x = -1; x <= 1; ++x)
                     if (!(x == 0 && y == 0))
                         if (xx + x > this.realmap_border[0] && xx + x < this.realmap_border[1]
                             && yy + y > this.realmap_border[2] && yy + y < this.realmap_border[3]
                             && (this.map[xx + x][yy + y] & cc) > 0) {
-                            res |= callback.call(this,xx + x,yy + y,cc,(Math.abs(x) == Math.abs(y)) ? 1.4 : 1);
+                            res |= callback.call(this, xx + x, yy + y, cc, (Math.abs(x) == Math.abs(y)) ? 1.4 : 1);
                         }
             }
             // проверка точек перехода
             // проверка точек перехода
-            if((1024 & this.map[xx][yy]) > 0){
-                res |= callback.call(this,xx, yy, (cc==1?4:(cc==2?8:(cc==4?1:2))), 1);
+            if ((1024 & this.map[xx][yy]) > 0) {
+                res |= callback.call(this, xx, yy, (cc == 1 ? 4 : (cc == 2 ? 8 : (cc == 4 ? 1 : 2))), 1);
             }
-            if((2048 & this.map[xx][yy]) > 0){
-                res |= callback.call(this,xx, yy, (cc==1?2:(cc==2?1:(cc==4?8:4))), 1);
+            if ((2048 & this.map[xx][yy]) > 0) {
+                res |= callback.call(this, xx, yy, (cc == 1 ? 2 : (cc == 2 ? 1 : (cc == 4 ? 8 : 4))), 1);
             }
             return res;
         }
 
-        let p = [[Math.round(a[0] / 5), Math.round(a[1] / 5),o1],
-                [Math.round(b[0] / 5), Math.round(b[1] / 5),o2]];
+        let p = [[Math.round(a[0] / 5), Math.round(a[1] / 5), o1],
+            [Math.round(b[0] / 5), Math.round(b[1] / 5), o2]];
         map[p[0][0]][p[0][1]][p[0][2]] = 1;
         map[p[1][0]][p[1][1]][p[1][2]] = -1;
-        let cnt=0;
+        let cnt = 0;
         //p=[p[0]];
         while (!finish && p.length > 0) {
             var points = [];
             //обходим точки
             for (let i = 0; i < p.length; ++i) {
                 // 8 соседних клеток
-                let oldv=map[p[i][0]][p[i][1]][p[i][2]];
-                lookaround.call(this, p[i][0],p[i][1],p[i][2], function(x,y,c, disp){
+                let oldv = map[p[i][0]][p[i][1]][p[i][2]];
+                lookaround.call(this, p[i][0], p[i][1], p[i][2], function (x, y, c, disp) {
                     let v = map[x][y][c],
                         newv = oldv +
                             (oldv < 0 ? -1 : 1) * disp;
@@ -370,48 +371,48 @@ window.rhand = {
                         map[x][y][c] = newv;
                         points.push([x, y, c]);
                     }
-                    if (v!==0 && (oldv < 0) === (v > 0)) {
-                        let newmin=Math.abs(newv-v);
-                        if(minlength>newmin){
-                            minpoint=[x,y,c];
-                            minlength=newmin;
+                    if (v !== 0 && (oldv < 0) === (v > 0)) {
+                        let newmin = Math.abs(newv - v);
+                        if (minlength > newmin) {
+                            minpoint = [x, y, c];
+                            minlength = newmin;
                         }
                         // встретили точку противоположного знака - финиш
-                        finish=true;
+                        finish = true;
                     }
                 })
             }
             //повторяем для новых клеток
             p = points;//console.log(cnt++,points.length); // 400 max
         }
-        if (minpoint===false) {
-            return false;
+        if (minpoint === false) {
+            return false; // Нету пути :(
         } else {
-            let maxpoint,min;
-            if(map[minpoint[0]][minpoint[1]][minpoint[2]]>0) {
-                maxpoint=minpoint;
-                //ищем минимальное отрицательное
-                min=-1000000;
-                lookaround.call(this, maxpoint[0], maxpoint[1], maxpoint[2], function(x,y,c, disp){
-                    if(0>map[x][y][c] && min<map[x][y][c]){
-                        min=map[x][y][c];
-                        minpoint=[x,y,c];
+            let maxpoint, min;
+            if (map[minpoint[0]][minpoint[1]][minpoint[2]] > 0) {
+                maxpoint = minpoint;
+                //ищем максимальное отрицательное
+                min = -1000000;
+                lookaround.call(this, maxpoint[0], maxpoint[1], maxpoint[2], function (x, y, c, disp) {
+                    if (0 > map[x][y][c] && min < map[x][y][c]) {
+                        min = map[x][y][c];
+                        minpoint = [x, y, c];
                     }
                 });
             } else {
-                //ищем минимальное отрицательное
-                min=1000000;
-                lookaround.call(this, minpoint[0], minpoint[1], minpoint[2], function(x,y,c, disp){
-                    if(0<map[x][y][c] && min>map[x][y][c]){
-                        min=map[x][y][c];
-                        maxpoint=[x,y,c];
+                //ищем минимальное положительное
+                min = 1000000;
+                lookaround.call(this, minpoint[0], minpoint[1], minpoint[2], function (x, y, c, disp) {
+                    if (0 < map[x][y][c] && min > map[x][y][c]) {
+                        min = map[x][y][c];
+                        maxpoint = [x, y, c];
                     }
                 });
             }
-            // сворачиваем трассу
-            min=1000000;
-            while(min!=1) {
-                if(!lookaround.call(this, maxpoint[0], maxpoint[1], maxpoint[2], function (x, y, c, disp) {
+            // сворачиваем трассу. От maxpoint до начала маршрута
+            min = 1000000;
+            while (min != 1) {
+                if (!lookaround.call(this, maxpoint[0], maxpoint[1], maxpoint[2], function (x, y, c, disp) {
                     if (0 < map[x][y][c] && min > map[x][y][c]) {
                         min = map[x][y][c];
                         maxpoint = [x, y, c];
@@ -420,16 +421,16 @@ window.rhand = {
                 })) {
                     break;
                 }
-                if(Math.abs(maxpoint[0])==30 && maxpoint[1]==0) {
+                if (Math.abs(maxpoint[0]) == 30 && maxpoint[1] == 0) {
                     trace.unshift([]);
                     continue;
                 }
-                trace.unshift([5*maxpoint[0],5*maxpoint[1],maxpoint[2]]);
+                trace.unshift([5 * maxpoint[0], 5 * maxpoint[1], maxpoint[2]]);
             }
-
-            min=-1000000;
-            while(min!=-1) {
-                if(!lookaround.call(this, minpoint[0], minpoint[1], minpoint[2], function (x, y, c, disp) {
+            // сворачиваем трассу. От minpoint до конца маршрута
+            min = -1000000;
+            while (min != -1) {
+                if (!lookaround.call(this, minpoint[0], minpoint[1], minpoint[2], function (x, y, c, disp) {
                     if (0 > map[x][y][c] && min < map[x][y][c]) {
                         min = map[x][y][c];
                         minpoint = [x, y, c];
@@ -438,70 +439,68 @@ window.rhand = {
                 })) {
                     break;
                 }
-                if(Math.abs(minpoint[0])==30 && minpoint[1]==0) {
+                if (Math.abs(minpoint[0]) == 30 && minpoint[1] == 0) {
                     trace.push([]);
                     continue;
                 }
-                trace.push([5*minpoint[0],5*minpoint[1],minpoint[2]]);
+                trace.push([5 * minpoint[0], 5 * minpoint[1], minpoint[2]]);
             }
-
-            if(trace.length>0)trace.shift();
-            if(trace.length>0)trace.pop();
-            a[2]=o1;b[2]=o2;
-            trace.unshift(a);trace.push(b);
+            // подставляем реальные координаты начала и конца маршрута вместо узлов сетки
+            if (trace.length > 0) trace.shift();
+            if (trace.length > 0) trace.pop();
+            a[2] = o1;
+            b[2] = o2;
+            trace.unshift(a);
+            trace.push(b);
             return trace;
         }
     },
 
     /**
      * рассчитать маршрут
-     * @param angle
      */
     buildtrace: function () {
         // точка старта
         let pa = [...this.pointA], pb = [...this.pointB];
         pa[2] = this.startA[0];
         pb[2] = this.startA[1];
-        let z = this.calc_silent(pa, pb), o1 = z[3];
+        let z = this.calc_silent(pa, pb);
 
         pa[2] = this.fin_A[0];
         pb[2] = this.fin_A[1];
-        let zz = this.calc_silent(pa, pb), o2 = zz[3];
+        let zz = this.calc_silent(pa, pb);
         //console.log(z,zz);
-        let ret = [[this.startA[0], this.startA[1]]], mpoint;
+        let ret = [[this.startA[0], this.startA[1]]];
 
-        function filltrace(a,o1, b, o2) {
-            let fa,fb,olda=false,trace = this.checkPoints(a, o1, b, o2);//, v=trace[0][3];
-            for (var i = 1; i < trace.length; i++) {
-                if(trace[i].length==0) {
-                    olda=[fa[2],fb[2]];
-                    while(trace[++i].length==0);
-                }
-                fa = this.buildTriangle(pa, trace[i], this.len[0], this.len[2], (trace[i][2] > 2));
-                fb = this.buildTriangle(pb, trace[i], this.len[1], this.len[3], (trace[i][2] == 1 || trace[i][2] == 4));
-                if (isNaN(fb[0]) || isNaN(fa[0])) {
-                    console.log('Opps!');
-                    return;
-                }
-                if(!!olda){
-                    if(Math.abs(fa[2]-olda[0])>Math.PI) {
-                        olda[0]+=(fa[2]>olda[0]?2:2)*Math.PI;
-                    }
-                    if(Math.abs(fb[2]-olda[1])>Math.PI) {
-                        olda[1]+=(fb[2]>olda[1]?2:2)*Math.PI;
-                    }
-                    ret.push([(fa[2]+olda[0])/2, (fb[2]+olda[1])/2]);
-                    olda=false;
-                }
-                ret.push([fa[2], fb[2]]);
+        let fa, fb, olda = false, trace = this.checkPoints(z[2], z[3], zz[2], zz[3]);//, v=trace[0][3];
+        for (var i = 1; i < trace.length; i++) {
+            if (trace[i].length == 0) {
+                olda = [fa[2], fb[2]];
+                while (trace[++i].length == 0) ;
             }
+            fa = this.buildTriangle(pa, trace[i], this.len[0], this.len[2], (trace[i][2] > 2));
+            fb = this.buildTriangle(pb, trace[i], this.len[1], this.len[3], (trace[i][2] == 1 || trace[i][2] == 4));
+            if (isNaN(fb[0]) || isNaN(fa[0])) {
+                console.log('Opps!'); // Что-то пошло не так, ошибка обсчета маршрута.
+                return;
+            }
+            if (!!olda) {
+                if (Math.abs(fa[2] - olda[0]) > Math.PI) {
+                    olda[0] += (fa[2] > olda[0] ? 2 : 2) * Math.PI;
+                }
+                if (Math.abs(fb[2] - olda[1]) > Math.PI) {
+                    olda[1] += (fb[2] > olda[1] ? 2 : 2) * Math.PI;
+                }
+                ret.push([(fa[2] + olda[0]) / 2, (fb[2] + olda[1]) / 2]);
+                olda = false;
+            }
+            ret.push([fa[2], fb[2]]);
         }
-        filltrace.call(this, z[2],o1, zz[2], o2);
         return ret;
     },
 
     /**
-     * пытаемся продвинутьманипулятор_ по возмоБности сохраняя порядок тыг
+     * пытаемся продвинуть манипулятор, по возможности сохраняя порядок тяг
      * @param a
      */
     moveTo: function (a) {
@@ -527,7 +526,7 @@ window.rhand = {
                 aa = a;
             }
             // перебираем возможные порядки решения
-            let fa,fb,o1 = order[0], o2 = order[1], found = false;
+            let fa, fb, o1 = order[0], o2 = order[1], found = false;
             for (var i = 0; i < 4; i++) {
                 if (i > 1) o1 = 1 - o1;
                 if (i & 1) o2 = 1 - o2;
@@ -535,7 +534,7 @@ window.rhand = {
                 fb = this.buildTriangle(this.pointB, aa, this.len[3], this.len[1], o2);
                 if (isNaN(fb[0]) || isNaN(fa[0])) continue;
                 let a = this.angle(fa, aa), b = this.angle(fb, aa);
-                console.log([o1,o2]);
+                console.log([o1, o2]);
                 if (Math.PI < this.norm(Math.PI - a + b)) {
                     order[0] = o1;
                     order[1] = o2;
@@ -552,8 +551,8 @@ window.rhand = {
             if (found)
                 log.push([fa[2], fb[2]]);
         }
-       // this.pointA[2] = olda;
-       // this.pointB[2] = oldb;
+        // this.pointA[2] = olda;
+        // this.pointB[2] = oldb;
         //console.log(log);
         return log;
     },
