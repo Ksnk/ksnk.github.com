@@ -35,6 +35,15 @@
             <path d="M98,49 L106,49 L106,54 L110,54 L110,64 L106,64 L98,64 L98,49 L98,49 Z M107.015625,49.0120239 L110.058838,53.0283203 L107.015625,53.0283203 L107.015625,49.0120239 L107.015625,49.0120239 Z M99,56 L99,57 L109,57 L109,56 L99,56 Z M99,54 L99,55 L105,55 L105,54 L99,54 Z M99,52 L99,53 L105,53 L105,52 L99,52 Z M99,50 L99,51 L105,51 L105,50 L99,50 Z M99,62 L99,63 L109,63 L109,62 L99,62 Z M99,60 L99,61 L109,61 L109,60 L99,60 Z M99,58 L99,59 L109,59 L109,58 L99,58 Z M99,58" id="Shape copy"></path>
         </g>
     </symbol>
+    <symbol id="icon-cross" viewBox="0 0 18 18">
+        <g id="Icons with numbers" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+            <g id="Group" transform="translate(-624.000000, -144.000000)" fill="#000000">
+                <path d="M623.984375,147.990967 L628.021851,143.99939 L632.010116,147.989884 L636,144 L640.019043,148.023682 L636.038873,152.020893 L640.033936,156.018188 L636.031738,160.062988 L632.026946,156.049999 L628.016357,160.077759 L624,156 L627.992602,152.007398 Z M623.984375,147.990967" id="Path 203"></path>
+            </g>
+        </g> </symbol>
+    <symbol id="icon-pencil" viewBox="0 0 18 18">
+        <path d='M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z'></path>
+    </symbol>
 
 
     <!--
@@ -146,6 +155,20 @@
                         <label class="text">y: <input data-handle="submitdraw" name="finXY.1"> </label>
                         <span title="Расчитать маршрут" data-handle="calc, coord, finXY"><svg class="svgicon"><use
                                 xlink:href="#icon-calc"/></svg></span></fieldset>
+                    <fieldset>
+                        <legend>Препятствия (не работают)</legend>
+                        <span title="Рисовать" data-handle='[["pin", "angle", "fin_A"],["pin", "cooord", "finXY"]]'><svg class="svgicon"><use
+                                xlink:href="#icon-pencil"/></svg></span>&nbsp;
+                        <span title="Очистить" data-handle="calc, coord, finXY"><svg class="svgicon"><use
+                                xlink:href="#icon-cross"/></svg></span>&nbsp;
+                        <span data-handle='["copyjson","#fc2",["trace"]]'><svg class="svgicon"><use
+                                xlink:href="#icon-copy"/></svg></span>&nbsp;
+                        <div style="display:inline-block; position:relative;">
+                    <span style="pointer-events: none;position:absolute;top:0;left:0;"><svg class="svgicon"><use
+                            xlink:href="#icon-paste"/></svg></span>
+                            <input type="text" data-handle='["pastepath","#fc3"]' id="fc3" style="opacity:0.01;outline:none;width:1em;height:1em;display:inline-block;">
+                        </div>
+                    </fieldset>
                 </div>
                 <div class="tabcontent " style="height:533px;overflow:auto;">
                     <table id="programm">

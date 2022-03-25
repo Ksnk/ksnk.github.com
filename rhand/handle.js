@@ -266,6 +266,29 @@ $(function () {
                 updatectrl();
                 _dt && drawTrace();
                 break;
+
+            case 'pastepath':
+                !function() {
+                    let sel = $(whattodo[1]),
+                        data = sel.val() || '';
+                    if ('' == data) {
+                        let clipboardData = handle.event.originalEvent.clipboardData || window.clipboardData;
+                        data = clipboardData && clipboardData.getData('Text') || '';
+                    }
+                    if (data == '') return;
+                    // рисуем
+                    let canvas = document.getElementById("canvas");
+                    //canvas.setAttribute("height", Math.round(zoom*(maxy-miny)+this.border*2));
+                    //canvas.setAttribute("width",Math.round(zoom*(maxx-minx)+this.border*2));
+                    let ctx = canvas.getContext("2d");
+                    ctx.lineWidth = 1;
+                    ctx.strokeStyle = "white";
+                    ctx.fillStyle = "white";
+
+                    let p = new Path2D(data);
+                    ctx.fill(p);
+                }();
+                break;
         }
         return false; // стандартный результат - прекращение обработки события
     }
@@ -283,9 +306,10 @@ $(function () {
             e.stopPropagation();
             e.preventDefault();
         }
-        var data = parseData(that.attr('data-handle'));
         handle.event = e;
-        return handle.call(this, data);
+        var data = parseData(that.attr('data-handle')),ret=handle.call(this, data);
+        handle.event =null;
+        return ret;
     });
     // визуализация шагов программы
     let look4keys=false;
@@ -352,6 +376,7 @@ $(function () {
                 }, 50);
             }, 300);
             handle.call(that, data);
+            handle.event = null;
             updatectrl();
             // генерируем
         } else {
