@@ -182,7 +182,7 @@ $(function () {
                 $('input[data-handle]').each(function(){
                     let
                         h=parseData($(this).attr('data-handle')),
-                        name = $(this).attr('name').split('[]'), multy=name.length > 1,
+                        name = ($(this).attr('name')||'').split('[]'), multy=name.length > 1,
                         v=_get(name[0]);
 
                     if($(this).is('input:text')){
@@ -230,18 +230,59 @@ $(function () {
                 play(rhand.trace);
                 drawTrace();
                 break;
+
+            case 'copyjson':
+                // so fill a json value
+                let sel=$(whattodo[1]),names=whattodo[2], val={};
+                for(let a in names){
+                    if(names.hasOwnProperty(a) && rhand.hasOwnProperty(names[a])) {
+                        val[names[a]] = rhand[names[a]];
+                    }
+                }
+                val.note = 'please! use this values in proper ways';
+                sel.val(JSON.stringify(val));
+                sel[0].select();
+                document.execCommand("copy");
+                sel.val('');
+                break;
+
+            case 'pastejson':
+                let _sel=$(whattodo[1]),_dt=false,
+                    data=_sel.val()||'',
+                    _names=whattodo[2];
+                if(''==data){
+                    let clipboardData = handle.event.originalEvent.clipboardData || window.clipboardData;
+                    data = clipboardData && clipboardData.getData('Text') ||'';
+                }
+                if(data=='') return;
+                _val=JSON.parse(data);
+                _sel.val('');
+                for(let a in _names){
+                    if(_names.hasOwnProperty(a) && rhand.hasOwnProperty(_names[a])) {
+                        rhand[_names[a]]=_val[_names[a]] ;
+                        if('trace'==_names[a]) _dt=true;
+                    }
+                }
+                updatectrl();
+                _dt && drawTrace();
+                break;
         }
         return false; // стандартный результат - прекращение обработки события
     }
 
     // обычная реакция на клик и изменения контролов
-    $(document).on('submit change click', '[data-handle]', function (e) {
+    $(document).on('submit change click paste', '[data-handle]', function (e) {
         let that = $(this);
         if (that.is('select') && e.type !== 'change') return;
         if ($(e.target).is('form') && e.type !== 'submit') return;
         if (that.is('.pressHold')) return;
         // if (e.type !== 'click') return;
         // if (e.type !== 'click') return;
+        if(e.type='paste'){
+            // Stop data actually being pasted into div
+            e.stopPropagation();
+            e.preventDefault();
+        }
         var data = parseData(that.attr('data-handle'));
         handle.event = e;
         return handle.call(this, data);
