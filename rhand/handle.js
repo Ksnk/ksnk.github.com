@@ -247,7 +247,7 @@ $(function () {
                 break;
 
             case 'pastejson':
-                let _sel=$(whattodo[1]),_dt=false,
+                let _sel=$(whattodo[1]),_dt=false,_val={},
                     data=_sel.val()||'',
                     _names=whattodo[2];
                 if(''==data){
