@@ -286,6 +286,9 @@ window.rhand = {
                 }
             }
         }
+        for(let i=0;i<this.Obstacles.length;i++){
+            line.call(this, this.Obstacles[i][0], this.Obstacles[i][1], {color: "white", lineWidth:"5"});
+        }
 
         line.call(this, this.pointA, this.finA, {color: "red"});
         line.call(this, this.finA, this.finC, {color: "green"});
@@ -297,9 +300,6 @@ window.rhand = {
         circle.call(this, this.finB, {color: "red", fillStyle: "green"});
         circle.call(this, this.finC, {color: "green", fillStyle: "yellow"});
 
-        for(let i=0;i<this.Obstacles.length;i++){
-            line.call(this, this.Obstacles[i][0], this.Obstacles[i][1], {color: "white", lineWidth:"5"});
-        }
     },
 
     /**
