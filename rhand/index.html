@@ -129,12 +129,12 @@
                         <label><input data-handle="submitdraw" name="mapauto" type="checkbox" value="1">auto</label>
                     </fieldset>
                     <br>Расчет маршрута
-                    <span data-handle='["copyjson","#forclipboard",["startA","fin_A", "finXY"]]'><svg class="svgicon"><use
+                    <span data-handle='["copyjson","#forclipboard",["startA","fin_A","Obstacles", "finXY"]]'><svg class="svgicon"><use
                             xlink:href="#icon-copy"/></svg></span>
                     <div style="display:inline-block; position:relative;">
                     <span style="pointer-events: none;position:absolute;top:0;left:0;"><svg class="svgicon"><use
                             xlink:href="#icon-paste"/></svg></span>
-                    <input type="text" data-handle='["pastejson","#forclipboard",["startA","fin_A", "finXY"]]' id="forclipboard" style="opacity:0.01;outline:none;width:1em;height:1em;display:inline-block;">
+                    <input type="text" data-handle='["pastejson","#forclipboard",["startA","fin_A", "Obstacles","finXY"]]' id="forclipboard" style="opacity:0.01;outline:none;width:1em;height:1em;display:inline-block;">
                     </div>
 
                     <br>
@@ -156,18 +156,11 @@
                         <span title="Расчитать маршрут" data-handle="calc, coord, finXY"><svg class="svgicon"><use
                                 xlink:href="#icon-calc"/></svg></span></fieldset>
                     <fieldset>
-                        <legend>Препятствия (не работают)</legend>
+                        <legend>Препятствия</legend>
                         <span title="Рисовать" data-handle="paint"><svg class="svgicon"><use
                                 xlink:href="#icon-pencil"/></svg></span>&nbsp;
-                        <span title="Очистить" data-handle="clearpaint"><svg class="svgicon"><use
+                        <span title="Убрать" data-handle="clearpaint"><svg class="svgicon"><use
                                 xlink:href="#icon-cross"/></svg></span>&nbsp;
-                        <span data-handle='["copyjson","#fc2",["trace"]]'><svg class="svgicon"><use
-                                xlink:href="#icon-copy"/></svg></span>&nbsp;
-                        <div style="display:inline-block; position:relative;">
-                    <span style="pointer-events: none;position:absolute;top:0;left:0;"><svg class="svgicon"><use
-                            xlink:href="#icon-paste"/></svg></span>
-                            <input type="text" data-handle='["pastepath","#fc3"]' id="fc3" style="opacity:0.01;outline:none;width:1em;height:1em;display:inline-block;">
-                        </div>
                     </fieldset>
                 </div>
                 <div class="tabcontent " style="height:533px;overflow:auto;">

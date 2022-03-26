@@ -25,6 +25,8 @@ window.rhand = {
     mapauto: 0,
 
     trace: [],
+    painting: '',
+    Obstacles:[],
 
     startA: [0, 0],
     finXY: [0, 0],
@@ -33,7 +35,7 @@ window.rhand = {
     /**
      * механика сохранения
      */
-    store_names: ['fin_A', 'finXY', 'startA', 'pointA', 'pointB', 'mapcolor', 'mapauto', 'trace'],
+    store_names: ['fin_A', 'finXY', 'startA', 'pointA', 'pointB', 'mapcolor', 'mapauto', 'trace','Obstacles'],
 
     serialize: function () {
         let ret = {};
@@ -42,7 +44,7 @@ window.rhand = {
     },
     unserialize: function (obj) {
         obj = JSON.parse(obj);
-        for (let a in obj) if (this.hasOwnProperty(a)) this[a] = obj[a];
+        for (let a in obj) if (obj.hasOwnProperty(a) && this.hasOwnProperty(a)) this[a] = obj[a];
     },
 
     /**
@@ -124,8 +126,8 @@ window.rhand = {
 
     /**
      * достраиваем треугольник на отрезка fa-fb. со стороны order
-     * @param {number[]}fa
-     * @param {number[]}fb
+     * @param {number[]} fa
+     * @param {number[]} fb
      * @param {number} la
      * @param {number} lb
      * @param {number} order
@@ -135,15 +137,59 @@ window.rhand = {
         let
             dx = fa[0] - fb[0],
             dy = fa[1] - fb[1],
+            d = Math.sqrt(dx * dx + dy * dy);
+        if(la>lb+d ||lb>la+d || d>lb+la) return [NaN,NaN,NaN];
+        let
+            p=(la+lb+d)/2, // полупериметр
+            a=2*Math.atan(Math.sqrt((p-lb)*(p-d)/(p*(p-lb)))), // прилежащий lb угол
             b = this.angle(fa, fb),
-            d = Math.sqrt(dx * dx + dy * dy),
-            a = Math.acos(d / (la + lb)),
+            //a = Math.acos(d / (la + lb)), // только для равных сторон!!!
             aa = this.norm(b + (order > 0 ? a : -a));
         return [
             fa[0] + la * Math.cos(aa),
             fa[1] + la * Math.sin(aa),
             aa
         ];
+    },
+
+    /**
+     * расстояние от точки C до отрезка A-B
+     * @param {*[]} A
+     * @param {*[]} B
+     * @param {*[]} C
+     */
+    distP: function(A,B,C){
+        let dx = A[0] - B[0],
+            dy = A[1] - B[1],
+            d = Math.sqrt(dx * dx + dy * dy),
+            D=this.prp(A,B,C);
+        if(((D[0]<=A[0] && D[0]>=B[0])||(D[0]>=A[0] && D[0]<=B[0]))
+            && ((D[1]<=A[1] && D[1]>=B[1])||(D[1]>=A[1] && D[1]<=B[1]))){
+            return this.dist(C,D);
+            //Math.abs((dy*C[1]+dx*C[1]+(A[0]*B[1]+A[1]*B[0]))/d);
+        }
+        return Math.min(this.dist(A,C),this.dist(B,C));
+    },
+
+    /**
+     * перпендикуляр от точки C до отрезка A-B
+     * @param {*[]} A
+     * @param {*[]} B
+     * @param {*[]} C
+     */
+    prp: function(A,B,C){
+        let dx=B[0]-A[0],dy=B[1]-A[1];
+        if(Math.abs(dx)<0.000001){
+            return [A[0],C[1]];
+        } else if (Math.abs(dy)<0.000001){
+            return [C[0],A[1]];
+        }
+        let dxy=dx/dy;
+        if(Math.abs(dxy-1/dxy)<0.000001) return C;
+        let x=(C[0]*dxy-A[1]+A[0]/dxy+C[1])/(dxy+1/dxy);
+        return [
+            x,(x-A[0])/dxy+A[1]
+        ]
     },
 
     /**
@@ -250,6 +296,10 @@ window.rhand = {
         circle.call(this, this.finA, {color: "red", fillStyle: "green"});
         circle.call(this, this.finB, {color: "red", fillStyle: "green"});
         circle.call(this, this.finC, {color: "green", fillStyle: "yellow"});
+
+        for(let i=0;i<this.Obstacles.length;i++){
+            line.call(this, this.Obstacles[i][0], this.Obstacles[i][1], {color: "white", lineWidth:"5"});
+        }
     },
 
     /**
@@ -262,8 +312,15 @@ window.rhand = {
             this.map[x] = [];
             for (let y = this.realmap_border[2]; y < this.realmap_border[3]; y++) {
                 this.map[x][y] = 0;
-
-                let z = [5 * x, 5 * y], o1 = 1, o2 = 0;
+                let clearpoint=false,z = [5 * x, 5 * y], o1 = 1, o2 = 0;
+                for(let a in this.Obstacles){
+                    let o=this.Obstacles[a],d=this.distP(o[0],o[1],z);
+                    if(d<7){
+                        clearpoint=true;
+                        break;
+                    }
+                }
+                if(!clearpoint)
                 for (var i = 0; i < 4; i++) {
                     if (i === 2) o1 = 1 - o1;
                     if (i & 1) o2 = 1 - o2;

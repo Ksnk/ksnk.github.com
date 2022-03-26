@@ -175,6 +175,7 @@ $(function () {
                         }
                     }
                 }
+                updatectrl();
                 draw();
                 return true;
             case "updatectrl":
@@ -194,9 +195,9 @@ $(function () {
 
                     } else if($(this).is('input:checkbox')){
                         if(multy){
-                            $(this)[v & $(this).val()?'attr':'removeAttr']("checked","checked");
+                            $(this).prop('checked',v & $(this).val());
                         } else {
-                            $(this)[$(this).val()==v?'attr':'removeAttr']("checked","checked");
+                            $(this).prop('checked',$(this).val()==v);
                         }
                     }
                 })
@@ -212,8 +213,37 @@ $(function () {
                 break;
 
             case 'mapclick':
-                let point = rhand.fromscreen([handle.event.offsetX, handle.event.offsetY]);
-                play(rhand.moveTo(point));
+                if(rhand.painting=='clear'){
+                    let x=rhand.fromscreen([handle.event.offsetX, handle.event.offsetY]);
+                    for(let a in rhand.Obstacles){
+                        let o=rhand.Obstacles[a];
+                        if(rhand.distP(o[0],o[1],x)<5){
+                            rhand.Obstacles.splice(a, 1);
+                            break;
+                        }
+                    }
+                    rhand.mapit();
+                    rhand.painting='';
+                    draw();
+                } else if(rhand.painting=='obstacles'){
+                    let x=rhand.fromscreen([handle.event.offsetX, handle.event.offsetY]);
+                    rhand.Obstacles.push([x,x]);
+                    rhand.painting='obstaclesfin';
+                    draw();
+                } else if(rhand.painting=='obstaclesfin'){
+                    let x=rhand.fromscreen([handle.event.offsetX, handle.event.offsetY]);
+                    if(rhand.Obstacles.length>0){
+                        let y= rhand.Obstacles.pop();
+                        y[1]=x;
+                        rhand.Obstacles.push(y);
+                    }
+                    rhand.painting='';
+                    rhand.mapit();
+                    draw();
+                } else {
+                    let point = rhand.fromscreen([handle.event.offsetX, handle.event.offsetY]);
+                    play(rhand.moveTo(point));
+                }
                 break;
 
             case 'load':
@@ -247,7 +277,7 @@ $(function () {
                 break;
 
             case 'pastejson':
-                let _sel=$(whattodo[1]),_dt=false,_val={},
+                let _sel=$(whattodo[1]),_rm=false,_dt=false,_val={},
                     data=_sel.val()||'',
                     _names=whattodo[2];
                 if(''==data){
@@ -261,14 +291,17 @@ $(function () {
                     if(_names.hasOwnProperty(a) && rhand.hasOwnProperty(_names[a])) {
                         rhand[_names[a]]=_val[_names[a]] ;
                         if('trace'==_names[a]) _dt=true;
+                        if('Obstacles'==_names[a]) _rm=true;
                     }
                 }
-                updatectrl();
+                _dt && rhand.mapit();
+                //updatectrl();
                 _dt && drawTrace();
+                draw();
                 break;
 
             case 'pastepath':
-                !function() {
+                (function() {
                     let sel = $(whattodo[1]),
                         data = sel.val() || '';
                     if ('' == data) {
@@ -287,7 +320,13 @@ $(function () {
 
                     let p = new Path2D(data);
                     ctx.fill(p);
-                }();
+                })();
+                break;
+            case 'paint':
+                rhand.painting='obstacles';
+                break;
+            case 'clearpaint':
+                rhand.painting='clear';
                 break;
         }
         return false; // стандартный результат - прекращение обработки события
