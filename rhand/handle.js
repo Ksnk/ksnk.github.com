@@ -201,6 +201,15 @@ $(function () {
                         }
                     }
                 })
+                // отмечаем режим рисования
+                let pb=$('button.painting.active'), ab=false;
+                if(rhand.painting=='clear') {
+                    ab=$('button.painting[data-handle=clearpaint]');
+                } else if(rhand.painting=='obstacles' || rhand.painting=='obstaclesfin') {
+                    ab=$('button.painting[data-handle=paint]');
+                }
+                if(pb.not(ab).length>0) pb.not(ab).removeClass('active');
+                if(ab.length>0) ab.addClass('active');
                 draw();
                 return true;
             // break;
@@ -229,6 +238,7 @@ $(function () {
                     let x=rhand.fromscreen([handle.event.offsetX, handle.event.offsetY]);
                     rhand.Obstacles.push([x,x]);
                     rhand.painting='obstaclesfin';
+                    updatectrl();
                     draw();
                 } else if(rhand.painting=='obstaclesfin'){
                     let x=rhand.fromscreen([handle.event.offsetX, handle.event.offsetY]);
@@ -239,6 +249,7 @@ $(function () {
                     }
                     rhand.painting='';
                     rhand.mapit();
+                    updatectrl();
                     draw();
                 } else {
                     let point = rhand.fromscreen([handle.event.offsetX, handle.event.offsetY]);
@@ -324,9 +335,11 @@ $(function () {
                 break;
             case 'paint':
                 rhand.painting='obstacles';
+                updatectrl();
                 break;
             case 'clearpaint':
                 rhand.painting='clear';
+                updatectrl();
                 break;
         }
         return false; // стандартный результат - прекращение обработки события
@@ -398,6 +411,9 @@ $(function () {
             }
             //console.log(e);
             return false;
+        } else if('Escape'==e.originalEvent.key && rhand.painting!=''){
+            rhand.painting='';
+            updatectrl();
         }
         //return false;
     })

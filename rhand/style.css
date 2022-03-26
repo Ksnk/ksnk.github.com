@@ -16,6 +16,10 @@ span[data-handle] {
   font-size: 0.8em;
 }
 
+button.active {
+  background: #bab8b8;
+}
+
 #programm tr.active {
   background: #DDDDDD;
 }
