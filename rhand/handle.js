@@ -136,7 +136,8 @@ $(function () {
                 updatectrl();
                 break;
             case 'rotate':
-                pa = [...rhand.pointA]; pb = [...rhand.pointB];
+                pa = [...rhand.pointA];
+                pb = [...rhand.pointB];
                 (whattodo[1] > 0 ? pb : pa)[2] += rhand.torad(whattodo[2]);
                 let x = rhand.calc_silent(pa, pb);
                 if (!isNaN(x[2][0])) {
@@ -202,7 +203,7 @@ $(function () {
                     }
                 })
                 // отмечаем режим рисования
-                let pb=$('button.painting.active'), ab=false;
+                pb=$('button.painting.active'), ab=false;
                 if(rhand.painting=='clear') {
                     ab=$('button.painting[data-handle=clearpaint]');
                 } else if(rhand.painting=='obstacles' || rhand.painting=='obstaclesfin') {
