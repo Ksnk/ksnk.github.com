@@ -26,7 +26,7 @@ window.rhand = {
 
     trace: [],
     painting: '',
-    Obstacles:[],
+    Obstacles: [],
 
     startA: [0, 0],
     finXY: [0, 0],
@@ -35,7 +35,7 @@ window.rhand = {
     /**
      * механика сохранения
      */
-    store_names: ['fin_A', 'finXY', 'startA', 'pointA', 'pointB', 'mapcolor', 'mapauto', 'trace','Obstacles'],
+    store_names: ['fin_A', 'finXY', 'startA', 'pointA', 'pointB', 'mapcolor', 'mapauto', 'trace', 'Obstacles'],
 
     serialize: function () {
         let ret = {};
@@ -109,7 +109,7 @@ window.rhand = {
         let
             dx = fa[0] - fb[0],
             dy = fa[1] - fb[1], b;
-        if (Math.abs(dx) < 0.00001) {
+        if (Math.abs(dx) < 0.000001) {
             if (dy < 0) {
                 b = Math.PI / 2;
             } else {
@@ -138,10 +138,10 @@ window.rhand = {
             dx = fa[0] - fb[0],
             dy = fa[1] - fb[1],
             d = Math.sqrt(dx * dx + dy * dy);
-        if(la>lb+d ||lb>la+d || d>lb+la) return [NaN,NaN,NaN];
+        if (la > lb + d || lb > la + d || d > lb + la) return [NaN, NaN, NaN];
         let
-            p=(la+lb+d)/2, // полупериметр
-            a=2*Math.atan(Math.sqrt((p-lb)*(p-d)/(p*(p-lb)))), // прилежащий lb угол
+            p = (la + lb + d) / 2, // полупериметр
+            a = 2 * Math.atan(Math.sqrt((p - lb) * (p - d) / (p * (p - lb)))), // прилежащий lb угол
             b = this.angle(fa, fb),
             //a = Math.acos(d / (la + lb)), // только для равных сторон!!!
             aa = this.norm(b + (order > 0 ? a : -a));
@@ -158,17 +158,17 @@ window.rhand = {
      * @param {*[]} B
      * @param {*[]} C
      */
-    distP: function(A,B,C){
+    distP: function (A, B, C) {
         let dx = A[0] - B[0],
             dy = A[1] - B[1],
             d = Math.sqrt(dx * dx + dy * dy),
-            D=this.prp(A,B,C);
-        if(((D[0]<=A[0] && D[0]>=B[0])||(D[0]>=A[0] && D[0]<=B[0]))
-            && ((D[1]<=A[1] && D[1]>=B[1])||(D[1]>=A[1] && D[1]<=B[1]))){
-            return this.dist(C,D);
+            D = this.prp(A, B, C);
+        if (((D[0] <= A[0] && D[0] >= B[0]) || (D[0] >= A[0] && D[0] <= B[0]))
+            && ((D[1] <= A[1] && D[1] >= B[1]) || (D[1] >= A[1] && D[1] <= B[1]))) {
+            return this.dist(C, D);
             //Math.abs((dy*C[1]+dx*C[1]+(A[0]*B[1]+A[1]*B[0]))/d);
         }
-        return Math.min(this.dist(A,C),this.dist(B,C));
+        return Math.min(this.dist(A, C), this.dist(B, C));
     },
 
     /**
@@ -177,18 +177,18 @@ window.rhand = {
      * @param {*[]} B
      * @param {*[]} C
      */
-    prp: function(A,B,C){
-        let dx=B[0]-A[0],dy=B[1]-A[1];
-        if(Math.abs(dx)<0.000001){
-            return [A[0],C[1]];
-        } else if (Math.abs(dy)<0.000001){
-            return [C[0],A[1]];
+    prp: function (A, B, C) {
+        let dx = B[0] - A[0], dy = B[1] - A[1];
+        if (Math.abs(dx) < 0.000001) {
+            return [A[0], C[1]];
+        } else if (Math.abs(dy) < 0.000001) {
+            return [C[0], A[1]];
         }
-        let dxy=dx/dy;
-        if(Math.abs(dxy-1/dxy)<0.000001) return C;
-        let x=(C[0]*dxy-A[1]+A[0]/dxy+C[1])/(dxy+1/dxy);
+        let dxy = dx / dy;
+        if (Math.abs(dxy - 1 / dxy) < 0.000001) return C;
+        let x = (C[0] * dxy - A[1] + A[0] / dxy + C[1]) / (dxy + 1 / dxy);
         return [
-            x,(x-A[0])/dxy+A[1]
+            x, (x - A[0]) / dxy + A[1]
         ]
     },
 
@@ -286,8 +286,8 @@ window.rhand = {
                 }
             }
         }
-        for(let i=0;i<this.Obstacles.length;i++){
-            line.call(this, this.Obstacles[i][0], this.Obstacles[i][1], {color: "white", lineWidth:"5"});
+        for (let i = 0; i < this.Obstacles.length; i++) {
+            line.call(this, this.Obstacles[i][0], this.Obstacles[i][1], {color: "white", lineWidth: "5"});
         }
 
         line.call(this, this.pointA, this.finA, {color: "red"});
@@ -312,27 +312,27 @@ window.rhand = {
             this.map[x] = [];
             for (let y = this.realmap_border[2]; y < this.realmap_border[3]; y++) {
                 this.map[x][y] = 0;
-                let clearpoint=false,z = [5 * x, 5 * y], o1 = 1, o2 = 0;
-                for(let a in this.Obstacles){
-                    let o=this.Obstacles[a],d=this.distP(o[0],o[1],z);
-                    if(d<7){
-                        clearpoint=true;
+                let clearpoint = false, z = [5 * x, 5 * y], o1 = 1, o2 = 0;
+                for (let a in this.Obstacles) {
+                    let o = this.Obstacles[a], d = this.distP(o[0], o[1], z);
+                    if (d < 7) {
+                        clearpoint = true;
                         break;
                     }
                 }
-                if(!clearpoint)
-                for (var i = 0; i < 4; i++) {
-                    if (i === 2) o1 = 1 - o1;
-                    if (i & 1) o2 = 1 - o2;
-                    let fa = this.buildTriangle(pa, z, this.len[0], this.len[2], o1),
-                        fb = this.buildTriangle(pb, z, this.len[1], this.len[3], 1 - o2);
-                    if (isNaN(fb[0]) || isNaN(fa[0])) continue;
-                    // угол <180 ?
-                    let a = this.angle(fa, z), b = this.angle(fb, z);
-                    if (Math.PI < this.norm(Math.PI - a + b)) {
-                        this.map[x][y] |= 1 << (o1 * 2 + o2);
+                if (!clearpoint)
+                    for (var i = 0; i < 4; i++) {
+                        if (i === 2) o1 = 1 - o1;
+                        if (i & 1) o2 = 1 - o2;
+                        let fa = this.buildTriangle(pa, z, this.len[0], this.len[2], o1),
+                            fb = this.buildTriangle(pb, z, this.len[1], this.len[3], 1 - o2);
+                        if (isNaN(fb[0]) || isNaN(fa[0])) continue;
+                        // угол <180 ?
+                        let a = this.angle(fa, z), b = this.angle(fb, z);
+                        if (Math.PI < this.norm(Math.PI - a + b)) {
+                            this.map[x][y] |= 1 << (o1 * 2 + o2);
+                        }
                     }
-                }
             }
         }
         // отметить все двойные точки слева; 2048 - можно рулить ногой A - _*
@@ -364,7 +364,7 @@ window.rhand = {
     },
 
     /**
-     * построить маршрут от точки a до точки b с порядком с
+     * построить маршрут от точки a(o1) до точки b(o2)
      * волновой алгоритм
      * @param {any[]} a
      * @param {number} o1
@@ -412,8 +412,6 @@ window.rhand = {
             [Math.round(b[0] / 5), Math.round(b[1] / 5), o2]];
         map[p[0][0]][p[0][1]][p[0][2]] = 1;
         map[p[1][0]][p[1][1]][p[1][2]] = -1;
-        let cnt = 0;
-        //p=[p[0]];
         while (!finish && p.length > 0) {
             var points = [];
             //обходим точки
@@ -434,7 +432,7 @@ window.rhand = {
                             minpoint = [x, y, c];
                             minlength = newmin;
                         }
-                        // встретили точку противоположного знака - финиш
+                        // встретили точку противоположного знака - финиш, но волну закончим.
                         finish = true;
                     }
                 })
@@ -531,9 +529,9 @@ window.rhand = {
 
         let fa, fb, olda = false, trace = this.checkPoints(z[2], z[3], zz[2], zz[3]);//, v=trace[0][3];
         for (var i = 1; i < trace.length; i++) {
-            if (trace[i].length == 0) {
+            if (trace[i].length === 0) { // пропускаем несколько ходов, пока топчемся по оси.
                 olda = [fa[2], fb[2]];
-                while (trace[++i].length == 0) ;
+                while (trace[++i].length === 0) ;
             }
             fa = this.buildTriangle(pa, trace[i], this.len[0], this.len[2], (trace[i][2] > 2));
             fb = this.buildTriangle(pb, trace[i], this.len[1], this.len[3], (trace[i][2] == 1 || trace[i][2] == 4));
@@ -541,7 +539,7 @@ window.rhand = {
                 console.log('Opps!'); // Что-то пошло не так, ошибка обсчета маршрута.
                 return;
             }
-            if (!!olda) {
+            if (!!olda) { // если топтались по оси - вставляем среднее между реальными ходами.
                 if (Math.abs(fa[2] - olda[0]) > Math.PI) {
                     olda[0] += (fa[2] > olda[0] ? 2 : 2) * Math.PI;
                 }

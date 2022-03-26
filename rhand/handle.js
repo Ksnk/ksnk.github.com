@@ -12,6 +12,7 @@ $(function () {
             });
         }
     }
+
     /**
      * отложенный updatectrl
      */
@@ -19,19 +20,19 @@ $(function () {
         if (!updatectrl._TO) {
             updatectrl._TO = setTimeout(function () {
                 updatectrl._TO = false;
-                draw._internal=true;
+                draw._internal = true;
                 handle(['updatectrl']);
-                draw._internal=false;
-            },100);
+                draw._internal = false;
+            }, 100);
         }
     }
 
-    function drawTrace(){
+    function drawTrace() {
         $('#programm tr:not(:first)').remove();
-        for(let i=0;i<rhand.trace.length;i++) {
-            if(rhand.trace[i])
-                $('#programm tbody').append("<tr data-data='"+JSON.stringify(rhand.trace[i])+
-                    "'><td>"+rhand.tograd(rhand.norm(rhand.trace[i][0]))+'</td><td>'+rhand.tograd(rhand.norm(rhand.trace[i][1]))+'</td><td></td><td></td></tr>');
+        for (let i = 0; i < rhand.trace.length; i++) {
+            if (rhand.trace[i])
+                $('#programm tbody').append("<tr data-data='" + JSON.stringify(rhand.trace[i]) +
+                    "'><td>" + rhand.tograd(rhand.norm(rhand.trace[i][0])) + '</td><td>' + rhand.tograd(rhand.norm(rhand.trace[i][1])) + '</td><td></td><td></td></tr>');
         }
     }
 
@@ -79,10 +80,10 @@ $(function () {
      * @returns {any}
      * @private
      */
-    function _get(addr){
-        let undef,name=addr.split('.'),r=rhand;
-        while(name.length>0){
-            if(undef==(r=r[name.shift()])) return;
+    function _get(addr) {
+        let undef, name = addr.split('.'), r = rhand;
+        while (name.length > 0) {
+            if (undef == (r = r[name.shift()])) return;
         }
         return r;
     }
@@ -93,12 +94,12 @@ $(function () {
      * @param val
      * @private
      */
-    function _set(addr, val){
-        let undef,name=addr.split('.'),r=rhand;
-        while(name.length>1){
-            if(undef==(r=r[name.shift()])) return;
+    function _set(addr, val) {
+        let undef, name = addr.split('.'), r = rhand;
+        while (name.length > 1) {
+            if (undef == (r = r[name.shift()])) return;
         }
-        r[name]=val;
+        r[name] = val;
     }
 
     /**
@@ -109,7 +110,7 @@ $(function () {
      *  -- несколько команд в одном флаконе, удобно для ajax
      */
     window.handle = function (whattodo) {
-        var pa,pb,undef;
+        var pa, pb, reason = whattodo[0] || '';
         if (whattodo && whattodo[0] && whattodo[0].constructor && whattodo[0].constructor === Array) {
             // нам передан массив массивов
             for (var x in whattodo) {
@@ -117,43 +118,41 @@ $(function () {
             }
             return false; // в этом случае нет возможности выдать другой результат
         }
-        var reason = whattodo[0] || '';
         switch (reason) {
             case 'letsfly':
-                var elem = document.createElement( 'script' );
+                var elem = document.createElement('script');
                 elem.type = 'text/javascript';
                 elem.async = true;
-                document.body.appendChild( elem );
-                elem.src = location.href.replace(/\/rhand.*$/,'/Fly/fly.js');
+                document.body.appendChild(elem);
+                elem.src = location.href.replace(/\/rhand.*$/, '/Fly/fly.js');
                 break;
-            case 'pin':
-                // забрать имеющиеся значения манипулятора и поставить в нужные значения
-                if(whattodo[1]=='angle') {
-                    _set(whattodo[2],[rhand.pointA[2],rhand.pointB[2]]);
+            case 'pin': // забрать имеющиеся значения манипулятора и поставить в нужные значения
+                if (whattodo[1] == 'angle') {
+                    _set(whattodo[2], [rhand.pointA[2], rhand.pointB[2]]);
                 } else {
-                    _set(whattodo[2],[rhand.finC[0],rhand.finC[1]]);
+                    _set(whattodo[2], [rhand.finC[0], rhand.finC[1]]);
                 }
                 updatectrl();
                 break;
             case 'rotate':
-                pa = [...rhand.pointA];
-                pb = [...rhand.pointB];
-                (whattodo[1] > 0 ? pb : pa)[2] += rhand.torad(whattodo[2]);
-                let x = rhand.calc_silent(pa, pb);
-                if (!isNaN(x[2][0])) {
-                    window.rhand[whattodo[1] > 0 ? 'pointB' : 'pointA'][2] += rhand.torad(whattodo[2]);
-                    draw();
+                pa = _get(whattodo[1])[2];
+                _get(whattodo[1])[2] += rhand.torad(whattodo[2]);
+                // проверка, не криво ли стоим ?
+                let x = rhand.calc_silent(rhand.pointA, rhand.pointB);
+                if (isNaN(x[2][0])) {
+                    _get(whattodo[1])[2] = pa;
                 }
+                draw();
                 break;
             case "submitdraw":
                 // изменение контрола и redraw
                 let i = $(this), name = i.attr('name').split('[]'), multy = name.length > 1;
-                name=name[0].split('.');
-                let r=rhand;
-                while(name.length>1){
-                    r=r[name.shift()];
+                name = name[0].split('.');
+                let r = rhand;
+                while (name.length > 1) {
+                    r = r[name.shift()];
                 }
-                name=name[0];
+                name = name[0];
                 if (i.is('input:checkbox')) {
                     if (multy) {
                         if (i[0].checked) {
@@ -170,9 +169,9 @@ $(function () {
                     }
                 } else if (i.is('input:text')) {
                     if (!multy) {
-                        r[name] = 0+i.val();
-                        if(whattodo[1]==='grad'){
-                            r[name]=rhand.torad(r[name]);
+                        r[name] = 0 + i.val();
+                        if (whattodo[1] === 'grad') {
+                            r[name] = rhand.torad(r[name]);
                         }
                     }
                 }
@@ -181,36 +180,37 @@ $(function () {
                 return true;
             case "updatectrl":
                 // ищем все контролы прямого отображения и обновляем
-                $('input[data-handle]').each(function(){
+                $('input[data-handle]').each(function () {
                     let
-                        h=parseData($(this).attr('data-handle')),
-                        name = ($(this).attr('name')||'').split('[]'), multy=name.length > 1,
-                        v=_get(name[0]);
+                        h = parseData($(this).attr('data-handle')),
+                        name = ($(this).attr('name') || '').split('[]'), multy = name.length > 1,
+                        v = _get(name[0]);
 
-                    if($(this).is('input:text')){
-                       if(h[1]=='grad'){
+                    if ($(this).is('input:text')) {
+                        if (h[1] == 'grad') {
                             $(this).val(rhand.tograd(v));
                         } else {
                             $(this).val(v);
                         }
 
-                    } else if($(this).is('input:checkbox')){
-                        if(multy){
-                            $(this).prop('checked',v & $(this).val());
+                    } else if ($(this).is('input:checkbox')) {
+                        if (multy) {
+                            $(this).prop('checked', v & $(this).val());
                         } else {
-                            $(this).prop('checked',$(this).val()==v);
+                            $(this).prop('checked', $(this).val() == v);
                         }
                     }
                 })
                 // отмечаем режим рисования
-                pb=$('button.painting.active'), ab=false;
-                if(rhand.painting=='clear') {
-                    ab=$('button.painting[data-handle=clearpaint]');
-                } else if(rhand.painting=='obstacles' || rhand.painting=='obstaclesfin') {
-                    ab=$('button.painting[data-handle=paint]');
+                pb = $('button.painting.active');
+                let ab = false;
+                if (rhand.painting == 'clear') {
+                    ab = $('button.painting[data-handle=clearpaint]');
+                } else if (rhand.painting == 'obstacles' || rhand.painting == 'obstaclesfin') {
+                    ab = $('button.painting[data-handle=paint]');
                 }
-                if(pb.not(ab).length>0) pb.not(ab).removeClass('active');
-                if(ab.length>0) ab.addClass('active');
+                if (pb.not(ab).length > 0) pb.not(ab).removeClass('active');
+                if (ab.length > 0) ab.addClass('active');
                 draw();
                 return true;
             // break;
@@ -223,32 +223,32 @@ $(function () {
                 break;
 
             case 'mapclick':
-                if(rhand.painting=='clear'){
-                    let x=rhand.fromscreen([handle.event.offsetX, handle.event.offsetY]);
-                    for(let a in rhand.Obstacles){
-                        let o=rhand.Obstacles[a];
-                        if(rhand.distP(o[0],o[1],x)<5){
+                if (rhand.painting == 'clear') {
+                    let x = rhand.fromscreen([handle.event.offsetX, handle.event.offsetY]);
+                    for (let a in rhand.Obstacles) {
+                        let o = rhand.Obstacles[a];
+                        if (rhand.distP(o[0], o[1], x) < 5) { // нашли первое близкое препятствие
                             rhand.Obstacles.splice(a, 1);
                             break;
                         }
                     }
                     rhand.mapit();
-                    rhand.painting='';
+                    rhand.painting = '';
                     draw();
-                } else if(rhand.painting=='obstacles'){
-                    let x=rhand.fromscreen([handle.event.offsetX, handle.event.offsetY]);
-                    rhand.Obstacles.push([x,x]);
-                    rhand.painting='obstaclesfin';
+                } else if (rhand.painting == 'obstacles') {
+                    let x = rhand.fromscreen([handle.event.offsetX, handle.event.offsetY]);
+                    rhand.Obstacles.push([x, x]);
+                    rhand.painting = 'obstaclesfin';
                     updatectrl();
                     draw();
-                } else if(rhand.painting=='obstaclesfin'){
-                    let x=rhand.fromscreen([handle.event.offsetX, handle.event.offsetY]);
-                    if(rhand.Obstacles.length>0){
-                        let y= rhand.Obstacles.pop();
-                        y[1]=x;
+                } else if (rhand.painting == 'obstaclesfin') {
+                    let x = rhand.fromscreen([handle.event.offsetX, handle.event.offsetY]);
+                    if (rhand.Obstacles.length > 0) {
+                        let y = rhand.Obstacles.pop();
+                        y[1] = x;
                         rhand.Obstacles.push(y);
                     }
-                    rhand.painting='';
+                    rhand.painting = '';
                     rhand.mapit();
                     updatectrl();
                     draw();
@@ -262,22 +262,22 @@ $(function () {
                 rhand.unserialize(localStorage.getItem('rhand'));
                 break;
             case 'store':
-                localStorage.setItem('rhand',rhand.serialize());
+                localStorage.setItem('rhand', rhand.serialize());
                 break;
 
             case 'calc':
                 // расчет маршрута с точки startA
                 // до точки finA
-                rhand.trace=rhand.buildtrace();
+                rhand.trace = rhand.buildtrace();
                 play(rhand.trace);
                 drawTrace();
                 break;
 
             case 'copyjson':
                 // so fill a json value
-                let sel=$(whattodo[1]),names=whattodo[2], val={};
-                for(let a in names){
-                    if(names.hasOwnProperty(a) && rhand.hasOwnProperty(names[a])) {
+                let sel = $(whattodo[1]), names = whattodo[2], val = {};
+                for (let a in names) {
+                    if (names.hasOwnProperty(a) && rhand.hasOwnProperty(names[a])) {
                         val[names[a]] = rhand[names[a]];
                     }
                 }
@@ -289,31 +289,33 @@ $(function () {
                 break;
 
             case 'pastejson':
-                let _sel=$(whattodo[1]),_rm=false,_dt=false,_val={},
-                    data=_sel.val()||'',
-                    _names=whattodo[2];
-                if(''==data){
-                    let clipboardData = handle.event.originalEvent.clipboardData || window.clipboardData;
-                    data = clipboardData && clipboardData.getData('Text') ||'';
-                }
-                if(data=='') return;
-                _val=JSON.parse(data);
-                _sel.val('');
-                for(let a in _names){
-                    if(_names.hasOwnProperty(a) && rhand.hasOwnProperty(_names[a])) {
-                        rhand[_names[a]]=_val[_names[a]] ;
-                        if('trace'==_names[a]) _dt=true;
-                        if('Obstacles'==_names[a]) _rm=true;
+                (function () {
+                    let sel = $(whattodo[1]), _rm = false, _dt = false, vsal = {},
+                        data = sel.val() || '',
+                        names = whattodo[2];
+                    if ('' == data) {
+                        let clipboardData = handle.event.originalEvent.clipboardData || window.clipboardData;
+                        data = clipboardData && clipboardData.getData('Text') || '';
                     }
-                }
-                _dt && rhand.mapit();
-                //updatectrl();
-                _dt && drawTrace();
-                draw();
+                    if (data == '') return;
+                    vsal = JSON.parse(data);
+                    sel.val('');
+                    for (let a in names) {
+                        if (names.hasOwnProperty(a) && rhand.hasOwnProperty(names[a])) {
+                            rhand[names[a]] = vsal[names[a]];
+                            if ('trace' == names[a]) _dt = true;
+                            if ('Obstacles' == names[a]) _rm = true;
+                        }
+                    }
+                    _rm && rhand.mapit();
+                    //updatectrl();
+                    _dt && drawTrace();
+                    draw();
+                })();
                 break;
 
             case 'pastepath':
-                (function() {
+                (function () {
                     let sel = $(whattodo[1]),
                         data = sel.val() || '';
                     if ('' == data) {
@@ -335,11 +337,11 @@ $(function () {
                 })();
                 break;
             case 'paint':
-                rhand.painting='obstacles';
+                rhand.painting = 'obstacles';
                 updatectrl();
                 break;
             case 'clearpaint':
-                rhand.painting='clear';
+                rhand.painting = 'clear';
                 updatectrl();
                 break;
         }
@@ -354,66 +356,72 @@ $(function () {
         if (that.is('.pressHold')) return;
         // if (e.type !== 'click') return;
         // if (e.type !== 'click') return;
-        if(e.type='paste'){
+        if (e.type = 'paste') {
             // Stop data actually being pasted into div
             e.stopPropagation();
             e.preventDefault();
         }
         handle.event = e;
-        var data = parseData(that.attr('data-handle')),ret=handle.call(this, data);
-        handle.event =null;
+        var data = parseData(that.attr('data-handle')), ret = handle.call(this, data);
+        handle.event = null;
         return ret;
     });
     // визуализация шагов программы
-    let look4keys=false;
+    let look4keys = false;
 
-    function show(tr){
-        let data=tr.data('data');
-        if(data && data[0] && data[1]){
+    function show(tr) {
+        let data = tr.data('data');
+        if (data && data[0] && data[1]) {
             rhand.pointA[2] = data[0];
             rhand.pointB[2] = data[1];
             draw();
         }
     }
-    $('#programm').on('click',function(e){
-        let x=$('tr.active',this),
-            tr=$(e.target).parents('tr').eq(0);
+
+    $('#programm').on('click', function (e) {
+        let x = $('tr.active', this),
+            tr = $(e.target).parents('tr').eq(0);
         x.not(tr).removeClass('active');
         tr.addClass('active');
         show(tr);
     });
-    $('#programm').hover(function(e){
-        look4keys=true;
-    }, function(){
-        look4keys=false;
+    $('#programm').hover(function (e) {
+        look4keys = true;
+    }, function () {
+        look4keys = false;
     });
-    $(document).on('keydown', function(e){
-        if(look4keys){
-            let move=false;
-            if(!!e.originalEvent.key){
-                if(e.originalEvent.key=='ArrowDown')
-                    move=1;
-                else if(e.originalEvent.key=='ArrowUp')
-                    move=-1;
+    $(document).on('keydown', function (e) {
+        if (look4keys) {
+            let move = false;
+            if (!!e.originalEvent.key) {
+                if (e.originalEvent.key == 'ArrowDown')
+                    move = 1;
+                else if (e.originalEvent.key == 'ArrowUp')
+                    move = -1;
             }
-            if(false!==move){
-                let that=$('#programm'),parent=that.parent(),h=$('tr:eq(1)', that).height();
-                if(move>0){
-                    parent.scrollTop(parent.scrollTop()+h);
+            if (false !== move) {
+                let that = $('#programm'), parent = that.parent(), h = $('tr:eq(1)', that).height();
+                if (move > 0) {
+                    parent.scrollTop(parent.scrollTop() + h);
                 } else {
-                    parent.scrollTop(parent.scrollTop()-h);
+                    parent.scrollTop(parent.scrollTop() - h);
                 }
-                let x=$('tr.active',that), y;
-                if(move>0){ y=x.next();} else {y=x.prev();}
-                if(y.length>0){
-                    x.removeClass('active');y.addClass('active');
+                let x = $('tr.active', that), y;
+                if (move > 0) {
+                    y = x.next();
+                } else {
+                    y = x.prev();
+                }
+                if (y.length > 0) {
+                    x.removeClass('active');
+                    y.addClass('active');
                     show(y);
                 }
             }
             //console.log(e);
             return false;
-        } else if('Escape'==e.originalEvent.key && rhand.painting!=''){
-            rhand.painting='';
+        } else if ('Escape' == e.originalEvent.key && rhand.painting != '') {
+            rhand.painting = '';
             updatectrl();
         }
         //return false;
@@ -443,7 +451,7 @@ $(function () {
         }
         return false;
     });
-    window.addEventListener('beforeunload', function(e) {
+    window.addEventListener('beforeunload', function (e) {
         handle(['store']);
         e.preventDefault();
         //e.returnValue = '';
