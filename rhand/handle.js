@@ -30,8 +30,8 @@ $(function () {
         $('#programm tr:not(:first)').remove();
         for(let i=0;i<rhand.trace.length;i++) {
             if(rhand.trace[i])
-                $('#programm tbody').append('<tr data-data="'+JSON.stringify(rhand.trace[i])+
-                    '"><td>'+rhand.tograd(rhand.norm(rhand.trace[i][0]))+'</td><td>'+rhand.tograd(rhand.norm(rhand.trace[i][1]))+'</td><td></td><td></td></tr>');
+                $('#programm tbody').append("<tr data-data='"+JSON.stringify(rhand.trace[i])+
+                    "'><td>"+rhand.tograd(rhand.norm(rhand.trace[i][0]))+'</td><td>'+rhand.tograd(rhand.norm(rhand.trace[i][1]))+'</td><td></td><td></td></tr>');
         }
     }
 
