@@ -11,13 +11,15 @@ window.rhand = {
     // длины тяг 0-АА 1-АБ 2-ПА 3-ПБ
     len: [170, 170, 170, 170],
     // увеличение
-    zoom: 1,
+    zoom: 2,
     // габариты окна
-    screen: [660, 760],
+    screen: [660, 660],
     // точка центра 0x0
-    zoompoint: [180 + 150, 440],
+    zoompoint: [180 + 150, 440], // screen/2, screen * 60%
 
-    realmap_border: [-38, 39, -51, 63],
+    minstep: 5,
+
+    realmap_border: [(150 - 170 - 170) / 6, (-150 + 170 + 170) / 6, -260 / 6, 320 / 6],
 
     //
     map: false,
@@ -31,6 +33,17 @@ window.rhand = {
     startA: [0, 0],
     finXY: [0, 0],
     fin_A: [0, 0],
+    zerocoord: 30,
+
+    init: function () {
+        this.realmap_border = [
+            Math.floor(-1+(this.pointA[1] - this.len[1] - this.len[3]) / this.minstep),
+            Math.ceil(1+(this.pointA[0] + this.len[0] + this.len[2]) / this.minstep),
+            Math.floor(-260 / this.minstep),
+            Math.ceil(320 / this.minstep),
+        ];
+        this.zerocoord = Math.round(this.pointB[0] / this.minstep);
+    },
 
     /**
      * механика сохранения
@@ -53,7 +66,7 @@ window.rhand = {
      * @returns {number[]}
      */
     fromscreen: function (x) {
-        return [x[0] - this.zoompoint[0], (this.screen[1] - x[1]) - this.zoompoint[1]];
+        return [this.zoom * (x[0] - this.zoompoint[0]), this.zoom * (this.screen[1] - x[1] - this.zoompoint[1])];
     },
 
     /**
@@ -62,7 +75,7 @@ window.rhand = {
      * @returns {number[]}
      */
     toscreen: function (x) {
-        return [x[0] + this.zoompoint[0], this.screen[1] - (x[1] + this.zoompoint[1])];
+        return [(x[0] / this.zoom + this.zoompoint[0]), (this.screen[1] - (x[1] / this.zoom + this.zoompoint[1]))];
     },
 
     /**
@@ -271,14 +284,14 @@ window.rhand = {
             for (let x = this.realmap_border[0]; x < this.realmap_border[1]; x++) for (let y = this.realmap_border[2]; y < this.realmap_border[3]; y++) {
                 if ((m = (this.map[x][y] & mapcolor)) > 0) {
                     if (!!(c = colormap[m])) {
-                        circle.call(this, [x * 5, y * 5],
+                        circle.call(this, [x * this.minstep, y * this.minstep],
                             {radius: 2, color: c, fillStyle: c});
                     } else {
                         for (let col in colors) if (!!(colors[col][0] & m)) {
-                            circle.call(this, [x * 5, y * 5],
-                                {radius: 2, color: colors[col][1], fillStyle: colors[col][1]});
+                            circle.call(this, [x * this.minstep, y * this.minstep],
+                                {radius: 1, color: colors[col][1], fillStyle: colors[col][1]});
                         }
-                        let xx = this.toscreen([x * 5, y * 5]);
+                        let xx = this.toscreen([x * this.minstep, y * this.minstep]);
                         let pixel = ctx.getImageData(xx[0], xx[1], 1, 1),
                             data = pixel.data;
                         colormap[m] = `rgba(${data[0]}, ${data[1]}, ${data[2]}, ${data[3] / 255})`;
@@ -312,7 +325,7 @@ window.rhand = {
             this.map[x] = [];
             for (let y = this.realmap_border[2]; y < this.realmap_border[3]; y++) {
                 this.map[x][y] = 0;
-                let clearpoint = false, z = [5 * x, 5 * y], o1 = 1, o2 = 0;
+                let clearpoint = false, z = [this.minstep * x, this.minstep * y], o1 = 1, o2 = 0;
                 for (let a in this.Obstacles) {
                     let o = this.Obstacles[a], d = this.distP(o[0], o[1], z);
                     if (d < 7) {
@@ -335,9 +348,9 @@ window.rhand = {
                     }
             }
         }
-        // отметить все двойные точки слева; 2048 - можно рулить ногой A - _*
+        // отметить все крайние точки слева; 2048 - можно рулить ногой A - _*
         for (let y = this.realmap_border[2]; y < this.realmap_border[3]; y++) {
-            for (let x = this.realmap_border[0]; x < this.realmap_border[1]; x++) {
+            for (let x = this.realmap_border[0]+1; x < this.realmap_border[1]; x++) {
                 if (this.map[x][y] != 0 && this.map[x][y] != 8) {
                     this.map[x][y] |= 2048;
                 }
@@ -346,7 +359,7 @@ window.rhand = {
                 }
             }
         }
-        // отметить все двойные точки справа; 1024 - можно рулить ногой B - *_
+        // отметить все крайние точки справа; 1024 - можно рулить ногой B - *_
         for (let y = this.realmap_border[2]; y < this.realmap_border[3]; y++) {
             for (let x = this.realmap_border[1] - 1; x > this.realmap_border[0]; x--) {
                 if (this.map[x][y] != 0 && this.map[x][y] != 8) {
@@ -358,9 +371,21 @@ window.rhand = {
             }
         }
         // отметить ocu
-        this.map[-30][0] |= 1024 + 15;
-        this.map[30][0] |= 2048 + 15;
-
+        this.map[-this.zerocoord][0] |= 1024 + 15;
+        this.map[this.zerocoord][0] |= 2048 + 15;
+// отметить все крайние точки ; 4096 - специальный вес, чтобы не проходить вблизи каверн
+        for (let y = this.realmap_border[2] + 1; y < this.realmap_border[3] - 1; y++) {
+            for (let x = this.realmap_border[1] - 2; x > this.realmap_border[0] + 1; x--) {
+                if ((this.map[x][y] & 15) != 0 && (
+                    0 == (this.map[x + 1][y] & 15)
+                    || 0 == (this.map[x - 1][y] & 15)
+                    || 0 == (this.map[x][y - 1] & 15)
+                    || 0 == (this.map[x][y + 1] & 15)
+                )) {
+                    this.map[x][y] |= 4096;
+                }
+            }
+        }
     },
 
     /**
@@ -394,22 +419,29 @@ window.rhand = {
                         if (xx + x > this.realmap_border[0] && xx + x < this.realmap_border[1]
                             && yy + y > this.realmap_border[2] && yy + y < this.realmap_border[3]
                             && (this.map[xx + x][yy + y] & cc) > 0) {
-                            res |= callback.call(this, xx + x, yy + y, cc, (Math.abs(x) == Math.abs(y)) ? 1.4 : 1);
+                            let weight = 1;
+                            if (Math.abs(x) == Math.abs(y)) weight = 1.4;
+                            if (!(this.map[xx + x + x] && (this.map[xx + x + x][yy + y + y] & cc) > 0)) {
+                                weight += 10; // избегаем границ зон
+                            }
+                            if (this.map[xx + x][yy + y] & 4096) weight += 10; // избегаем клеток рядом с кавернами
+
+                            res |= callback.call(this, xx + x, yy + y, cc, weight);
                         }
             }
             // проверка точек перехода
             // проверка точек перехода
             if ((1024 & this.map[xx][yy]) > 0) {
-                res |= callback.call(this, xx, yy, (cc == 1 ? 4 : (cc == 2 ? 8 : (cc == 4 ? 1 : 2))), 1);
+                res |= callback.call(this, xx, yy, (cc == 1 ? 4 : (cc == 2 ? 8 : (cc == 4 ? 1 : 2))), (this.map[xx][yy] & 4096 ? 10 : 0) + 10);
             }
             if ((2048 & this.map[xx][yy]) > 0) {
-                res |= callback.call(this, xx, yy, (cc == 1 ? 2 : (cc == 2 ? 1 : (cc == 4 ? 8 : 4))), 1);
+                res |= callback.call(this, xx, yy, (cc == 1 ? 2 : (cc == 2 ? 1 : (cc == 4 ? 8 : 4))), (this.map[xx][yy] & 4096 ? 10 : 0) + 10);
             }
             return res;
         }
 
-        let p = [[Math.round(a[0] / 5), Math.round(a[1] / 5), o1],
-            [Math.round(b[0] / 5), Math.round(b[1] / 5), o2]];
+        let p = [[Math.round(a[0] / this.minstep), Math.round(a[1] / this.minstep), o1],
+            [Math.round(b[0] / this.minstep), Math.round(b[1] / this.minstep), o2]];
         map[p[0][0]][p[0][1]][p[0][2]] = 1;
         map[p[1][0]][p[1][1]][p[1][2]] = -1;
         while (!finish && p.length > 0) {
@@ -476,11 +508,11 @@ window.rhand = {
                 })) {
                     break;
                 }
-                if (Math.abs(maxpoint[0]) == 30 && maxpoint[1] == 0) {
+                if (Math.abs(maxpoint[0]) == this.zerocoord && maxpoint[1] == 0) {
                     trace.unshift([]);
                     continue;
                 }
-                trace.unshift([5 * maxpoint[0], 5 * maxpoint[1], maxpoint[2]]);
+                trace.unshift([this.minstep * maxpoint[0], this.minstep * maxpoint[1], maxpoint[2]]);
             }
             // сворачиваем трассу. От minpoint до конца маршрута
             min = -1000000;
@@ -494,11 +526,11 @@ window.rhand = {
                 })) {
                     break;
                 }
-                if (Math.abs(minpoint[0]) == 30 && minpoint[1] == 0) {
+                if (Math.abs(minpoint[0]) == this.zerocoord && minpoint[1] == 0) {
                     trace.push([]);
                     continue;
                 }
-                trace.push([5 * minpoint[0], 5 * minpoint[1], minpoint[2]]);
+                trace.push([this.minstep * minpoint[0], this.minstep * minpoint[1], minpoint[2]]);
             }
             // подставляем реальные координаты начала и конца маршрута вместо узлов сетки
             if (trace.length > 0) trace.shift();

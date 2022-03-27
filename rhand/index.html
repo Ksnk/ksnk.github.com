@@ -8,7 +8,7 @@
 <body>
 <svg fill="currentColor" style="display: none" xmlns="http://www.w3.org/2000/svg">
     <symbol id="icon-rollup" viewBox="0 0 16 16">
-        <g fill="#000000" transform="translate(-384.000000, -144.000000)">
+        <g fill="#fff" transform="translate(-384.000000, -144.000000)">
             <path d="M391.5,157 C389.014719,157 387,154.985281 387,152.5 C387,152.331018 387.009314,152.164211 387.027464,152 L385.018945,152 C385.00639,152.165053 385,152.33178 385,152.5 C385,156.089851 387.910149,159 391.5,159 C395.089851,159 398,156.089851 398,152.5 C398,149.078368 395.356198,146.27423 392,146.018945 L392,148.027464 C394.249941,148.27615 396,150.183701 396,152.5 C396,154.985281 393.985281,157 391.5,157 L391.5,157 Z M388,147 L392,150 L392,144 L388,147 L388,147 Z M388,147"
             />
         </g>
@@ -44,8 +44,6 @@
     <symbol id="icon-pencil" viewBox="0 0 18 18">
         <path d='M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z'></path>
     </symbol>
-
-
     <!--
     <symbol id="icon-ribbon" viewBox="0 0 18 18">
         <g id="Icons with numbers" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -84,24 +82,24 @@
 </svg>
 
 <div id="mapwrapper" style="z-index:100;">
-    <!--<span class="ion ion-android-close" style="float:right;" data-handle="map.close"></span>
-    <div class="search  unselectable"><input type="text">
-        <span class="ion ion-android-add-circle" data-handle="map.zoom.plus"></span>
-        <span class="ion ion-android-remove-circle" data-handle="map.zoom.minus"></span>
-        <div class="dropdownlist"></div>
-
-    </div>-->
     <table style="table-layout:fixed;width:100%;">
-        <col width="330"/>
-        <col width="330"/>
+        <col />
+        <col width="50"/>
         <col width="300"/>
-        <col/>
         <tr>
-            <td colspan="2">
+            <td colspan="2" style="text-align: center;">
 
-                <div id="map" style="width:100%;height:580px;overflow:hidden;">
-                    <canvas data-handle="mapclick" height="580" id="canvas" style="background-color:#444"
+                <div id="map" style="display:inline-block;position:relative;">
+                    <canvas data-handle="mapclick" height="660" id="canvas" style="background-color:#444"
                             width="660"></canvas>
+                    <span style="position:absolute;left:0.5em;top:0.5em;" class="pressHold" data-handle="rotate,pointA,1"><svg class="svgicon "><use
+                            xlink:href="#icon-rollup"/></svg></span>
+                    <span style="position:absolute;left:2em;top:0.5em;" class="pressHold" data-handle="rotate,pointA,-1"><svg class="svgicon mirrorY"><use
+                            xlink:href="#icon-rollup"/></svg></span>
+                    <span style="position:absolute;right:2em;top:0.5em;" class="pressHold" data-handle="rotate,pointB,1"><svg class="svgicon "><use
+                            xlink:href="#icon-rollup"/></svg></span>
+                    <span style="position:absolute;right:0.5em;top:0.5em;" class="pressHold" data-handle="rotate,pointB,-1"><svg class="svgicon mirrorY"><use
+                            xlink:href="#icon-rollup"/></svg></span>
                 </div>
             </td>
             <td valign="top">
@@ -163,7 +161,7 @@
                                 xlink:href="#icon-cross"/></svg></button>&nbsp;
                     </fieldset>
                 </div>
-                <div class="tabcontent " style="height:533px;overflow:auto;">
+                <div class="tabcontent " style="height:620px;overflow:auto;">
                     <table id="programm">
                         <tr>
                             <th><span data-handle='["copyjson","#fc2",["trace"]]'><svg class="svgicon"><use
@@ -183,23 +181,8 @@
 
                 </div>
             </td>
-            <td></td>
         </tr>
-        <tr class="unselectable">
-            <td>
-                <span class="pressHold" data-handle="rotate,pointA,1"><svg class="svgicon "><use
-                        xlink:href="#icon-rollup"/></svg></span>
-                <span class="pressHold" data-handle="rotate,pointA,-1"><svg class="svgicon mirrorY"><use
-                        xlink:href="#icon-rollup"/></svg></span>
-            </td>
-            <td align="right">
-                <span class="pressHold" data-handle="rotate,pointB,1"><svg class="svgicon "><use
-                        xlink:href="#icon-rollup"/></svg></span>
-                <span class="pressHold" data-handle="rotate,pointB,-1"><svg class="svgicon mirrorY"><use
-                        xlink:href="#icon-rollup"/></svg></span>
-            </td>
-            <td></td>
-        </tr>
+
     </table>
 </div>
 
