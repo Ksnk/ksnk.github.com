@@ -641,7 +641,7 @@ window.rhand = {
                 fb = this.buildTriangle(this.pointB, aa, this.len[3], this.len[1], o2);
                 if (isNaN(fb[0]) || isNaN(fa[0])) continue;
                 let a = this.angle(fa, aa), b = this.angle(fb, aa);
-                console.log([o1, o2]);
+                //console.log([o1, o2]);
                 if (Math.PI < this.norm(Math.PI - a + b)) {
                     order[0] = o1;
                     order[1] = o2;

@@ -483,6 +483,19 @@ $(function () {
         //e.returnValue = '';
         return true;
     });
+    $(window).bind('mousewheel DOMMouseScroll', function(event){
+        if($(event.target).is('#canvas')) {
+            if (event.originalEvent.wheelDelta > 0 || event.originalEvent.detail < 0) {
+                // scroll up
+                rhand.zoom=Math.min(2,rhand.zoom*1.1);
+            } else {
+                rhand.zoom=Math.max(rhand.zoom/1.1,0.5);
+            }
+            rhand.svgcache=[];
+            rhand.draw();
+            //return false;
+        }
+    });
 
     rhand.init();
     handle([['load'],['resize']]);
