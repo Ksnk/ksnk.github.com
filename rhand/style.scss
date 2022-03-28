@@ -18,6 +18,36 @@ span[data-handle] {
 
 }
 
+#map {
+  display: inline-block;
+  position: relative;
+
+  span {
+    position: absolute;
+    top: 0.5em;
+  }
+}
+
+div.forpaste {
+  display: inline-block;
+  position: relative;
+
+  span {
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  input {
+    opacity: 0.01;
+    outline: none;
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+  }
+}
+
 button.active {
   background: #bab8b8;
 }
@@ -25,6 +55,7 @@ button.active {
 #programm tr.active {
   background: #DDDDDD;
 }
+
 #programm tr:hover {
   background: #f3f3f3;
 }

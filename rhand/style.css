@@ -16,6 +16,33 @@ span[data-handle] {
   font-size: 0.8em;
 }
 
+#map {
+  display: inline-block;
+  position: relative;
+}
+#map span {
+  position: absolute;
+  top: 0.5em;
+}
+
+div.forpaste {
+  display: inline-block;
+  position: relative;
+}
+div.forpaste span {
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+div.forpaste input {
+  opacity: 0.01;
+  outline: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+}
+
 button.active {
   background: #bab8b8;
 }
