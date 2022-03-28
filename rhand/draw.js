@@ -302,6 +302,15 @@ window.rhand = {
         for (let i = 0; i < this.Obstacles.length; i++) {
             line.call(this, this.Obstacles[i][0], this.Obstacles[i][1], {color: "white", lineWidth: "5"});
         }
+        if(this.trace){
+            let p=this.trace[0][2];
+            for(let i=1;i<this.trace.length;i++){
+                if(this.trace[i][2]) {
+                    line.call(this, p, this.trace[i][2], {lineWidth: 1, color: "red"});
+                    p = this.trace[i][2];
+                }
+            }
+        }
 
         line.call(this, this.pointA, this.finA, {color: "red"});
         line.call(this, this.finA, this.finC, {color: "green"});

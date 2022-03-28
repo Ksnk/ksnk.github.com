@@ -29,10 +29,15 @@ $(function () {
 
     function drawTrace() {
         $('#programm tr:not(:first)').remove();
+        let pa=[...rhand.pointA],pb=[...rhand.pointB];
         for (let i = 0; i < rhand.trace.length; i++) {
-            if (rhand.trace[i])
+            if (rhand.trace[i]) {
+                pa[2]=rhand.trace[i][0],pb[2]=rhand.trace[i][1];
+                let z=rhand.calc_silent(pa,pb);
+                rhand.trace[i][2]=z[2];
                 $('#programm tbody').append("<tr data-data='" + JSON.stringify(rhand.trace[i]) +
                     "'><td>" + rhand.tograd(rhand.norm(rhand.trace[i][0])) + '</td><td>' + rhand.tograd(rhand.norm(rhand.trace[i][1])) + '</td><td></td><td></td></tr>');
+            }
         }
     }
 
@@ -389,7 +394,7 @@ $(function () {
 
     function show(tr) {
         let data = tr.data('data');
-        if (data && data[0] && data[1]) {
+        if (data && data.length && data.length>1) {
             rhand.pointA[2] = data[0];
             rhand.pointB[2] = data[1];
             draw();
