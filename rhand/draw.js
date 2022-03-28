@@ -35,6 +35,8 @@ window.rhand = {
     fin_A: [0, 0],
     zerocoord: 30,
 
+    svgcache: [],
+
     init: function () {
         this.realmap_border = [
             Math.floor(-1+(this.pointA[1] - this.len[1] - this.len[3]) / this.minstep),
@@ -302,14 +304,23 @@ window.rhand = {
         for (let i = 0; i < this.Obstacles.length; i++) {
             line.call(this, this.Obstacles[i][0], this.Obstacles[i][1], {color: "white", lineWidth: "5"});
         }
-        if(this.trace){
-            let p=this.trace[0][2];
-            for(let i=1;i<this.trace.length;i++){
-                if(this.trace[i][2]) {
-                    line.call(this, p, this.trace[i][2], {lineWidth: 1, color: "red"});
-                    p = this.trace[i][2];
+        if (this.trace) {
+            if(!this.svgcache['trace']) {
+                let m='',p = this.toscreen(this.trace[0][2]);
+                m+='M'+Math.round(p[0])+' '+Math.round(p[1])+' ';
+                for (let i = 1; i < this.trace.length; i++) {
+                    if (this.trace[i][2]) {
+                        p = this.toscreen(this.trace[i][2]);;
+                        m+='L'+Math.round(p[0])+' '+Math.round(p[1])+' ';
+                    }
                 }
+                this.svgcache['trace']=m;
             }
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = "red";
+            ctx.fillStyle = "red";
+            let p = new Path2D(this.svgcache['trace']);
+            ctx.stroke(p);
         }
 
         line.call(this, this.pointA, this.finA, {color: "red"});

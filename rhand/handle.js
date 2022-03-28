@@ -362,9 +362,7 @@ $(function () {
                     w/2,
                     h*2/5
                 ]
-                console.log([w,h], bound,
-                    rhand.screen,rhand.zoom,rhand.zoompoint)
-
+                rhand.svgcache=[];
                 draw();
                 break;
         }
