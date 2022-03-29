@@ -35,6 +35,8 @@ window.rhand = {
     fin_A: [0, 0],
     zerocoord: 30,
 
+    templine:false,
+
     svgcache: [],
 
     init: function () {
@@ -302,6 +304,15 @@ window.rhand = {
         }
         for (let i = 0; i < this.Obstacles.length; i++) {
             line.call(this, this.Obstacles[i][0], this.Obstacles[i][1], {color: "white", lineWidth: "5"});
+        }
+        if(this.templine){
+            ctx.beginPath();
+            ctx.lineCap = "round";
+            ctx.lineWidth =  3;
+            ctx.moveTo(this.templine[0][0], this.templine[0][1]);
+            ctx.lineTo(this.templine[1][0], this.templine[1][1]);
+            ctx.strokeStyle = "lightgray";
+            ctx.stroke();
         }
         if (this.trace) {
             if(!this.svgcache['trace']) {

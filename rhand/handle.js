@@ -230,8 +230,9 @@ $(function () {
                 break;
 
             case 'mapclick':
+                let o=whattodo[1];
                 if (rhand.painting === 'clear') {
-                    let x = rhand.fromscreen([handle.event.offsetX, handle.event.offsetY]);
+                    let x = rhand.fromscreen([o.offsetX, o.offsetY]);
                     for (let a in rhand.Obstacles) {
                         let o = rhand.Obstacles[a];
                         if (rhand.distP(o[0], o[1], x) < 5) { // нашли первое близкое препятствие
@@ -243,13 +244,13 @@ $(function () {
                     rhand.painting = '';
                     draw();
                 } else if (rhand.painting === 'obstacles') {
-                    let x = rhand.fromscreen([handle.event.offsetX, handle.event.offsetY]);
+                    let x = rhand.fromscreen([o.offsetX, o.offsetY]);
                     rhand.Obstacles.push([x, x]);
                     rhand.painting = 'obstaclesfin';
                     updatectrl();
                     draw();
                 } else if (rhand.painting === 'obstaclesfin') {
-                    let x = rhand.fromscreen([handle.event.offsetX, handle.event.offsetY]);
+                    let x = rhand.fromscreen([o.offsetX, o.offsetY]);
                     if (rhand.Obstacles.length > 0) {
                         let y = rhand.Obstacles.pop();
                         y[1] = x;
@@ -260,7 +261,7 @@ $(function () {
                     updatectrl();
                     draw();
                 } else {
-                    let point = rhand.fromscreen([handle.event.offsetX, handle.event.offsetY]);
+                    let point = rhand.fromscreen([o.offsetX, o.offsetY]);
                     play(rhand.moveTo(point));
                 }
                 break;
@@ -350,6 +351,21 @@ $(function () {
             case 'clearpaint':
                 rhand.painting = 'clear';
                 updatectrl();
+                break;
+            case 'mapdragtemp':
+                rhand.templine=[whattodo[1],whattodo[2]];
+                draw();
+                //console.log('mousedragtemp',whattodo[1],whattodo[2]);
+                break;
+            case 'mapdrag': (function() {
+                let a = rhand.fromscreen([rhand.templine[0][0], rhand.templine[0][1]]),
+                    b=rhand.fromscreen([rhand.templine[1][0], rhand.templine[1][1]]);
+                rhand.templine = false;
+                rhand.Obstacles.push([a, b]);
+                rhand.mapit();
+                updatectrl();
+                draw();
+                })();
                 break;
             case 'resize':
                 let bound=$('#map').parents('td')[0].getBoundingClientRect();
@@ -498,6 +514,44 @@ $(function () {
             //return false;
         }
     });
+    // D&D на канвасе
+    let timetostart,to=false,state=0, startpoint=[], lastpoint;
+    $(document).on('mousedown mouseup mouseleave','#canvas',function(e){
+        // d&d support
+        if(e.type=='mousedown') {
+            let today = new Date();
+            state=1; // pressed
+            timetostart = today.getMilliseconds();
+            startpoint=[e.offsetX,e.offsetY];
+            to=setTimeout(function(){
+                state=2; // dragging
+                $(document).on('mousemove','#canvas',function(e){
+                    lastpoint=[e.offsetX,e.offsetY];
+                    handle(['mapdragtemp',startpoint,lastpoint]);
+                    return false;
+                });
+                to=false;
+            },200);
+        } else {
+            // прекращаем
+            if(e.type=='mouseup'){
+                lastpoint=[e.offsetX,e.offsetY];
+            }
+            $(document).off('mousemove','#canvas');
+            if(to){
+                clearTimeout(to);
+                to=false;
+            }
+            if(state==2)
+                handle(['mapdrag',startpoint,[e.offsetX,e.offsetY]]);
+            else if(state==1) {
+                handle(['mapclick',{offsetX:e.offsetX,offsetY:e.offsetY}]);
+            }
+
+            state=0;
+            return false;
+        }
+    })
 
     rhand.init();
     handle([['load'],['resize']]);
