@@ -181,7 +181,6 @@ window.rhand = {
         if (((D[0] <= A[0] && D[0] >= B[0]) || (D[0] >= A[0] && D[0] <= B[0]))
             && ((D[1] <= A[1] && D[1] >= B[1]) || (D[1] >= A[1] && D[1] <= B[1]))) {
             return this.dist(C, D);
-            //Math.abs((dy*C[1]+dx*C[1]+(A[0]*B[1]+A[1]*B[0]))/d);
         }
         return Math.min(this.dist(A, C), this.dist(B, C));
     },
@@ -291,7 +290,7 @@ window.rhand = {
                     } else {
                         for (let col in colors) if (!!(colors[col][0] & m)) {
                             circle.call(this, [x * this.minstep, y * this.minstep],
-                                {radius: 1, color: colors[col][1], fillStyle: colors[col][1]});
+                                {radius: 2, color: colors[col][1], fillStyle: colors[col][1]});
                         }
                         let xx = this.toscreen([x * this.minstep, y * this.minstep]);
                         let pixel = ctx.getImageData(xx[0], xx[1], 1, 1),
@@ -442,7 +441,7 @@ window.rhand = {
                             let weight = 1;
                             if (Math.abs(x) == Math.abs(y)) weight = 1.4;
                             if (!(this.map[xx + x + x] && (this.map[xx + x + x][yy + y + y] & cc) > 0)) {
-                                weight += 10; // избегаем границ зон
+                                weight += 3; // избегаем границ зон
                             }
                             if (this.map[xx + x][yy + y] & 4096) weight += 10; // избегаем клеток рядом с кавернами
 

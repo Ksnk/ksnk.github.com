@@ -39,6 +39,8 @@ $(function () {
                     "'><td>" + rhand.tograd(rhand.norm(rhand.trace[i][0])) + '</td><td>' + rhand.tograd(rhand.norm(rhand.trace[i][1])) + '</td><td></td><td></td></tr>');
             }
         }
+        rhand.svgcache=[];
+        draw();
     }
 
     /**
@@ -487,9 +489,9 @@ $(function () {
         if($(event.target).is('#canvas')) {
             if (event.originalEvent.wheelDelta > 0 || event.originalEvent.detail < 0) {
                 // scroll up
-                rhand.zoom=Math.min(2,rhand.zoom*1.1);
+                rhand.zoom=Math.max(0.5,rhand.zoom*0.9);
             } else {
-                rhand.zoom=Math.max(rhand.zoom/1.1,0.5);
+                rhand.zoom=Math.min(rhand.zoom/0.9,2);
             }
             rhand.svgcache=[];
             rhand.draw();
