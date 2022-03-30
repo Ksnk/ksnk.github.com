@@ -26,6 +26,31 @@ span[data-handle] {
     position: absolute;
     top: 0.5em;
   }
+
+  .right0 {
+    right: 0.5em;
+  }
+
+  .left0 {
+    left: 0.5em;
+  }
+
+  .right1 {
+    right: 2em;
+  }
+
+  .left1 {
+    left: 2em;
+  }
+
+  canvas {
+    background-color: #444;
+  }
+}
+
+.tabcontent {
+  height: 620px;
+  overflow: auto;
 }
 
 div.forpaste {

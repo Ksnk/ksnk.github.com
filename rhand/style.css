@@ -24,6 +24,26 @@ span[data-handle] {
   position: absolute;
   top: 0.5em;
 }
+#map .right0 {
+  right: 0.5em;
+}
+#map .left0 {
+  left: 0.5em;
+}
+#map .right1 {
+  right: 2em;
+}
+#map .left1 {
+  left: 2em;
+}
+#map canvas {
+  background-color: #444;
+}
+
+.tabcontent {
+  height: 620px;
+  overflow: auto;
+}
 
 div.forpaste {
   display: inline-block;

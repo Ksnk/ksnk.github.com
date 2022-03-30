@@ -29,17 +29,17 @@ $(function () {
 
     function drawTrace() {
         $('#programm tr:not(:first)').remove();
-        let pa=[...rhand.pointA],pb=[...rhand.pointB];
+        let pa = [...rhand.pointA], pb = [...rhand.pointB];
         for (let i = 0; i < rhand.trace.length; i++) {
             if (rhand.trace[i]) {
-                pa[2]=rhand.trace[i][0],pb[2]=rhand.trace[i][1];
-                let z=rhand.calc_silent(pa,pb);
-                rhand.trace[i][2]=z[2];
+                pa[2] = rhand.trace[i][0], pb[2] = rhand.trace[i][1];
+                let z = rhand.calc_silent(pa, pb);
+                rhand.trace[i][2] = z[2];
                 $('#programm tbody').append("<tr data-data='" + JSON.stringify(rhand.trace[i]) +
                     "'><td>" + rhand.tograd(rhand.norm(rhand.trace[i][0])) + '</td><td>' + rhand.tograd(rhand.norm(rhand.trace[i][1])) + '</td><td></td><td></td></tr>');
             }
         }
-        rhand.svgcache=[];
+        rhand.svgcache = [];
         draw();
     }
 
@@ -62,9 +62,11 @@ $(function () {
     /**
      * анимировать перемещение манипулятора
      * @param {{x:number,y:number}[]}trace
+     * Останавливается при нажатии на Esc (см. play.stop)
      */
     function play(trace) {
-        let cur = 0;play.stop=false;
+        let cur = 0;
+        play.stop = false;
         if (!!play.i) clearInterval(play.i);
         play.i = setInterval(function () {
             if (cur >= trace.length || play.stop) {
@@ -116,7 +118,7 @@ $(function () {
      * - handle([['rotate',1,-1],['rotate',1,-1],['rotate',1,-1],['rotate',1,-1]])
      *  -- несколько команд в одном флаконе, удобно для ajax
      */
-    var oldzoompoint=false;
+    var oldzoompoint = false;
     window.handle = function (whattodo) {
         var pa, pb, reason = whattodo[0] || '';
         if (whattodo && whattodo[0] && whattodo[0].constructor && whattodo[0].constructor === Array) {
@@ -216,7 +218,7 @@ $(function () {
                     ab = $('button.painting[data-handle=clearpaint]');
                 } else if (rhand.painting == 'obstacles') {
                     ab = $('button.painting[data-handle=paint]');
-                }else  {
+                } else {
                     ab = $('button.painting[data-handle=moving]');
                 }
                 if (pb.not(ab).length > 0) pb.not(ab).removeClass('active');
@@ -233,7 +235,7 @@ $(function () {
                 break;
 
             case 'mapclick':
-                let o=whattodo[1];
+                let o = whattodo[1];
                 if (rhand.painting === 'clear') {
                     let x = rhand.fromscreen([o.offsetX, o.offsetY]);
                     for (let a in rhand.Obstacles) {
@@ -342,23 +344,23 @@ $(function () {
                 updatectrl();
                 break;
             case 'mapdragtemp':
-                if(rhand.painting == 'obstacles') {
+                if (rhand.painting == 'obstacles') {
                     rhand.templine = [whattodo[1], whattodo[2]];
                     draw();
-                } else if(rhand.painting == ''){
-                    if(false===oldzoompoint){
-                        oldzoompoint=[...rhand.zoompoint];
+                } else if (rhand.painting == '') {
+                    if (false === oldzoompoint) {
+                        oldzoompoint = [...rhand.zoompoint];
                     }
-                    rhand.zoompoint[0]=oldzoompoint[0]+(whattodo[2][0]-whattodo[1][0]);
-                    rhand.zoompoint[1]=oldzoompoint[1]-(whattodo[2][1]-whattodo[1][1]);
+                    rhand.zoompoint[0] = oldzoompoint[0] + (whattodo[2][0] - whattodo[1][0]);
+                    rhand.zoompoint[1] = oldzoompoint[1] - (whattodo[2][1] - whattodo[1][1]);
                     //console.log('mousedragtemp',rhand.zoompoint,oldzoompoint);
-                    rhand.svgcache=[];
+                    rhand.svgcache = [];
                     draw();
                 }
                 //console.log('mousedragtemp',whattodo[1],whattodo[2]);
                 break;
             case 'mapdrag':
-                if(rhand.painting == 'obstacles') {
+                if (rhand.painting == 'obstacles') {
                     (function () {
                         let a = rhand.fromscreen([rhand.templine[0][0], rhand.templine[0][1]]),
                             b = rhand.fromscreen([rhand.templine[1][0], rhand.templine[1][1]]);
@@ -368,31 +370,31 @@ $(function () {
                         updatectrl();
                         draw();
                     })()
-                } else if(rhand.painting == ''){
-                    if(false!==oldzoompoint) {
-                        rhand.zoompoint[0]=oldzoompoint[0]+(whattodo[2][0]-whattodo[1][0]);
-                        rhand.zoompoint[1]=oldzoompoint[1]-(whattodo[2][1]-whattodo[1][1])
+                } else if (rhand.painting == '') {
+                    if (false !== oldzoompoint) {
+                        rhand.zoompoint[0] = oldzoompoint[0] + (whattodo[2][0] - whattodo[1][0]);
+                        rhand.zoompoint[1] = oldzoompoint[1] - (whattodo[2][1] - whattodo[1][1])
                         oldzoompoint = false;
-                        rhand.svgcache=[];
+                        rhand.svgcache = [];
                         draw();
                         //console.log('move',rhand.zoompoint);
                     }
                 }
                 break;
             case 'resize':
-                let bound=$('#map').parents('td')[0].getBoundingClientRect();
-                rhand.zoom=Math.min(2,Math.max(0.5,Math.max(rhand.screen[0]/bound.width,
-                    rhand.screen[1]/bound.height)));
-                let h=Math.min(rhand.screen[1]/rhand.zoom,bound.height),
-                    w=Math.min(rhand.screen[0]/rhand.zoom,bound.width);
+                let bound = $('#map').parents('td')[0].getBoundingClientRect();
+                rhand.zoom = Math.min(2, Math.max(0.5, Math.max(rhand.screen[0] / bound.width,
+                    rhand.screen[1] / bound.height)));
+                let h = Math.min(rhand.screen[1] / rhand.zoom, bound.height),
+                    w = Math.min(rhand.screen[0] / rhand.zoom, bound.width);
                 $('#canvas')[0].setAttribute("height", h);
-                $('#canvas')[0].setAttribute("width",w);
-                rhand.screen=[w,h];
-                rhand.zoompoint=[
-                    w/2,
-                    h*2/5
+                $('#canvas')[0].setAttribute("width", w);
+                rhand.screen = [w, h];
+                rhand.zoompoint = [
+                    w / 2,
+                    h * 2 / 5
                 ]
-                rhand.svgcache=[];
+                rhand.svgcache = [];
                 draw();
                 break;
         }
@@ -422,7 +424,7 @@ $(function () {
 
     function show(tr) {
         let data = tr.data('data');
-        if (data && data.length && data.length>1) {
+        if (data && data.length && data.length > 1) {
             rhand.pointA[2] = data[0];
             rhand.pointB[2] = data[1];
             draw();
@@ -472,9 +474,9 @@ $(function () {
             //console.log(e);
             return false;
         } else if ('Escape' == e.originalEvent.key) {
-            if( rhand.painting != '')
+            if (rhand.painting != '')
                 rhand.painting = '';
-            play.stop=true;
+            play.stop = true;
             updatectrl();
         }
         //return false;
@@ -513,60 +515,60 @@ $(function () {
         //e.returnValue = '';
         return true;
     });
-    $(window).bind('mousewheel DOMMouseScroll', function(event){
-        if($(event.target).is('#canvas')) {
+    $(window).bind('mousewheel DOMMouseScroll', function (event) {
+        if ($(event.target).is('#canvas')) {
             if (event.originalEvent.wheelDelta > 0 || event.originalEvent.detail < 0) {
                 // scroll up
-                rhand.zoom=Math.max(0.5,rhand.zoom*0.9);
+                rhand.zoom = Math.max(0.5, rhand.zoom * 0.9);
             } else {
-                rhand.zoom=Math.min(rhand.zoom/0.9,2);
+                rhand.zoom = Math.min(rhand.zoom / 0.9, 2);
             }
-            rhand.svgcache=[];
+            rhand.svgcache = [];
             rhand.draw();
             //return false;
         }
     });
     // D&D на канвасе
-    let timetostart,to=false,state=0, startpoint=[], lastpoint;
-    $(document).on('mousedown mouseup mouseleave','#canvas',function(e){
+    let timetostart, to = false, state = 0, startpoint = [], lastpoint;
+    $(document).on('mousedown mouseup mouseleave', '#canvas', function (e) {
         // d&d support
-        if(e.type=='mousedown') {
+        if (e.type == 'mousedown') {
             let today = new Date();
-            state=1; // pressed
+            state = 1; // pressed
             timetostart = today.getMilliseconds();
-            startpoint=[e.offsetX,e.offsetY];
-            to=setTimeout(function(){
-                $(document).on('mousemove','#canvas',function(e){
-                    state=2; // dragging
-                    lastpoint=[e.offsetX,e.offsetY];
-                    handle(['mapdragtemp',startpoint,lastpoint]);
+            startpoint = [e.offsetX, e.offsetY];
+            to = setTimeout(function () {
+                $(document).on('mousemove', '#canvas', function (e) {
+                    state = 2; // dragging
+                    lastpoint = [e.offsetX, e.offsetY];
+                    handle(['mapdragtemp', startpoint, lastpoint]);
                     return false;
                 });
-                to=false;
-            },200);
+                to = false;
+            }, 200);
         } else {
             // прекращаем
-            if(e.type=='mouseup'){
-                lastpoint=[e.offsetX,e.offsetY];
+            if (e.type == 'mouseup') {
+                lastpoint = [e.offsetX, e.offsetY];
             }
-            $(document).off('mousemove','#canvas');
-            if(to){
+            $(document).off('mousemove', '#canvas');
+            if (to) {
                 clearTimeout(to);
-                to=false;
+                to = false;
             }
-            if(state==2)
-                handle(['mapdrag',startpoint,[e.offsetX,e.offsetY]]);
-            else if(state==1) {
-                handle(['mapclick',{offsetX:e.offsetX,offsetY:e.offsetY}]);
+            if (state == 2)
+                handle(['mapdrag', startpoint, [e.offsetX, e.offsetY]]);
+            else if (state == 1) {
+                handle(['mapclick', {offsetX: e.offsetX, offsetY: e.offsetY}]);
             }
 
-            state=0;
+            state = 0;
             return false;
         }
     })
 
     rhand.init();
-    handle([['load'],['resize']]);
+    handle([['load'], ['resize']]);
     window.rhand.mapit();
     draw();
     drawTrace();
