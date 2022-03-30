@@ -218,7 +218,11 @@ window.rhand = {
             ((a1[0] * b1[1] - a1[1] * b1[0]) * (a2[0] - b2[0]) - (a1[0] - b1[0]) * (a2[0] * b2[1] - a2[1] * b2[0])) / discr,
             ((a1[0] * b1[1] - a1[1] * b1[0]) * (a2[1] - b2[1]) - (a1[1] - b1[1]) * (a2[0] * b2[1] - a2[1] * b2[0])) / discr
         ];
-        return Math.min(Math.max(this.distP(a1, b1, i),this.distP(a2, b2, i)),this.distP(a1, b1, a2), this.distP(a1, b1, b2));
+        return Math.min(
+            Math.max(this.distP(a1, b1, i),this.distP(a2, b2, i)),
+            this.distP(a2, b2, a1), this.distP(a2, b2, b1),
+            this.distP(a1, b1, a2), this.distP(a1, b1, b2)
+        );
     },
 
     /**
@@ -297,7 +301,7 @@ window.rhand = {
         let m, c, colormap = [];
 
         if (this.mapcolor > 0 || this.mapauto) {
-            let radius=Math.round(2/this.zoom),mapcolor = this.mapcolor;
+            let radius=2/this.zoom,mapcolor = this.mapcolor;
             if (this.mapauto) mapcolor |= x[3];
             for (let x = this.realmap_border[0]; x < this.realmap_border[1]; x++) for (let y = this.realmap_border[2]; y < this.realmap_border[3]; y++) {
                 if ((m = (this.map[x][y] & mapcolor)) > 0) {
@@ -338,7 +342,6 @@ window.rhand = {
                 for (let i = 1; i < this.trace.length; i++) {
                     if (this.trace[i][2]) {
                         p = this.toscreen(this.trace[i][2]);
-                        ;
                         m += 'L' + Math.round(p[0]) + ' ' + Math.round(p[1]) + ' ';
                     }
                 }
@@ -392,7 +395,7 @@ window.rhand = {
 
                         let a = this.angle(fa, z), b = this.angle(fb, z);
                         if (Math.PI < this.norm(Math.PI - a + b)) {
-                            if (rhand.intersectPP(pa, fa, pb, fb) > 10) {
+                            if (this.intersectPP(pa, fa, pb, fb) > 10) {
                                 this.map[x][y] |= 1 << (o1 * 2 + o2);
                             }
                         }
