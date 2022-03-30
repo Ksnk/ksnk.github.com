@@ -116,6 +116,7 @@ $(function () {
      * - handle([['rotate',1,-1],['rotate',1,-1],['rotate',1,-1],['rotate',1,-1]])
      *  -- несколько команд в одном флаконе, удобно для ajax
      */
+    var oldzoompoint=false;
     window.handle = function (whattodo) {
         var pa, pb, reason = whattodo[0] || '';
         if (whattodo && whattodo[0] && whattodo[0].constructor && whattodo[0].constructor === Array) {
@@ -213,8 +214,10 @@ $(function () {
                 let ab = false;
                 if (rhand.painting == 'clear') {
                     ab = $('button.painting[data-handle=clearpaint]');
-                } else if (rhand.painting == 'obstacles' || rhand.painting == 'obstaclesfin') {
+                } else if (rhand.painting == 'obstacles') {
                     ab = $('button.painting[data-handle=paint]');
+                }else  {
+                    ab = $('button.painting[data-handle=moving]');
                 }
                 if (pb.not(ab).length > 0) pb.not(ab).removeClass('active');
                 if (ab.length > 0) ab.addClass('active');
@@ -241,24 +244,6 @@ $(function () {
                         }
                     }
                     rhand.mapit();
-                    rhand.painting = '';
-                    draw();
-                } else if (rhand.painting === 'obstacles') {
-                    let x = rhand.fromscreen([o.offsetX, o.offsetY]);
-                    rhand.Obstacles.push([x, x]);
-                    rhand.painting = 'obstaclesfin';
-                    updatectrl();
-                    draw();
-                } else if (rhand.painting === 'obstaclesfin') {
-                    let x = rhand.fromscreen([o.offsetX, o.offsetY]);
-                    if (rhand.Obstacles.length > 0) {
-                        let y = rhand.Obstacles.pop();
-                        y[1] = x;
-                        rhand.Obstacles.push(y);
-                    }
-                    rhand.painting = '';
-                    rhand.mapit();
-                    updatectrl();
                     draw();
                 } else {
                     let point = rhand.fromscreen([o.offsetX, o.offsetY]);
@@ -352,20 +337,47 @@ $(function () {
                 rhand.painting = 'clear';
                 updatectrl();
                 break;
+            case 'moving':
+                rhand.painting = '';
+                updatectrl();
+                break;
             case 'mapdragtemp':
-                rhand.templine=[whattodo[1],whattodo[2]];
-                draw();
+                if(rhand.painting == 'obstacles') {
+                    rhand.templine = [whattodo[1], whattodo[2]];
+                    draw();
+                } else if(rhand.painting == ''){
+                    if(false===oldzoompoint){
+                        oldzoompoint=[...rhand.zoompoint];
+                    }
+                    rhand.zoompoint[0]=oldzoompoint[0]+(whattodo[2][0]-whattodo[1][0]);
+                    rhand.zoompoint[1]=oldzoompoint[1]-(whattodo[2][1]-whattodo[1][1]);
+                    //console.log('mousedragtemp',rhand.zoompoint,oldzoompoint);
+                    rhand.svgcache=[];
+                    draw();
+                }
                 //console.log('mousedragtemp',whattodo[1],whattodo[2]);
                 break;
-            case 'mapdrag': (function() {
-                let a = rhand.fromscreen([rhand.templine[0][0], rhand.templine[0][1]]),
-                    b=rhand.fromscreen([rhand.templine[1][0], rhand.templine[1][1]]);
-                rhand.templine = false;
-                rhand.Obstacles.push([a, b]);
-                rhand.mapit();
-                updatectrl();
-                draw();
-                })();
+            case 'mapdrag':
+                if(rhand.painting == 'obstacles') {
+                    (function () {
+                        let a = rhand.fromscreen([rhand.templine[0][0], rhand.templine[0][1]]),
+                            b = rhand.fromscreen([rhand.templine[1][0], rhand.templine[1][1]]);
+                        rhand.templine = false;
+                        rhand.Obstacles.push([a, b]);
+                        rhand.mapit();
+                        updatectrl();
+                        draw();
+                    })()
+                } else if(rhand.painting == ''){
+                    if(false!==oldzoompoint) {
+                        rhand.zoompoint[0]=oldzoompoint[0]+(whattodo[2][0]-whattodo[1][0]);
+                        rhand.zoompoint[1]=oldzoompoint[1]-(whattodo[2][1]-whattodo[1][1])
+                        oldzoompoint = false;
+                        rhand.svgcache=[];
+                        draw();
+                        //console.log('move',rhand.zoompoint);
+                    }
+                }
                 break;
             case 'resize':
                 let bound=$('#map').parents('td')[0].getBoundingClientRect();
@@ -524,8 +536,8 @@ $(function () {
             timetostart = today.getMilliseconds();
             startpoint=[e.offsetX,e.offsetY];
             to=setTimeout(function(){
-                state=2; // dragging
                 $(document).on('mousemove','#canvas',function(e){
+                    state=2; // dragging
                     lastpoint=[e.offsetX,e.offsetY];
                     handle(['mapdragtemp',startpoint,lastpoint]);
                     return false;

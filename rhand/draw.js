@@ -239,15 +239,17 @@ window.rhand = {
     draw: function () {
 
         function circle(a, options) {
-            options = options || {};
-            ctx.beginPath();
-            ctx.lineWidth = options.lineWidth || 1;
-            ctx.strokeStyle = options.color || "white";
             let x = this.toscreen(a);
-            ctx.arc(x[0], x[1], options.radius || 5, 0, 2 * Math.PI);
-            ctx.fillStyle = options.fillStyle || "gray";
-            ctx.fill();
-            ctx.stroke();
+            if(x[0]>0 && x[0]<this.screen[0] && x[1]>0 && x[1]<this.screen[1]) {
+                options = options || {};
+                ctx.beginPath();
+                ctx.lineWidth = options.lineWidth || 1;
+                ctx.strokeStyle = options.color || "white";
+                ctx.arc(x[0], x[1], options.radius || 5, 0, 2 * Math.PI);
+                ctx.fillStyle = options.fillStyle || "gray";
+                ctx.fill();
+                ctx.stroke();
+            }
         }
 
         function line(a, b, options) {
@@ -295,9 +297,11 @@ window.rhand = {
                                 {radius: 2, color: colors[col][1], fillStyle: colors[col][1]});
                         }
                         let xx = this.toscreen([x * this.minstep, y * this.minstep]);
-                        let pixel = ctx.getImageData(xx[0], xx[1], 1, 1),
-                            data = pixel.data;
-                        colormap[m] = `rgba(${data[0]}, ${data[1]}, ${data[2]}, ${data[3] / 255})`;
+                        if(xx[0]>0 && xx[0]<this.screen[0] && xx[1]>0 && xx[1]<this.screen[1]) {
+                            let pixel = ctx.getImageData(xx[0], xx[1], 1, 1),
+                                data = pixel.data;
+                            colormap[m] = `rgba(${data[0]}, ${data[1]}, ${data[2]}, ${data[3] / 255})`;
+                        }
                     }
                 }
             }
