@@ -35,14 +35,14 @@ window.rhand = {
     fin_A: [0, 0],
     zerocoord: 30,
 
-    templine:false,
+    templine: false,
 
     svgcache: [],
 
     init: function () {
         this.realmap_border = [
-            Math.floor(-1+(this.pointA[1] - this.len[1] - this.len[3]) / this.minstep),
-            Math.ceil(1+(this.pointA[0] + this.len[0] + this.len[2]) / this.minstep),
+            Math.floor(-1 + (this.pointA[1] - this.len[1] - this.len[3]) / this.minstep),
+            Math.ceil(1 + (this.pointA[0] + this.len[0] + this.len[2]) / this.minstep),
             Math.floor(-260 / this.minstep),
             Math.ceil(320 / this.minstep),
         ];
@@ -208,6 +208,19 @@ window.rhand = {
         ]
     },
 
+    // расстояние до 2 отрезков
+    intersectPP: function (a1, b1, a2, b2) {
+        let discr = (a1[0] - b1[0]) * (a2[1] - b2[1]) - (a1[1] - b1[1]) * (a2[0] - b2[0]);
+        if (Math.abs(discr) < 0.000001) {
+            return Math.min(this.distP(a1, b1, a2), this.distP(a1, b1, b2));
+        }
+        let i = [
+            ((a1[0] * b1[1] - a1[1] * b1[0]) * (a2[0] - b2[0]) - (a1[0] - b1[0]) * (a2[0] * b2[1] - a2[1] * b2[0])) / discr,
+            ((a1[0] * b1[1] - a1[1] * b1[0]) * (a2[1] - b2[1]) - (a1[1] - b1[1]) * (a2[0] * b2[1] - a2[1] * b2[0])) / discr
+        ];
+        return Math.min(Math.max(this.distP(a1, b1, i),this.distP(a2, b2, i)),this.distP(a1, b1, a2), this.distP(a1, b1, b2));
+    },
+
     /**
      * вычисление положения манипулятора по состоянию активных тяг
      * @param {*[]} pa - стартовые координаты и угол первого двигателя
@@ -240,7 +253,7 @@ window.rhand = {
 
         function circle(a, options) {
             let x = this.toscreen(a);
-            if(x[0]>0 && x[0]<this.screen[0] && x[1]>0 && x[1]<this.screen[1]) {
+            if (x[0] > 0 && x[0] < this.screen[0] && x[1] > 0 && x[1] < this.screen[1]) {
                 options = options || {};
                 ctx.beginPath();
                 ctx.lineWidth = options.lineWidth || 1;
@@ -284,20 +297,20 @@ window.rhand = {
         let m, c, colormap = [];
 
         if (this.mapcolor > 0 || this.mapauto) {
-            let mapcolor = this.mapcolor;
+            let radius=Math.round(2/this.zoom),mapcolor = this.mapcolor;
             if (this.mapauto) mapcolor |= x[3];
             for (let x = this.realmap_border[0]; x < this.realmap_border[1]; x++) for (let y = this.realmap_border[2]; y < this.realmap_border[3]; y++) {
                 if ((m = (this.map[x][y] & mapcolor)) > 0) {
                     if (!!(c = colormap[m])) {
                         circle.call(this, [x * this.minstep, y * this.minstep],
-                            {radius: 2, color: c, fillStyle: c});
+                            {radius: radius, color: c, fillStyle: c});
                     } else {
                         for (let col in colors) if (!!(colors[col][0] & m)) {
                             circle.call(this, [x * this.minstep, y * this.minstep],
-                                {radius: 2, color: colors[col][1], fillStyle: colors[col][1]});
+                                {radius: radius, color: colors[col][1], fillStyle: colors[col][1]});
                         }
                         let xx = this.toscreen([x * this.minstep, y * this.minstep]);
-                        if(xx[0]>0 && xx[0]<this.screen[0] && xx[1]>0 && xx[1]<this.screen[1]) {
+                        if (xx[0] > 0 && xx[0] < this.screen[0] && xx[1] > 0 && xx[1] < this.screen[1]) {
                             let pixel = ctx.getImageData(xx[0], xx[1], 1, 1),
                                 data = pixel.data;
                             colormap[m] = `rgba(${data[0]}, ${data[1]}, ${data[2]}, ${data[3] / 255})`;
@@ -309,26 +322,27 @@ window.rhand = {
         for (let i = 0; i < this.Obstacles.length; i++) {
             line.call(this, this.Obstacles[i][0], this.Obstacles[i][1], {color: "white", lineWidth: "5"});
         }
-        if(this.templine){
+        if (this.templine) {
             ctx.beginPath();
             ctx.lineCap = "round";
-            ctx.lineWidth =  3;
+            ctx.lineWidth = 3;
             ctx.moveTo(this.templine[0][0], this.templine[0][1]);
             ctx.lineTo(this.templine[1][0], this.templine[1][1]);
             ctx.strokeStyle = "lightgray";
             ctx.stroke();
         }
         if (this.trace) {
-            if(!this.svgcache['trace']) {
-                let m='',p = this.toscreen(this.trace[0][2]);
-                m+='M'+Math.round(p[0])+' '+Math.round(p[1])+' ';
+            if (!this.svgcache['trace']) {
+                let m = '', p = this.toscreen(this.trace[0][2]);
+                m += 'M' + Math.round(p[0]) + ' ' + Math.round(p[1]) + ' ';
                 for (let i = 1; i < this.trace.length; i++) {
                     if (this.trace[i][2]) {
-                        p = this.toscreen(this.trace[i][2]);;
-                        m+='L'+Math.round(p[0])+' '+Math.round(p[1])+' ';
+                        p = this.toscreen(this.trace[i][2]);
+                        ;
+                        m += 'L' + Math.round(p[0]) + ' ' + Math.round(p[1]) + ' ';
                     }
                 }
-                this.svgcache['trace']=m;
+                this.svgcache['trace'] = m;
             }
             ctx.lineWidth = 1;
             ctx.strokeStyle = "red";
@@ -375,16 +389,19 @@ window.rhand = {
                             fb = this.buildTriangle(pb, z, this.len[1], this.len[3], 1 - o2);
                         if (isNaN(fb[0]) || isNaN(fa[0])) continue;
                         // угол <180 ?
+
                         let a = this.angle(fa, z), b = this.angle(fb, z);
                         if (Math.PI < this.norm(Math.PI - a + b)) {
-                            this.map[x][y] |= 1 << (o1 * 2 + o2);
+                            if (rhand.intersectPP(pa, fa, pb, fb) > 10) {
+                                this.map[x][y] |= 1 << (o1 * 2 + o2);
+                            }
                         }
                     }
             }
         }
         // отметить все крайние точки слева; 2048 - можно рулить ногой A - _*
         for (let y = this.realmap_border[2]; y < this.realmap_border[3]; y++) {
-            for (let x = this.realmap_border[0]+1; x < this.realmap_border[1]; x++) {
+            for (let x = this.realmap_border[0] + 1; x < this.realmap_border[1]; x++) {
                 if (this.map[x][y] != 0 && this.map[x][y] != 8) {
                     this.map[x][y] |= 2048;
                 }
