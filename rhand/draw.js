@@ -508,10 +508,7 @@ window.rhand = {
                     let v = map[x][y][c],
                         newv = oldv +
                             (oldv < 0 ? -1 : 1) * disp;
-                    if (v === 0 || (oldv < 0 ? v < newv : v > newv)) {
-                        map[x][y][c] = newv;
-                        points.push([x, y, c]);
-                    }
+
                     if (v !== 0 && (oldv < 0) === (v > 0)) {
                         let newmin = Math.abs(newv - v);
                         if (minlength > newmin) {
@@ -520,6 +517,9 @@ window.rhand = {
                         }
                         // встретили точку противоположного знака - финиш, но волну закончим.
                         finish = true;
+                    } else if (v === 0 || (oldv < 0 ? v < newv : v > newv)) {
+                        map[x][y][c] = newv;
+                        points.push([x, y, c]);
                     }
                 })
             }
@@ -614,6 +614,7 @@ window.rhand = {
         let ret = [[this.startA[0], this.startA[1]]];
 
         let fa, fb, olda = false, trace = this.checkPoints(z[2], z[3], zz[2], zz[3]);//, v=trace[0][3];
+
         for (var i = 1; i < trace.length; i++) {
             if (trace[i].length === 0) { // пропускаем несколько ходов, пока топчемся по оси.
                 olda = [fa[2], fb[2]];
