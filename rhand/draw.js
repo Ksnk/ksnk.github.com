@@ -101,7 +101,7 @@ window.rhand = {
      * @returns {number}
      */
     dist: function (fa, fb) {
-        let dx = fa[1] - fb[1], dy = fa[0] - fb[0];
+        let dx = fa[0] - fb[0], dy = fa[1] - fb[1];
         return Math.sqrt(dx * dx + dy * dy);
     },
 
@@ -118,14 +118,14 @@ window.rhand = {
 
     /**
      * Угол наклона отрезка, к оси X
-     * @param fa
-     * @param fb
+     * @param A
+     * @param B
      * @returns {*}
      */
-    angle: function (fa, fb) {
+    angle: function (A, B) {
         let
-            dx = fa[0] - fb[0],
-            dy = fa[1] - fb[1], b;
+            dx = A[0] - B[0],
+            dy = A[1] - B[1], b;
         if (Math.abs(dx) < 0.000001) {
             if (dy < 0) {
                 b = Math.PI / 2;
@@ -142,38 +142,38 @@ window.rhand = {
     },
 
     /**
-     * достраиваем треугольник на отрезка fa-fb. со стороны order
-     * @param {number[]} fa
-     * @param {number[]} fb
+     * достраиваем треугольник на отрезка A-B. со стороны order
+     * @param {number[]} A
+     * @param {number[]} B
      * @param {number} la
      * @param {number} lb
      * @param {number} order
-     * @returns {*[]} -x,y,a -  x,y координаты достраиваемой вершины, а - угол треугольника при вершине fa
+     * @returns {*[]} -x,y,a -  x,y координаты достраиваемой вершины, а - угол треугольника при вершине A
      */
-    buildTriangle: function (fa, fb, la, lb, order) {
+    buildTriangle: function (A, B, la, lb, order) {
         let
-            dx = fa[0] - fb[0],
-            dy = fa[1] - fb[1],
+            dx = A[0] - B[0],
+            dy = A[1] - B[1],
             d = Math.sqrt(dx * dx + dy * dy);
         if (la > lb + d || lb > la + d || d > lb + la) return [NaN, NaN, NaN];
         let
             p = (la + lb + d) / 2, // полупериметр
             a = 2 * Math.atan(Math.sqrt((p - lb) * (p - d) / (p * (p - lb)))), // прилежащий lb угол
-            b = this.angle(fa, fb),
+            b = this.angle(A, B),
             //a = Math.acos(d / (la + lb)), // только для равных сторон!!!
             aa = this.norm(b + (order > 0 ? a : -a));
         return [
-            fa[0] + la * Math.cos(aa),
-            fa[1] + la * Math.sin(aa),
+            A[0] + la * Math.cos(aa),
+            A[1] + la * Math.sin(aa),
             aa
         ];
     },
 
     /**
      * расстояние от точки C до отрезка A-B
-     * @param {*[]} A
-     * @param {*[]} B
-     * @param {*[]} C
+     * @param {number[]} A
+     * @param {number[]} B
+     * @param {number[]} C
      */
     distP: function (A, B, C) {
         let dx = A[0] - B[0],
@@ -188,10 +188,10 @@ window.rhand = {
     },
 
     /**
-     * перпендикуляр от точки C до отрезка A-B
-     * @param {*[]} A
-     * @param {*[]} B
-     * @param {*[]} C
+     * перпендикуляр от точки C до прямой A-B
+     * @param {number[]} A
+     * @param {number[]} B
+     * @param {number[]} C
      */
     prp: function (A, B, C) {
         let dx = B[0] - A[0], dy = B[1] - A[1];
@@ -209,6 +209,13 @@ window.rhand = {
     },
 
     // расстояние до 2 отрезков
+    /**
+     * асстояние до 2 отрезков a1-b1 a2-b2
+     * @param {number[]} a1
+     * @param {number[]} b1
+     * @param {number[]} a2
+     * @param {number[]} b2
+     */
     intersectPP: function (a1, b1, a2, b2) {
         let discr = (a1[0] - b1[0]) * (a2[1] - b2[1]) - (a1[1] - b1[1]) * (a2[0] - b2[0]);
         if (Math.abs(discr) < 0.000001) {
@@ -367,7 +374,7 @@ window.rhand = {
     },
 
     /**
-     * разметить карту
+     * разметить карту - нарисовать области разного порядка
      */
     mapit: function () {
         let pa = [...this.pointA], pb = [...this.pointB];
@@ -445,9 +452,9 @@ window.rhand = {
     /**
      * построить маршрут от точки a(o1) до точки b(o2)
      * волновой алгоритм
-     * @param {any[]} a
+     * @param {number[]} a
      * @param {number} o1
-     * @param {any[]} b
+     * @param {number[]} b
      * @param {number} o2
      */
     checkPoints: function (a, o1, b, o2) {
@@ -473,12 +480,13 @@ window.rhand = {
                         if (xx + x > this.realmap_border[0] && xx + x < this.realmap_border[1]
                             && yy + y > this.realmap_border[2] && yy + y < this.realmap_border[3]
                             && (this.map[xx + x][yy + y] & cc) > 0) {
-                            let weight = 1;
-                            if (Math.abs(x) == Math.abs(y)) weight = 1.4;
+                            let weight = (Math.abs(x) == Math.abs(y)?1.4:1);
                             if (!(this.map[xx + x + x] && (this.map[xx + x + x][yy + y + y] & cc) > 0)) {
                                 weight += 3; // избегаем границ зон
                             }
-                            if (this.map[xx + x][yy + y] & 4096) weight += 10; // избегаем клеток рядом с кавернами
+                            if (this.map[xx + x][yy + y] & 4096) { // избегаем клеток рядом с кавернами
+                                weight += 10;
+                            }
 
                             res |= callback.call(this, xx + x, yy + y, cc, weight);
                         }

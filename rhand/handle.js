@@ -39,7 +39,7 @@ $(function () {
                     "'><td>" + rhand.tograd(rhand.norm(rhand.trace[i][0])) + '</td><td>' + rhand.tograd(rhand.norm(rhand.trace[i][1])) + '</td><td></td><td></td></tr>');
             }
         }
-        rhand.svgcache = [];
+        rhand.svgcache ['trace']=false;
         draw();
     }
 
