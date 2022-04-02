@@ -525,46 +525,51 @@ window.rhand = {
             return res;
         }
 
-        let minp=0,mino=0, // минимальные длины волн
-            p = [[Math.round(a[0] / this.minstep), Math.round(a[1] / this.minstep), o1],
-            [Math.round(b[0] / this.minstep), Math.round(b[1] / this.minstep), o2]],
-            minlength = 100000;
-        map[p[0][0]][p[0][1]][p[0][2]] = 1;
-        map[p[1][0]][p[1][1]][p[1][2]] = -1;
+        let p = [[Math.round(a[0] / this.minstep), Math.round(a[1] / this.minstep), o1,1],
+            [Math.round(b[0] / this.minstep), Math.round(b[1] / this.minstep), o2,-1]];
+        map[p[0][0]][p[0][1]][p[0][2]] = p[0][3];
+        map[p[1][0]][p[1][1]][p[1][2]] = p[1][3];
        // p.pop();
-        while (minp-mino<minlength && p.length > 0) {
-            var points = [];
+        while (minpoint===false && p.length > 0) {
             minp=100000;mino=-100000;
             //обходим точки
-            for (let i = 0; i < p.length; ++i) {
+            let pp=p.shift();
+            //for (let i = 0; i < p.length; ++i) {
                 // 8 соседних клеток
-                let oldv = map[p[i][0]][p[i][1]][p[i][2]];
-                lookaround.call(this, p[i][0], p[i][1], p[i][2], function (x, y, c, disp) {
-                    let v = map[x][y][c],
-                        newv = oldv +
-                            (oldv < 0 ? -1 : 1) * disp;
+            let oldv = map[pp[0]][pp[1]][pp[2]];
+            if(lookaround.call(this, pp[0], pp[1], pp[2], function (x, y, c, disp) {
+                let v = map[x][y][c],
+                    newv = oldv +
+                        (oldv < 0 ? -1 : 1) * disp;
 
-                    if (v !== 0 && (oldv < 0) === (v > 0)) {
-                        // встретили точку противоположного знака.
-                        let newmin = Math.abs(newv - v);
-                        if (minlength > newmin) {
-                            minpoint = [x, y, c];
-                            minlength = newmin;
-                        }
-
-                    } else if (v === 0 || (oldv < 0 ? v < newv : v > newv)) {
-                        map[x][y][c] = newv;
-                        if(newv>0){
-                            minp=Math.min(minp,newv)
-                        } else {
-                            mino=Math.max(mino,newv)
-                        }
-                        points.push([x, y, c]);
+                if (v !== 0 && (oldv < 0) === (v > 0)) {
+                    // встретили точку противоположного знака. Нашли!
+                    return true;
+                } else if (v === 0 || (oldv < 0 ? v < newv : v > newv)) {
+                    map[x][y][c] = newv;
+                    if(newv>0){
+                        minp=Math.min(minp,newv)
+                    } else {
+                        mino=Math.max(mino,newv)
                     }
-                })
-            }
+                    // вставляем значение в нужную позицию
+                    for(var i=0;i<p.length;i++){
+                        if(Math.abs(p[i][3])>Math.abs(newv))
+                            break;
+                    }
+                    if(i>0 && i <p.length) {
+                        p.splice(i,0,[x, y, c, newv]);
+                    } else if(i==0){
+                        p.unshift([x, y, c, newv])
+                    } else {
+                        p.push([x, y, c, newv]);
+                    }
+                }
+            }))
+                minpoint = pp;
+
             //повторяем для новых клеток
-            p = points;//console.log(cnt++,points.length); // 400 max
+            //p = points;//console.log(cnt++,points.length); // 400 max
         }
         if (minpoint === false) {
             return false; // Нету пути :(
