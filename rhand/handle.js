@@ -383,7 +383,7 @@ $(function () {
                 break;
             case 'resize':
                 let bound = $('#map').parents('td')[0].getBoundingClientRect();
-                rhand.zoom = Math.min(2, Math.max(0.5, Math.max(rhand.screen[0] / bound.width,
+                rhand.zoom = Math.min(4, Math.max(0.5, Math.max(rhand.screen[0] / bound.width,
                     rhand.screen[1] / bound.height)));
                 let h = Math.min(rhand.screen[1] / rhand.zoom, bound.height),
                     w = Math.min(rhand.screen[0] / rhand.zoom, bound.width);
@@ -519,7 +519,7 @@ $(function () {
         if ($(event.target).is('#canvas')) {
             if (event.originalEvent.wheelDelta > 0 || event.originalEvent.detail < 0) {
                 // scroll up
-                rhand.zoom = Math.max(0.5, rhand.zoom * 0.9);
+                rhand.zoom = Math.max(0.2, rhand.zoom * 0.9);
             } else {
                 rhand.zoom = Math.min(rhand.zoom / 0.9, 2);
             }

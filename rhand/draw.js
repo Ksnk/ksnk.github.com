@@ -327,6 +327,24 @@ window.rhand = {
                             colormap[m] = `rgba(${data[0]}, ${data[1]}, ${data[2]}, ${data[3] / 255})`;
                         }
                     }
+                    let a=this.toscreen([x*5,y*5]);
+                    if (a[0] > 0 && a[0] < this.screen[0] && a[1] > 0 && a[1] < this.screen[1])
+                    if(this.zoom<0.3 && this._map && this._map[x]&& this._map[x][y]){
+                        let v=100000,txt='';
+                        for(let i=0;i<4;i++) {
+                            let aa=this._map[x][y][1<<i];
+                            if (aa != 0) {
+                                if (Math.abs(v) > Math.abs(aa)){
+                                    v=aa;
+                                    ctx.fillStyle = ['red','yellow','blue',"gray"][i];
+                                }
+                            }
+                        }
+                        ctx.font = "8px Arial";
+                        // ctx.fillStyle = "gray";
+                        ctx.textAlign = "center";
+                        ctx.fillText(''+(Math.round(10*v)/10), a[0],a[1]+4);
+                    }
                 }
             }
         }
@@ -383,15 +401,16 @@ window.rhand = {
             this.map[x] = [];
             for (let y = this.realmap_border[2]; y < this.realmap_border[3]; y++) {
                 this.map[x][y] = 0;
-                let clearpoint = false, z = [this.minstep * x, this.minstep * y], o1 = 1, o2 = 0;
+                let letitempty = false, z = [this.minstep * x, this.minstep * y], o1 = 1, o2 = 0;
                 for (let a in this.Obstacles) {
-                    let o = this.Obstacles[a], d = this.distP(o[0], o[1], z);
-                    if (d < 7) {
-                        clearpoint = true;
+                    let o = this.Obstacles[a];
+                    // рядом с препятствием ?
+                    if (this.distP(o[0], o[1], z) < 7) {
+                        letitempty = true;
                         break;
                     }
                 }
-                if (!clearpoint)
+                if (!letitempty)
                     for (var i = 0; i < 4; i++) {
                         if (i === 2) o1 = 1 - o1;
                         if (i & 1) o2 = 1 - o2;
@@ -413,7 +432,9 @@ window.rhand = {
         for (let y = this.realmap_border[2]; y < this.realmap_border[3]; y++) {
             for (let x = this.realmap_border[0] + 1; x < this.realmap_border[1]; x++) {
                 if (this.map[x][y] != 0 && this.map[x][y] != 8) {
-                    this.map[x][y] |= 2048;
+                    let _y=this.minstep*y,_x=this.minstep*x-(x>0?this.pointA[0]:-this.pointA[0]);
+                    if(Math.abs(Math.sqrt((_x*_x+_y*_y))-this.len[0]-this.len[1])<5)
+                        this.map[x][y] |= 2048;
                 }
                 if (this.map[x][y] != 0) {
                     break;
@@ -424,7 +445,9 @@ window.rhand = {
         for (let y = this.realmap_border[2]; y < this.realmap_border[3]; y++) {
             for (let x = this.realmap_border[1] - 1; x > this.realmap_border[0]; x--) {
                 if (this.map[x][y] != 0 && this.map[x][y] != 8) {
-                    this.map[x][y] |= 1024;
+                    let _y=this.minstep*y,_x=this.minstep*x-(x>0?this.pointA[0]:-this.pointA[0]);
+                    if(Math.abs(Math.sqrt((_x*_x+_y*_y))-this.len[0]-this.len[1])<10)
+                        this.map[x][y] |= 1024;
                 }
                 if (this.map[x][y] != 0) {
                     break;
@@ -459,7 +482,7 @@ window.rhand = {
      */
     checkPoints: function (a, o1, b, o2) {
         // сюда будем бросать длины переходов
-        var map = [], trace = [], minpoint = false, minlength = 100000, finish = false;
+        var map = [], trace = [], minpoint = false;
         for (let x = this.realmap_border[0]; x < this.realmap_border[1]; x++) {
             map[x] = [];
             for (let y = this.realmap_border[2]; y < this.realmap_border[3]; y++) {
@@ -502,12 +525,16 @@ window.rhand = {
             return res;
         }
 
-        let p = [[Math.round(a[0] / this.minstep), Math.round(a[1] / this.minstep), o1],
-            [Math.round(b[0] / this.minstep), Math.round(b[1] / this.minstep), o2]];
+        let minp=0,mino=0, // минимальные длины волн
+            p = [[Math.round(a[0] / this.minstep), Math.round(a[1] / this.minstep), o1],
+            [Math.round(b[0] / this.minstep), Math.round(b[1] / this.minstep), o2]],
+            minlength = 100000;
         map[p[0][0]][p[0][1]][p[0][2]] = 1;
         map[p[1][0]][p[1][1]][p[1][2]] = -1;
-        while (!finish && p.length > 0) {
+       // p.pop();
+        while (minp-mino<minlength && p.length > 0) {
             var points = [];
+            minp=100000;mino=-100000;
             //обходим точки
             for (let i = 0; i < p.length; ++i) {
                 // 8 соседних клеток
@@ -518,15 +545,20 @@ window.rhand = {
                             (oldv < 0 ? -1 : 1) * disp;
 
                     if (v !== 0 && (oldv < 0) === (v > 0)) {
+                        // встретили точку противоположного знака.
                         let newmin = Math.abs(newv - v);
                         if (minlength > newmin) {
                             minpoint = [x, y, c];
                             minlength = newmin;
                         }
-                        // встретили точку противоположного знака - финиш, но волну закончим.
-                        finish = true;
+
                     } else if (v === 0 || (oldv < 0 ? v < newv : v > newv)) {
                         map[x][y][c] = newv;
+                        if(newv>0){
+                            minp=Math.min(minp,newv)
+                        } else {
+                            mino=Math.max(mino,newv)
+                        }
                         points.push([x, y, c]);
                     }
                 })
@@ -570,10 +602,6 @@ window.rhand = {
                 })) {
                     break;
                 }
-                if (Math.abs(maxpoint[0]) == this.zerocoord && maxpoint[1] == 0) {
-                    trace.unshift([]);
-                    continue;
-                }
                 trace.unshift([this.minstep * maxpoint[0], this.minstep * maxpoint[1], maxpoint[2]]);
             }
             // сворачиваем трассу. От minpoint до конца маршрута
@@ -588,10 +616,6 @@ window.rhand = {
                 })) {
                     break;
                 }
-                if (Math.abs(minpoint[0]) == this.zerocoord && minpoint[1] == 0) {
-                    trace.push([]);
-                    continue;
-                }
                 trace.push([this.minstep * minpoint[0], this.minstep * minpoint[1], minpoint[2]]);
             }
             // подставляем реальные координаты начала и конца маршрута вместо узлов сетки
@@ -600,7 +624,8 @@ window.rhand = {
             a[2] = o1;
             b[2] = o2;
             trace.unshift(a);
-            trace.push(b);
+            trace.push(b)
+            this._map=map;
             return trace;
         }
     },
@@ -621,29 +646,27 @@ window.rhand = {
         //console.log(z,zz);
         let ret = [[this.startA[0], this.startA[1]]];
 
-        let fa, fb, olda = false, trace = this.checkPoints(z[2], z[3], zz[2], zz[3]);//, v=trace[0][3];
+        let fa, fb, olda = false, trace = this.checkPoints(z[2], z[3], zz[2], zz[3]);
 
         for (var i = 1; i < trace.length; i++) {
-            if (trace[i].length === 0) { // пропускаем несколько ходов, пока топчемся по оси.
-                olda = [fa[2], fb[2]];
-                while (trace[++i].length === 0) ;
-            }
             fa = this.buildTriangle(pa, trace[i], this.len[0], this.len[2], (trace[i][2] > 2));
             fb = this.buildTriangle(pb, trace[i], this.len[1], this.len[3], (trace[i][2] == 1 || trace[i][2] == 4));
             if (isNaN(fb[0]) || isNaN(fa[0])) {
-                console.log('Opps!'); // Что-то пошло не так, ошибка обсчета маршрута.
-                return;
-            }
-            if (!!olda) { // если топтались по оси - вставляем среднее между реальными ходами.
-                if (Math.abs(fa[2] - olda[0]) > Math.PI) {
-                    olda[0] += (fa[2] > olda[0] ? 2 : 2) * Math.PI;
+                olda=ret[ret.length-1];
+                continue; // движемся вблизи точки 0
+            } else {
+                if (!!olda) { // если топтались по оси - вставляем среднее между реальными ходами.
+                    if (Math.abs(fa[2] - olda[0]) > Math.PI) {
+                        olda[0] += (fa[2] > olda[0] ? 2 : 2) * Math.PI;
+                    }
+                    if (Math.abs(fb[2] - olda[1]) > Math.PI) {
+                        olda[1] += (fb[2] > olda[1] ? 2 : 2) * Math.PI;
+                    }
+                    ret.push([(fa[2] + olda[0]) / 2, (fb[2] + olda[1]) / 2]);
+                    olda = false;
                 }
-                if (Math.abs(fb[2] - olda[1]) > Math.PI) {
-                    olda[1] += (fb[2] > olda[1] ? 2 : 2) * Math.PI;
-                }
-                ret.push([(fa[2] + olda[0]) / 2, (fb[2] + olda[1]) / 2]);
-                olda = false;
             }
+
             ret.push([fa[2], fb[2]]);
         }
         return ret;
@@ -651,6 +674,7 @@ window.rhand = {
 
     /**
      * пытаемся продвинуть манипулятор, по возможности сохраняя порядок тяг
+     * способ применяется при клике на карту, иногда грлючит
      * @param a
      */
     moveTo: function (a) {
@@ -688,7 +712,6 @@ window.rhand = {
                 if (Math.PI < this.norm(Math.PI - a + b)) {
                     order[0] = o1;
                     order[1] = o2;
-                    //this.mapit(aa,[o1,o2]);
                     found = true;
                     break;
                 }
