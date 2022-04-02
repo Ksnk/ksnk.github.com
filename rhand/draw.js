@@ -313,12 +313,25 @@ window.rhand = {
             for (let x = this.realmap_border[0]; x < this.realmap_border[1]; x++) for (let y = this.realmap_border[2]; y < this.realmap_border[3]; y++) {
                 if ((m = (this.map[x][y] & mapcolor)) > 0) {
                     if (!!(c = colormap[m])) {
+                        let col0=c;
+                        if((this.map[x][y] & 1024)>0){
+                            col0='rgb(188,188,188)';
+                        } else if((this.map[x][y] & 2048)>0){
+                            col0='rgb(214,187,187)';
+                        }
+
                         circle.call(this, [x * this.minstep, y * this.minstep],
-                            {radius: radius, color: c, fillStyle: c});
+                            {radius: radius, color: col0, fillStyle: c});
                     } else {
                         for (let col in colors) if (!!(colors[col][0] & m)) {
+                            let col0=colors[col][1];
+                            if((this.map[x][y] & 1024)>0){
+                                col0='rgb(188,188,188)';
+                            } else if((this.map[x][y] & 2048)>0){
+                                col0='rgb(214,187,187)';
+                            }
                             circle.call(this, [x * this.minstep, y * this.minstep],
-                                {radius: radius, color: colors[col][1], fillStyle: colors[col][1]});
+                                {radius: radius, color: col0, fillStyle: colors[col][1]});
                         }
                         let xx = this.toscreen([x * this.minstep, y * this.minstep]);
                         if (xx[0] > 0 && xx[0] < this.screen[0] && xx[1] > 0 && xx[1] < this.screen[1]) {
@@ -336,14 +349,21 @@ window.rhand = {
                             if (aa != 0) {
                                 if (Math.abs(v) > Math.abs(aa)){
                                     v=aa;
-                                    ctx.fillStyle = ['red','yellow','blue',"gray"][i];
+                                    ctx.fillStyle = [
+                                        'rgb(250,125,66)',
+                                        'rgb(246,209,76)',
+                                        'rgb(132,255,54)',
+                                        "rgb(44,255,249)"
+                                    ][i];
                                 }
                             }
                         }
-                        ctx.font = "9px Arial";
-                        // ctx.fillStyle = "gray";
-                        ctx.textAlign = "center";
-                        ctx.fillText(''+(Math.round(10*v)/10), a[0],a[1]+4);
+                        if(v<100000) {
+                            ctx.font = "9px Arial";
+                            // ctx.fillStyle = "gray";
+                            ctx.textAlign = "center";
+                            ctx.fillText('' + (Math.round(10 * v) / 10), a[0], a[1] + 4);
+                        }
                     }
                 }
             }
@@ -446,7 +466,7 @@ window.rhand = {
             for (let x = this.realmap_border[1] - 1; x > this.realmap_border[0]; x--) {
                 if (this.map[x][y] != 0 && this.map[x][y] != 8) {
                     let _y=this.minstep*y,_x=this.minstep*x-(x>0?this.pointA[0]:-this.pointA[0]);
-                    if(Math.abs(Math.sqrt((_x*_x+_y*_y))-this.len[0]-this.len[1])<10)
+                    if(Math.abs(Math.sqrt((_x*_x+_y*_y))-this.len[0]-this.len[1])<5)
                         this.map[x][y] |= 1024;
                 }
                 if (this.map[x][y] != 0) {
