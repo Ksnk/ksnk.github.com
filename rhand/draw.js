@@ -340,7 +340,7 @@ window.rhand = {
                                 }
                             }
                         }
-                        ctx.font = "8px Arial";
+                        ctx.font = "9px Arial";
                         // ctx.fillStyle = "gray";
                         ctx.textAlign = "center";
                         ctx.fillText(''+(Math.round(10*v)/10), a[0],a[1]+4);
@@ -597,6 +597,7 @@ window.rhand = {
             }
             // сворачиваем трассу. От maxpoint до начала маршрута
             min = 1000000;
+            trace.unshift([this.minstep * maxpoint[0], this.minstep * maxpoint[1], maxpoint[2]]);
             while (min != 1) {
                 if (!lookaround.call(this, maxpoint[0], maxpoint[1], maxpoint[2], function (x, y, c, disp) {
                     if (0 < map[x][y][c] && min > map[x][y][c]) {
@@ -611,6 +612,7 @@ window.rhand = {
             }
             // сворачиваем трассу. От minpoint до конца маршрута
             min = -1000000;
+            trace.push([this.minstep * minpoint[0], this.minstep * minpoint[1], minpoint[2]]);
             while (min != -1) {
                 if (!lookaround.call(this, minpoint[0], minpoint[1], minpoint[2], function (x, y, c, disp) {
                     if (0 > map[x][y][c] && min < map[x][y][c]) {
