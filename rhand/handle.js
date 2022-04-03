@@ -36,7 +36,7 @@ $(function () {
                 let z = rhand.calc_silent(pa, pb);
                 rhand.trace[i][2] = z[2];
                 $('#programm tbody').append("<tr data-data='" + JSON.stringify(rhand.trace[i]) +
-                    "'><td>" + rhand.tograd(rhand.norm(rhand.trace[i][0])) + '</td><td>' + rhand.tograd(rhand.norm(rhand.trace[i][1])) + '</td><td></td><td></td></tr>');
+                    "'><td>" + rhand.tograd(rhand.trace[i][0]) + '</td><td>' + rhand.tograd(rhand.trace[i][1]) + '</td><td></td><td></td></tr>');
             }
         }
         rhand.svgcache ['trace']=false;
