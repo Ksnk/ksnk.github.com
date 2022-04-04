@@ -67,10 +67,7 @@
      * @param {number[]} C
      */
     function distP(A, B, C) {
-        let dx = A[0] - B[0],
-            dy = A[1] - B[1],
-            d = Math.sqrt(dx * dx + dy * dy),
-            D = prp(A, B, C);
+        let D = prp(A, B, C);
         if (((D[0] <= A[0] && D[0] >= B[0]) || (D[0] >= A[0] && D[0] <= B[0]))
             && ((D[1] <= A[1] && D[1] >= B[1]) || (D[1] >= A[1] && D[1] <= B[1]))) {
             return dist(C, D);
@@ -118,7 +115,6 @@
             p = (la + lb + d) / 2, // полупериметр
             a = 2 * Math.atan(Math.sqrt((p - lb) * (p - d) / (p * (p - lb)))), // прилежащий lb угол
             b = angle(A, B),
-            //a = Math.acos(d / (la + lb)), // только для равных сторон!!!
             aa = norm(b + (order > 0 ? a : -a));
         return [
             A[0] + la * Math.cos(aa),
@@ -322,7 +318,7 @@
             let m, c, colormap = [];
 
             if (this.mapcolor > 0 || this.mapauto) {
-                let radius = 2 / this.zoom, mapcolor = this.mapcolor;
+                let radius = 2*this.minstep/(5 * this.zoom), mapcolor = this.mapcolor;
                 if (this.mapauto) mapcolor |= x[3];
                 for (let x = this.realmap_border[0]; x < this.realmap_border[1]; x++) for (let y = this.realmap_border[2]; y < this.realmap_border[3]; y++) {
                     if ((m = (this.map[x][y] & mapcolor)) > 0) {
@@ -354,7 +350,7 @@
                                 colormap[m] = `rgba(${data[0]}, ${data[1]}, ${data[2]}, ${data[3] / 255})`;
                             }
                         }
-                        let a = this.toscreen([x * 5, y * 5]);
+                        let a = this.toscreen([x * this.minstep, y * this.minstep]);
                         if (a[0] > 0 && a[0] < this.screen[0] && a[1] > 0 && a[1] < this.screen[1])
                             if (this.zoom < 0.3 && this._map && this._map[x] && this._map[x][y]) {
                                 let v = 100000, txt = '';
@@ -364,10 +360,10 @@
                                         if (Math.abs(v) > Math.abs(aa)) {
                                             v = aa;
                                             ctx.fillStyle = [
-                                                'rgb(250,125,66)',
-                                                'rgb(246,209,76)',
-                                                'rgb(132,255,54)',
-                                                "rgb(44,255,249)"
+                                                "rgb(44,255,249)",
+                                                'rgb(250,66,232)',
+                                                'rgb(255,65,119)',
+                                                'rgb(125,255,45)'
                                             ][i];
                                         }
                                     }

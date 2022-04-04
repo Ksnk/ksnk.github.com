@@ -530,9 +530,15 @@ $(function () {
     });
     // D&D на канвасе
     let timetostart, to = false, state = 0, startpoint = [], lastpoint;
-    $(document).on('mousedown mouseup mouseleave', '#canvas', function (e) {
+    $(document).on('mousedown mouseup mouseleave mouseenter', '#canvas', function (e) {
         // d&d support
-        if (e.type == 'mousedown') {
+        if(e.type == 'mouseenter'){
+            state=0;
+            if (to) {
+                clearTimeout(to);
+                to = false;
+            }
+        } else if (e.type == 'mousedown') {
             let today = new Date();
             state = 1; // pressed
             timetostart = today.getMilliseconds();
@@ -561,7 +567,6 @@ $(function () {
             else if (state == 1) {
                 handle(['mapclick', {offsetX: e.offsetX, offsetY: e.offsetY}]);
             }
-
             state = 0;
             return false;
         }
