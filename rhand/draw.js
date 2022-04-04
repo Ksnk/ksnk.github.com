@@ -159,7 +159,7 @@
         // длины тяг 0-АА 1-АБ 2-ПА 3-ПБ
         len: [170, 170, 170, 170],
         // увеличение
-        zoom: 2,
+        zoom: 1,
         // габариты окна
         screen: [660, 660],
         // точка центра 0x0
@@ -208,15 +208,18 @@
         torad: function (a) {
             return norm(torad(a));
         },
+        distP: function (A, B, C) {
+            return distP(A, B, C);
+        },
 
         /**
          * механика сохранения
          */
-        store_names: ['fin_A', 'finXY', 'startA', 'pointA', 'pointB', 'mapcolor', 'mapauto', 'trace', 'Obstacles'],
-
         serialize: function () {
             let ret = {};
-            for (let a in this.store_names) ret[this.store_names[a]] = this[this.store_names[a]];
+            for (let a of [
+                'fin_A', 'finXY', 'startA', 'pointA', 'pointB', 'mapcolor', 'mapauto', 'trace', 'Obstacles'
+            ]) ret[a] = this[a];
             return JSON.stringify(ret);
         },
         unserialize: function (obj) {
@@ -243,12 +246,33 @@
         },
 
         /**
+         *
+         * @param zoommul - модификатор зума
+         * @param drag - модификатор сдвига (с точках экрана)
+         */
+        zoomdrag: function (obj) {//zoommul, drag){
+            if (!!obj.zoommul)
+                rhand.zoom = Math.min(2, Math.max(0.25, rhand.zoom * obj.zoommul));
+            else if (!!obj.zoom)
+                rhand.zoom = Math.min(2, Math.max(0.25, obj.zoom));
+
+            if (!!obj.drag)
+                rhand.zoompoint = obj.drag;
+        },
+
+        /**
          * вычисление положения манипулятора по состоянию активных тяг
          * @param {*[]} pa - стартовые координаты и угол первого двигателя
          * @param {*[]} pb - стартовые координаты и угол второго двигателя
+         * @param {number} na - значение угла А, если нужно
+         * @param {number} nb - значение угла B, если нужно
          * @returns {[*[], *[], *[], number]} 0- fa,1- fb - точки пассивных осей; 3-координата АЭ, 4 - порядок манипулятора
          */
-        calc_silent: function (pa, pb) {
+        calc_silent: function (pa, pb, na, nb) {
+            let
+                undef;
+            if (na !== undef) pa[2] = na;
+            if (nb !== undef) pb[2] = nb;
             let
                 fa = [pa[0] + this.len[0] * Math.cos(pa[2]),
                     pa[1] + this.len[0] * Math.sin(pa[2])],
@@ -298,6 +322,17 @@
                 ctx.stroke();
             }
 
+            function bordercolor(x, y, c) {
+                let v = this.map[x][y];
+                if (((v & 1024) > 0) && ((v & 2048) > 0)) {
+                    return 'rgb(217,159,246)';
+                } else if ((v & 1024) > 0) {
+                    return 'rgb(187,231,229)';
+                } else if ((v & 2048) > 0) {
+                    return 'rgb(195,117,117)';
+                } else return c;
+            }
+
             let canvas = document.getElementById("canvas");
             //canvas.setAttribute("height", Math.round(zoom*(maxy-miny)+this.border*2));
             //canvas.setAttribute("width",Math.round(zoom*(maxx-minx)+this.border*2));
@@ -309,39 +344,28 @@
             this.finC = x[2];
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            let colors = [
-                [2, "rgb(177,100,185,0.3)"],
-                [1, "rgb(100,185,185,0.3)"],
-                [8, "rgb(100,185,104,0.3)"],
-                [4, "rgb(185,100,117,0.3)"],
-            ];
             let m, c, colormap = [];
 
             if (this.mapcolor > 0 || this.mapauto) {
-                let radius = 2*this.minstep/(5 * this.zoom), mapcolor = this.mapcolor;
+                let radius = 2 * this.minstep / (5 * this.zoom), mapcolor = this.mapcolor;
                 if (this.mapauto) mapcolor |= x[3];
                 for (let x = this.realmap_border[0]; x < this.realmap_border[1]; x++) for (let y = this.realmap_border[2]; y < this.realmap_border[3]; y++) {
                     if ((m = (this.map[x][y] & mapcolor)) > 0) {
                         if (!!(c = colormap[m])) {
-                            let col0 = c;
-                            if ((this.map[x][y] & 1024) > 0) {
-                                col0 = 'rgb(188,188,188)';
-                            } else if ((this.map[x][y] & 2048) > 0) {
-                                col0 = 'rgb(214,187,187)';
-                            }
+                            let col0 = bordercolor.call(this, x, y, c);
 
                             circle.call(this, [x * this.minstep, y * this.minstep],
                                 {radius: radius, color: col0, fillStyle: c});
                         } else {
-                            for (let col in colors) if (!!(colors[col][0] & m)) {
-                                let col0 = colors[col][1];
-                                if ((this.map[x][y] & 1024) > 0) {
-                                    col0 = 'rgb(188,188,188)';
-                                } else if ((this.map[x][y] & 2048) > 0) {
-                                    col0 = 'rgb(214,187,187)';
-                                }
+                            for (let col of [
+                                [2, "rgb(177,100,185,0.3)"],
+                                [1, "rgb(100,185,185,0.3)"],
+                                [8, "rgb(100,185,104,0.3)"],
+                                [4, "rgb(185,100,117,0.3)"],
+                            ]) if (!!(col[0] & m)) {
+                                let col0 = bordercolor.call(this, x, y, col[1]);
                                 circle.call(this, [x * this.minstep, y * this.minstep],
-                                    {radius: radius, color: col0, fillStyle: colors[col][1]});
+                                    {radius: radius, color: col0, fillStyle: col[1]});
                             }
                             let xx = this.toscreen([x * this.minstep, y * this.minstep]);
                             if (xx[0] > 0 && xx[0] < this.screen[0] && xx[1] > 0 && xx[1] < this.screen[1]) {
@@ -378,10 +402,10 @@
                     }
                 }
             }
-            if(!!this.Obstacles)
-            for (let i = 0; i < this.Obstacles.length; i++) {
-                line.call(this, this.Obstacles[i][0], this.Obstacles[i][1], {color: "white", lineWidth: "5"});
-            }
+            if (!!this.Obstacles)
+                for (let i = 0; i < this.Obstacles.length; i++) {
+                    line.call(this, this.Obstacles[i][0], this.Obstacles[i][1], {color: "white", lineWidth: "5"});
+                }
             if (!!this.templine) {
                 ctx.beginPath();
                 ctx.lineCap = "round";
@@ -391,7 +415,7 @@
                 ctx.strokeStyle = "lightgray";
                 ctx.stroke();
             }
-            if (!!this.trace && this.trace.length>0 && this.trace[0].length>2) {
+            if (!!this.trace && this.trace.length > 0 && this.trace[0].length > 2) {
                 if (!this.svgcache['trace']) {
                     let m = '', p = this.toscreen(this.trace[0][2]);
                     m += 'M' + Math.round(p[0]) + ' ' + Math.round(p[1]) + ' ';
@@ -433,8 +457,7 @@
                 for (let y = this.realmap_border[2]; y < this.realmap_border[3]; y++) {
                     this.map[x][y] = 0;
                     let letitempty = false, z = [this.minstep * x, this.minstep * y], o1 = 1, o2 = 0;
-                    for (let a in this.Obstacles) {
-                        let o = this.Obstacles[a];
+                    for (let o of this.Obstacles) {
                         // рядом с препятствием ?
                         if (distP(o[0], o[1], z) < 7) {
                             letitempty = true;
@@ -464,8 +487,8 @@
                 for (let x = this.realmap_border[0]; x < this.realmap_border[1]; x++) {
                     if (this.map[x][y] != 0 && this.map[x][y] != 8) {
                         let _y = this.minstep * y, _x = this.minstep * x - (x > 0 ? this.pointA[0] : -this.pointA[0]);
-                        if (Math.abs(Math.sqrt((_x * _x + _y * _y)) - this.len[0] - this.len[1]) < 5) {
-                            this.map[x][y] |= (x < 0 ? 2048 : 1024);
+                        if (Math.abs(Math.sqrt((_x * _x + _y * _y)) - this.len[0] - this.len[1]) < this.minstep) {
+                            this.map[x][y] |= (x == 0 ? 1024 + 2048 : (x < 0 ? 2048 : 1024));
                         }
                     }
                 }
@@ -659,13 +682,9 @@
         buildtrace: function () {
             // точка старта
             let pa = [...this.pointA], pb = [...this.pointB];
-            pa[2] = this.startA[0];
-            pb[2] = this.startA[1];
-            let z = this.calc_silent(pa, pb);
+            let z = this.calc_silent(pa, pb, this.startA[0], this.startA[1]);
 
-            pa[2] = this.fin_A[0];
-            pb[2] = this.fin_A[1];
-            let zz = this.calc_silent(pa, pb);
+            let zz = this.calc_silent(pa, pb, this.fin_A[0], this.fin_A[1]);
             //console.log(z,zz);
             let ret = [[this.startA[0], this.startA[1]]];
 

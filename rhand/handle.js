@@ -30,13 +30,12 @@ $(function () {
     function drawTrace() {
         $('#programm tr:not(:first)').remove();
         let pa = [...rhand.pointA], pb = [...rhand.pointB];
-        for (let i = 0; i < rhand.trace.length; i++) {
-            if (rhand.trace[i]) {
-                pa[2] = rhand.trace[i][0], pb[2] = rhand.trace[i][1];
-                let z = rhand.calc_silent(pa, pb);
-                rhand.trace[i][2] = z[2];
-                $('#programm tbody').append("<tr data-data='" + JSON.stringify(rhand.trace[i]) +
-                    "'><td>" + rhand.tograd(rhand.trace[i][0]) + '</td><td>' + rhand.tograd(rhand.trace[i][1]) + '</td><td></td><td></td></tr>');
+        for (let t of rhand.trace) {
+            if (t && t.length>1) {
+                let z = rhand.calc_silent(pa, pb, t[0], t[1]);
+                t[2] = z[2];
+                $('#programm tbody').append("<tr data-data='" + JSON.stringify(t) +
+                    "'><td>" + rhand.tograd(t[0]) + '</td><td>' + rhand.tograd(t[1]) + '</td><td></td><td></td></tr>');
             }
         }
         rhand.svgcache ['trace']=false;
@@ -123,8 +122,8 @@ $(function () {
         var pa, pb, reason = whattodo[0] || '';
         if (whattodo && whattodo[0] && whattodo[0].constructor && whattodo[0].constructor === Array) {
             // нам передан массив массивов
-            for (var x in whattodo) {
-                handle.call(this, whattodo[x])
+            for (var x of whattodo) {
+                handle.call(this, x)
             }
             return false; // в этом случае нет возможности выдать другой результат
         }
@@ -271,9 +270,9 @@ $(function () {
             case 'copyjson':
                 // so fill a json value
                 let sel = $(whattodo[1]), names = whattodo[2], val = {};
-                for (let a in names) {
-                    if (names.hasOwnProperty(a) && rhand.hasOwnProperty(names[a])) {
-                        val[names[a]] = rhand[names[a]];
+                for (let a of names) {
+                    if (rhand.hasOwnProperty(a)) {
+                        val[a] = rhand[a];
                     }
                 }
                 val.note = 'please! use this values in proper ways';
@@ -295,11 +294,11 @@ $(function () {
                     if (data == '') return;
                     vsal = JSON.parse(data);
                     sel.val('');
-                    for (let a in names) {
-                        if (names.hasOwnProperty(a) && rhand.hasOwnProperty(names[a])) {
-                            rhand[names[a]] = vsal[names[a]];
-                            if ('trace' == names[a]) _dt = true;
-                            if ('Obstacles' == names[a]) _rm = true;
+                    for (let a of names) {
+                        if ( rhand.hasOwnProperty(a)) {
+                            rhand[a] = vsal[a];
+                            if ('trace' == a) _dt = true;
+                            if ('Obstacles' == a) _rm = true;
                         }
                     }
                     _rm && rhand.mapit();
@@ -351,9 +350,9 @@ $(function () {
                     if (false === oldzoompoint) {
                         oldzoompoint = [...rhand.zoompoint];
                     }
-                    rhand.zoompoint[0] = oldzoompoint[0] + (whattodo[2][0] - whattodo[1][0]);
-                    rhand.zoompoint[1] = oldzoompoint[1] - (whattodo[2][1] - whattodo[1][1]);
-                    //console.log('mousedragtemp',rhand.zoompoint,oldzoompoint);
+                    rhand.zoomdrag({drag:
+                        [oldzoompoint[0] + (whattodo[2][0] - whattodo[1][0]),
+                        oldzoompoint[1] - (whattodo[2][1] - whattodo[1][1])]})
                     rhand.svgcache = [];
                     draw();
                 }
@@ -372,28 +371,23 @@ $(function () {
                     })()
                 } else if (rhand.painting == '') {
                     if (false !== oldzoompoint) {
-                        rhand.zoompoint[0] = oldzoompoint[0] + (whattodo[2][0] - whattodo[1][0]);
-                        rhand.zoompoint[1] = oldzoompoint[1] - (whattodo[2][1] - whattodo[1][1])
+                        rhand.zoomdrag({drag:
+                            [oldzoompoint[0] + (whattodo[2][0] - whattodo[1][0]),
+                                oldzoompoint[1] - (whattodo[2][1] - whattodo[1][1])]})
                         oldzoompoint = false;
                         rhand.svgcache = [];
                         draw();
-                        //console.log('move',rhand.zoompoint);
                     }
                 }
                 break;
             case 'resize':
                 let bound = $('#map').parents('td')[0].getBoundingClientRect();
-                rhand.zoom = Math.min(4, Math.max(0.5, Math.max(rhand.screen[0] / bound.width,
-                    rhand.screen[1] / bound.height)));
                 let h = Math.min(rhand.screen[1] / rhand.zoom, bound.height),
                     w = Math.min(rhand.screen[0] / rhand.zoom, bound.width);
                 $('#canvas')[0].setAttribute("height", h);
                 $('#canvas')[0].setAttribute("width", w);
+                rhand.zoomdrag({drag:[w / 2,h * 2 / 5]})
                 rhand.screen = [w, h];
-                rhand.zoompoint = [
-                    w / 2,
-                    h * 2 / 5
-                ]
                 rhand.svgcache = [];
                 draw();
                 break;
@@ -519,13 +513,12 @@ $(function () {
         if ($(event.target).is('#canvas')) {
             if (event.originalEvent.wheelDelta > 0 || event.originalEvent.detail < 0) {
                 // scroll up
-                rhand.zoom = Math.max(0.2, rhand.zoom * 0.9);
+                rhand.zoomdrag ({zoommul:0.9});
             } else {
-                rhand.zoom = Math.min(rhand.zoom / 0.9, 2);
+                rhand.zoomdrag ({zoommul:10/9});
             }
             rhand.svgcache = [];
-            rhand.draw();
-            //return false;
+            draw();
         }
     });
     // D&D на канвасе
