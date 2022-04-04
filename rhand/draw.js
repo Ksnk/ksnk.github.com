@@ -395,7 +395,7 @@
                 ctx.strokeStyle = "lightgray";
                 ctx.stroke();
             }
-            if (!!this.trace) {
+            if (!!this.trace && this.trace.length>0 && this.trace[0].length>2) {
                 if (!this.svgcache['trace']) {
                     let m = '', p = this.toscreen(this.trace[0][2]);
                     m += 'M' + Math.round(p[0]) + ' ' + Math.round(p[1]) + ' ';
