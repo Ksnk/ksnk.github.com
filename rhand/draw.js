@@ -252,19 +252,20 @@
          */
         zoomdrag: function (obj) {//zoommul, drag){
             if (!!obj.drag)
-                rhand.zoompoint = obj.drag;
+                this.zoompoint = obj.drag;
             else if (!!obj.point) {
-                var p=rhand.fromscreen(obj.point);
+                var p=this.fromscreen(obj.point);
             }
             if (!!obj.zoommul)
-                rhand.zoom = Math.min(2, Math.max(0.25, rhand.zoom * obj.zoommul));
+                this.zoom = Math.min(2, Math.max(0.1, this.zoom * obj.zoommul));
             else if (!!obj.zoom)
-                rhand.zoom = Math.min(2, Math.max(0.25, obj.zoom));
+                this.zoom = Math.min(2, Math.max(0.1, obj.zoom));
             if (!!obj.point) {
-                let pp=rhand.toscreen(p);
-                rhand.zoompoint[0] -=pp[0]-obj.point[0];
-                rhand.zoompoint[1] +=pp[1]-obj.point[1];
+                let pp=this.toscreen(p);
+                this.zoompoint[0] -=pp[0]-obj.point[0];
+                this.zoompoint[1] +=pp[1]-obj.point[1];
             }
+            this.svgcache = [];
         },
 
         /**
@@ -384,7 +385,7 @@
                         let a = this.toscreen([x * this.minstep, y * this.minstep]);
                         if (a[0] > 0 && a[0] < this.screen[0] && a[1] > 0 && a[1] < this.screen[1])
                             if (this.zoom < 0.3 && this._map && this._map[x] && this._map[x][y]) {
-                                let v = 100000, txt = '';
+                                let v = 100000;
                                 for (let i = 0; i < 4; i++) {
                                     let aa = this._map[x][y][1 << i];
                                     if (aa != 0) {
@@ -400,7 +401,8 @@
                                     }
                                 }
                                 if (v < 100000) {
-                                    ctx.font = "9px Arial";
+                                    // 0.25->9, 01 - 14  y=(x-0.25)*(8-14)/(0.25-0.1)+8
+                                    ctx.font = Math.round((this.minstep/5)*(this.zoom-0.25)*(-6/0.15)+8)+"px Arial";
                                     // ctx.fillStyle = "gray";
                                     ctx.textAlign = "center";
                                     ctx.fillText('' + (Math.round(10 * v) / 10), a[0], a[1] + 4);

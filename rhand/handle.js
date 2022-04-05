@@ -7,7 +7,7 @@ $(function () {
         if (!draw._TO && !draw._internal) {
             draw._TO = window.requestAnimationFrame(function () {
                 draw._TO = false;
-                window.rhand.draw();
+                rhand.draw();
                 updatectrl();
             });
         }
@@ -353,7 +353,7 @@ $(function () {
                     rhand.zoomdrag({drag:
                         [oldzoompoint[0] + (whattodo[2][0] - whattodo[1][0]),
                         oldzoompoint[1] - (whattodo[2][1] - whattodo[1][1])]})
-                    rhand.svgcache = [];
+
                     draw();
                 }
                 //console.log('mousedragtemp',whattodo[1],whattodo[2]);
@@ -375,7 +375,7 @@ $(function () {
                             [oldzoompoint[0] + (whattodo[2][0] - whattodo[1][0]),
                                 oldzoompoint[1] - (whattodo[2][1] - whattodo[1][1])]})
                         oldzoompoint = false;
-                        rhand.svgcache = [];
+
                         draw();
                     }
                 }
@@ -388,7 +388,7 @@ $(function () {
                 $('#canvas')[0].setAttribute("width", w);
                 rhand.zoomdrag({drag:[w / 2,h * 2 / 5]})
                 rhand.screen = [w, h];
-                rhand.svgcache = [];
+
                 draw();
                 break;
         }
@@ -517,7 +517,7 @@ $(function () {
             } else {
                 rhand.zoomdrag ({zoommul:10/9, point:[event.offsetX, event.offsetY]});
             }
-            rhand.svgcache = [];
+
             draw();
         }
     });
