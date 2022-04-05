@@ -452,7 +452,7 @@
 
                             let a = angle(fa, z), b = angle(fb, z);
                             if (Math.PI < norm(Math.PI - a + b)) {
-                                if (intersectPP(pa, fa, pb, fb) > 10) {
+                                if (intersectPP(pa, fa, pb, fb) > 2*this.minstep) {
                                     this.map[x][y] |= 1 << (o1 * 2 + o2);
                                 }
                             }
@@ -464,7 +464,7 @@
                 for (let x = this.realmap_border[0]; x < this.realmap_border[1]; x++) {
                     if (this.map[x][y] != 0 && this.map[x][y] != 8) {
                         let _y = this.minstep * y, _x = this.minstep * x - (x > 0 ? this.pointA[0] : -this.pointA[0]);
-                        if (Math.abs(Math.sqrt((_x * _x + _y * _y)) - this.len[0] - this.len[1]) < 5) {
+                        if (Math.abs(Math.sqrt((_x * _x + _y * _y)) - this.len[0] - this.len[1]) < this.minstep) {
                             this.map[x][y] |= (x < 0 ? 2048 : 1024);
                         }
                     }
