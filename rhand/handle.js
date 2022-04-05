@@ -513,9 +513,9 @@ $(function () {
         if ($(event.target).is('#canvas')) {
             if (event.originalEvent.wheelDelta > 0 || event.originalEvent.detail < 0) {
                 // scroll up
-                rhand.zoomdrag ({zoommul:0.9});
+                rhand.zoomdrag ({zoommul:0.9, point:[event.offsetX, event.offsetY]});
             } else {
-                rhand.zoomdrag ({zoommul:10/9});
+                rhand.zoomdrag ({zoommul:10/9, point:[event.offsetX, event.offsetY]});
             }
             rhand.svgcache = [];
             draw();

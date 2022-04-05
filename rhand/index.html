@@ -50,7 +50,8 @@
     </symbol>
     <symbol id="icon-move" viewBox="0 0 18 18">
         <g xmlns="http://www.w3.org/2000/svg" id="Group" transform="translate(-192.000000, -96.000000)" fill="#000000">
-            <path d="M193,105.007952 L194.497016,106.502984 L198,103 L201,106 L197.499005,109.500995 L199,111 L193,111 Z M207,102.992048 L205.502984,101.497016 L202,105 L199,102 L202.500995,98.4990053 L201,97 L207,97 Z M207,102.992048" id="Triangle 269"/>
+            <path d="M193,105.007952 L194.497016,106.502984 L198,103 L201,106 L197.499005,109.500995 L199,111 L193,111 Z M207,102.992048 L205.502984,101.497016 L202,105 L199,102 L202.500995,98.4990053 L201,97 L207,97 Z M207,102.992048"
+                  id="Triangle 269"/>
         </g>
     </symbol>
     <!--
@@ -167,31 +168,32 @@
                         <label class="text">ось Б: <input data-handle="submitdraw,grad" name="fin_A.1"> </label>
                         <label class="text">x: <input data-handle="submitdraw" name="finXY.0"> </label> <br>
                         <label class="text">y: <input data-handle="submitdraw" name="finXY.1"> </label>
-                        <span title="Расчитать маршрут" data-handle="calc, coord, finXY"><svg class="svgicon"><use
-                                xlink:href="#icon-calc"/></svg></span></fieldset>
+                        <span title="Расчитать маршрут" data-handle="calc, coord, finXY">
+                            <svg class="svgicon">
+                                <use xlink:href="#icon-calc"/>
+                            </svg>
+                        </span>
+                    </fieldset>
                     <fieldset>
                         <legend>Препятствия</legend>
                         <button class="painting" title="Рисовать" data-handle="paint">
                             <svg class="svgicon">
-                                <use
-                                        xlink:href="#icon-pencil"/>
+                                <use xlink:href="#icon-pencil"/>
                             </svg>
                         </button>&nbsp;
                         <button class="painting" title="Убрать" data-handle="clearpaint">
                             <svg class="svgicon">
-                                <use
-                                        xlink:href="#icon-cross"/>
+                                <use xlink:href="#icon-cross"/>
                             </svg>
                         </button>&nbsp;
                         <button class="painting" title="Двигать" data-handle="moving">
                             <svg class="svgicon">
-                                <use
-                                        xlink:href="#icon-move"/>
+                                <use xlink:href="#icon-move"/>
                             </svg>
                         </button>&nbsp;
                     </fieldset>
                 </div>
-                <div class="tabcontent " >
+                <div class="tabcontent ">
                     <table id="programm">
                         <tr>
                             <th><span data-handle='["copyjson","#fc2",["trace"]]'><svg class="svgicon"><use

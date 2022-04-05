@@ -255,9 +255,16 @@
                 rhand.zoom = Math.min(2, Math.max(0.25, rhand.zoom * obj.zoommul));
             else if (!!obj.zoom)
                 rhand.zoom = Math.min(2, Math.max(0.25, obj.zoom));
-
             if (!!obj.drag)
                 rhand.zoompoint = obj.drag;
+            else if (!!obj.point) {
+            /*    let p=rhand.fromscreen(obj.point), pp=rhand.fromscreen(rhand.zoompoint);
+                console.log(obj.point,rhand.zoompoint,p, pp);
+                rhand.zoompoint[0] +=(p[0]-pp[0])/rhand.zoom;
+                rhand.zoompoint[1] +=(p[1]-pp[1])/rhand.zoom;*/
+             //   let p=[rhand.fromscreen(obj.point[0]),rhand.fromscreen(obj.point[1])]
+            }
+
         },
 
         /**
