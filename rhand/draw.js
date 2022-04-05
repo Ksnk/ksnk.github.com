@@ -262,10 +262,8 @@
                 rhand.zoom = Math.min(2, Math.max(0.25, obj.zoom));
             if (!!obj.point) {
                 let pp=rhand.toscreen(p);
-                //console.log(obj.point,rhand.zoompoint,p, pp);
-                rhand.zoompoint[0] +=pp[0]-obj.point[0];
-                rhand.zoompoint[1] -=pp[1]-obj.point[1];
-                //   let p=[rhand.fromscreen(obj.point[0]),rhand.fromscreen(obj.point[1])]
+                rhand.zoompoint[0] -=pp[0]-obj.point[0];
+                rhand.zoompoint[1] +=pp[1]-obj.point[1];
             }
         },
 
