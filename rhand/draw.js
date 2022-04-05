@@ -251,20 +251,22 @@
          * @param drag - модификатор сдвига (с точках экрана)
          */
         zoomdrag: function (obj) {//zoommul, drag){
+            if (!!obj.drag)
+                rhand.zoompoint = obj.drag;
+            else if (!!obj.point) {
+                var p=rhand.fromscreen(obj.point);
+            }
             if (!!obj.zoommul)
                 rhand.zoom = Math.min(2, Math.max(0.25, rhand.zoom * obj.zoommul));
             else if (!!obj.zoom)
                 rhand.zoom = Math.min(2, Math.max(0.25, obj.zoom));
-            if (!!obj.drag)
-                rhand.zoompoint = obj.drag;
-            else if (!!obj.point) {
-            /*    let p=rhand.fromscreen(obj.point), pp=rhand.fromscreen(rhand.zoompoint);
-                console.log(obj.point,rhand.zoompoint,p, pp);
-                rhand.zoompoint[0] +=(p[0]-pp[0])/rhand.zoom;
-                rhand.zoompoint[1] +=(p[1]-pp[1])/rhand.zoom;*/
-             //   let p=[rhand.fromscreen(obj.point[0]),rhand.fromscreen(obj.point[1])]
+            if (!!obj.point) {
+                let pp=rhand.toscreen(p);
+                //console.log(obj.point,rhand.zoompoint,p, pp);
+                rhand.zoompoint[0] +=pp[0]-obj.point[0];
+                rhand.zoompoint[1] -=pp[1]-obj.point[1];
+                //   let p=[rhand.fromscreen(obj.point[0]),rhand.fromscreen(obj.point[1])]
             }
-
         },
 
         /**
