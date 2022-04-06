@@ -167,6 +167,7 @@
 
         minstep: 5,
 
+        // границы карты графа пути. Пересчитываются в методе init
         realmap_border: [(150 - 170 - 170) / 6, (-150 + 170 + 170) / 6, -260 / 6, 320 / 6],
 
         //
@@ -254,16 +255,16 @@
             if (!!obj.drag)
                 this.zoompoint = obj.drag;
             else if (!!obj.point) {
-                var p=this.fromscreen(obj.point);
+                var p = this.fromscreen(obj.point);
             }
             if (!!obj.zoommul)
                 this.zoom = Math.min(2, Math.max(0.1, this.zoom * obj.zoommul));
             else if (!!obj.zoom)
                 this.zoom = Math.min(2, Math.max(0.1, obj.zoom));
             if (!!obj.point) {
-                let pp=this.toscreen(p);
-                this.zoompoint[0] -=pp[0]-obj.point[0];
-                this.zoompoint[1] +=pp[1]-obj.point[1];
+                let pp = this.toscreen(p);
+                this.zoompoint[0] -= pp[0] - obj.point[0];
+                this.zoompoint[1] += pp[1] - obj.point[1];
             }
             this.svgcache = [];
         },
@@ -299,6 +300,31 @@
                 o2 = 1 - o2;
             }
             return [fa, fb, x, 1 << (o1 * 2 + o2)];
+        },
+
+        updateAngles: function (obj) {
+            let olda = this.pointA[2], oldb = this.pointB[2];
+            if (!!obj.dA) {
+                this.pointA[2] += obj.dA;
+            }
+            if (!!obj.A) {
+                this.pointA[2] = obj.A;
+            }
+            if (!!obj.dB) {
+                this.pointB[2] += obj.dB;
+            }
+            if (!!obj.B) {
+                this.pointB[2] = obj.B;
+            }
+            // проверка, не криво ли стоим ?
+            let x = this.calc_silent(this.pointA, this.pointB);
+            if (isNaN(x[2][0]) ||
+                intersectPP(this.pointA, x[0], this.pointB, x[1]) < 10) {
+                this.pointA[2] = olda;
+                this.pointB[2] = oldb;
+                return false;
+            }
+            return true;
         },
 
         // рисовать манипулятор
@@ -388,7 +414,7 @@
                                 let v = 100000;
                                 for (let i = 0; i < 4; i++) {
                                     let aa = this._map[x][y][1 << i];
-                                    if (aa != 0) {
+                                    if (aa != 0 && (mapcolor & (1 << i))) {
                                         if (Math.abs(v) > Math.abs(aa)) {
                                             v = aa;
                                             ctx.fillStyle = [
@@ -402,7 +428,7 @@
                                 }
                                 if (v < 100000) {
                                     // 0.25->9, 01 - 14  y=(x-0.25)*(8-14)/(0.25-0.1)+8
-                                    ctx.font = Math.round((this.minstep/5)*(this.zoom-0.25)*(-6/0.15)+8)+"px Arial";
+                                    ctx.font = Math.round((this.minstep / 5) * (this.zoom - 0.25) * (-6 / 0.15) + 8) + "px Arial";
                                     // ctx.fillStyle = "gray";
                                     ctx.textAlign = "center";
                                     ctx.fillText('' + (Math.round(10 * v) / 10), a[0], a[1] + 4);
@@ -484,7 +510,7 @@
 
                             let a = angle(fa, z), b = angle(fb, z);
                             if (Math.PI < norm(Math.PI - a + b)) {
-                                if (intersectPP(pa, fa, pb, fb) > 2*this.minstep) {
+                                if (intersectPP(pa, fa, pb, fb) > 2 * this.minstep) {
                                     this.map[x][y] |= 1 << (o1 * 2 + o2);
                                 }
                             }

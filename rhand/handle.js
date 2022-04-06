@@ -74,8 +74,7 @@ $(function () {
                 updatectrl();
                 return;
             }
-            rhand.pointA[2] = trace[cur][0];
-            rhand.pointB[2] = trace[cur][1];
+            rhand.updateAngles({A:trace[cur][0],B:trace[cur][1]})
             draw();
             cur++;
 
@@ -144,13 +143,8 @@ $(function () {
                 updatectrl();
                 break;
             case 'rotate':
-                pa = _get(whattodo[1])[2];
-                _get(whattodo[1])[2] += rhand.torad(whattodo[2]);
-                // проверка, не криво ли стоим ?
-                let x = rhand.calc_silent(rhand.pointA, rhand.pointB);
-                if (isNaN(x[2][0])) {
-                    _get(whattodo[1])[2] = pa;
-                }
+                let obj={};obj[whattodo[1]=='pointA'?'dA':'dB']=rhand.torad(whattodo[2]);
+                rhand.updateAngles(obj);
                 draw();
                 break;
             case "submitdraw":
@@ -419,8 +413,7 @@ $(function () {
     function show(tr) {
         let data = tr.data('data');
         if (data && data.length && data.length > 1) {
-            rhand.pointA[2] = data[0];
-            rhand.pointB[2] = data[1];
+            rhand.updateAngles({A:data[0],B:data[1]});
             draw();
         }
     }
