@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Пример анимации Canvas</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script>
+
+        /**
+         * Объект, осуществляющий вычисления. Некоторые неявные типы
+         * -- <<point>>>> - [x,y] - координаты точки {x,y}
+         * -- <<vector>>>> - {start: <<point>>, fin: <<point>>}
+         * @type {{_interval: boolean, moveupto: (function(*, *): *[]), newline: anima.newline, permanentdraw: anima.permanentdraw, clearpermanent: anima.clearpermanent, moveuptopercent: (function(*, *): *[]), dist: (function(*): number), resize: anima.resize, _draw: anima._draw, _TO: boolean, draw: anima.draw, lines: *[]}}
+         */
+        let anima={
+            /* массив линий */
+            lines:[],
+            /**
+             * временные переменные
+             */
+            _TO:false,_interval:false,
+
+            /**
+             * Сдвинутся на dist пикселей
+             * @param x - vector
+             * @param dist
+             * @returns {*[]}
+             */
+            moveupto:function(x,dist){
+                let d=this.dist(x);
+                return this.moveuptopercent(x,dist/d);
+            },
+            /**
+             * сдвинутся на долю от длины вектора
+             * @param x - vector
+             * @param dist
+             * @returns {*[]}
+             */
+            moveuptopercent:function(x,dist){
+                return [x.start[0]+dist*(x.fin[0]-x.start[0]),x.start[1]+dist*(x.fin[1]-x.start[1])];
+            },
+            /**
+             * длина вектора
+             * @param x - vector
+             * @returns {number}
+             */
+            dist:function(x){
+                return Math.sqrt((x.start[0]-x.fin[0])*(x.start[0]-x.fin[0]) +  (x.start[1]-x.fin[1])*(x.start[1]-x.fin[1]));
+            },
+
+            /**
+             * Инициирует непрерывную перерисовку контента. Для плавной анимации.
+             */
+            permanentdraw:function(){
+                if(!!this._interval) return;
+                this._interval=setInterval(()=>anima.draw(),10);
+            },
+            /**
+             * останавливает анимацию
+             */
+            clearpermanent:function(){
+                if(!this._interval) return;
+                clearInterval(this._interval);
+                this._interval=null;
+            },
+
+            /**
+             * отложенный draw - заявка на перерисовку. Можно частить, все равно не должно тормозить
+             */
+            draw: function () {
+                if (!this._TO) {
+                    let that=this;
+                    this._TO = window.requestAnimationFrame(function () {
+                        that._TO = false;
+                        that._draw();
+                    });
+                }
+            },
+
+
+            /* настоящая перерисовка канваса */
+            _draw: function (){
+                /**
+                 * Вспомогательная функция для рисования линии
+                 * @param a - point
+                 * @param b - point
+                 * @param options - {lineCap:<<"butt"|"round"|"square">>, lineWidth:<<int>>, color:<<color>>}
+                 */
+                function line(a, b, options) {
+                    options = options || {};
+                    ctx.beginPath();
+                    ctx.lineCap = options.lineCap || "round";
+                    ctx.lineWidth = options.lineWidth || 2;
+                    ctx.moveTo(a[0], a[1]);
+                    ctx.lineTo(b[0], b[1]);
+                    ctx.strokeStyle = options.color || "white";
+                    ctx.stroke();
+                }
+                /**
+                 * Вспомогательная функция для рисования круга c границей
+                 * @param a - point
+                 * @param options - {radius:<<int>>, lineWidth:<<int>>, color:<<color>>, fillStyle:<<string>>}
+                 */
+                function circle(a, options) {
+                    options = options || {};
+                    ctx.beginPath();
+                    ctx.lineWidth = options.lineWidth || 1;
+                    ctx.strokeStyle = options.color || "white";
+                    ctx.arc(a[0], a[1], options.radius || 5, 0, 2 * Math.PI);
+                    ctx.fillStyle = options.fillStyle || "gray";
+                    ctx.fill();
+                    ctx.stroke();
+                }
+
+                let canvas = $('#canvas')[0];
+                let ctx = canvas.getContext("2d");
+                let canclearpermanent=true; // нужно ли отключать анимацию
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (let l of this.lines){
+                    let percent=1, d;
+                    if(!!l.animation) {
+                        d = new Date();
+                        percent = (d - l.starttime) / l.animation;
+                    }
+                    if(percent<1) {
+                        let fin = this.moveuptopercent({start: l.start, fin: l.fin}, percent);
+                        line(l.start, fin);
+                        canclearpermanent=false;
+                    } else {
+                        line(l.start, l.fin);
+                        circle(l.fin);
+                    }
+
+                }
+                if(canclearpermanent){
+                    this.clearpermanent();
+                }
+            },
+            /**
+             * обработка ресайза, просто установка габаритов канваса.
+             * @param bound
+             */
+            resize: function(bound){
+                $('#canvas')[0].setAttribute("height", bound.height);
+                $('#canvas')[0].setAttribute("width", bound.width);
+            },
+            /**
+             * добавить еще один элемент анимации
+             * @param line - vector
+             * @param animation - int: микротик - 1000 в секунду.
+             */
+            newline: function(line, animation){
+                if(!!animation){
+                    line.starttime=new Date();
+                    line.animation=animation;
+                }
+                this.lines.push(line);
+                this.permanentdraw();
+            }
+        }
+        $(function(){
+            /**
+             * перевычислить новые значения start-fin
+             * @param that - DOM элемент
+             * @param animation - 1000==1 секунда
+             */
+            function recalc(that,animation){
+                let border = $('.container')[0].getBoundingClientRect();
+                let start = that.getBoundingClientRect();
+                let point = $(that).data('anchor');
+                let fin = $('#' + point)[0].getBoundingClientRect();
+                let xstart=[start.left - border.left+start.width/2, start.top - border.top+start.height/2],
+                    ystart=[fin.left - border.left, fin.top - border.top+fin.height/2];
+                xstart=anima.moveupto({start:xstart,fin:ystart}, start.width/2+1);
+                anima.newline({
+                    start: xstart,
+                    fin: ystart
+                },animation);
+            }
+
+            /**
+             * Изменение окна броузера
+             */
+            $(window).on('resize', function(){
+                let ofs=$('.container')[0].getBoundingClientRect();
+                anima.resize({width: ofs.width,height:ofs.height});
+                anima.lines=[]; // пока вот так вот просто, без пересчета
+                $('div[data-anchor]').each(function(){
+                    if($(this).data('complete')){
+                       recalc(this);
+                    }
+                })
+                anima.draw();
+            }).trigger('resize');
+
+            $(document).on('mouseenter click','div[data-anchor]',function(){
+                if(!$(this).data('complete')) {
+                    $(this).data('complete', 'complete'); // больше не будем реагировать
+                    recalc(this, 1000);
+                }
+            })
+        })
+    </script>
+    <style>
+        .container {
+            position:relative;
+        }
+        #canvas {
+            position:absolute;
+            top:0; left:0; width:100%;height:100%;
+            overflow:hidden;
+            z-index:1001;
+            pointer-events: none;
+        }
+        .text {
+        }
+
+        .point {
+            position:absolute;
+            width:24px;
+            height:24px;
+            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAApgAAAKYB3X3/OAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAANCSURBVEiJtZZPbBtFFMZ/M7ubXdtdb1xSFyeilBapySVU8h8OoFaooFSqiihIVIpQBKci6KEg9Q6H9kovIHoCIVQJJCKE1ENFjnAgcaSGC6rEnxBwA04Tx43t2FnvDAfjkNibxgHxnWb2e/u992bee7tCa00YFsffekFY+nUzFtjW0LrvjRXrCDIAaPLlW0nHL0SsZtVoaF98mLrx3pdhOqLtYPHChahZcYYO7KvPFxvRl5XPp1sN3adWiD1ZAqD6XYK1b/dvE5IWryTt2udLFedwc1+9kLp+vbbpoDh+6TklxBeAi9TL0taeWpdmZzQDry0AcO+jQ12RyohqqoYoo8RDwJrU+qXkjWtfi8Xxt58BdQuwQs9qC/afLwCw8tnQbqYAPsgxE1S6F3EAIXux2oQFKm0ihMsOF71dHYx+f3NND68ghCu1YIoePPQN1pGRABkJ6Bus96CutRZMydTl+TvuiRW1m3n0eDl0vRPcEysqdXn+jsQPsrHMquGeXEaY4Yk4wxWcY5V/9scqOMOVUFthatyTy8QyqwZ+kDURKoMWxNKr2EeqVKcTNOajqKoBgOE28U4tdQl5p5bwCw7BWquaZSzAPlwjlithJtp3pTImSqQRrb2Z8PHGigD4RZuNX6JYj6wj7O4TFLbCO/Mn/m8R+h6rYSUb3ekokRY6f/YukArN979jcW+V/S8g0eT/N3VN3kTqWbQ428m9/8k0P/1aIhF36PccEl6EhOcAUCrXKZXXWS3XKd2vc/TRBG9O5ELC17MmWubD2nKhUKZa26Ba2+D3P+4/MNCFwg59oWVeYhkzgN/JDR8deKBoD7Y+ljEjGZ0sosXVTvbc6RHirr2reNy1OXd6pJsQ+gqjk8VWFYmHrwBzW/n+uMPFiRwHB2I7ih8ciHFxIkd/3Omk5tCDV1t+2nNu5sxxpDFNx+huNhVT3/zMDz8usXC3ddaHBj1GHj/As08fwTS7Kt1HBTmyN29vdwAw+/wbwLVOJ3uAD1wi/dUH7Qei66PfyuRj4Ik9is+hglfbkbfR3cnZm7chlUWLdwmprtCohX4HUtlOcQjLYCu+fzGJH2QRKvP3UNz8bWk1qMxjGTOMThZ3kvgLI5AzFfo379UAAAAASUVORK5CYII=");
+        }
+
+        .foo {
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: column;
+            height: 300px;
+        }
+
+        .a {
+            flex: 0 0 100%;
+            background: green;
+        }
+
+        .b {
+            flex: 0 0 100%;
+            order: 1;
+            background: blue;
+        }
+
+    </style>
+</head>
+<body>
+<br>
+<br> <!-- для проверки, что мы рисуем откуда надо, а не просто сверху экрана -->
+<div class="container">
+
+<div class="foo">
+    <div class="a">
+        <div class="point" style="top:30px;left:10px;" data-anchor="x1"></div>
+        <div class="point" style="top:40px;left:160px;" data-anchor="x1"></div>
+        <div class="point" style="top:10px;left:90px;" data-anchor="x6"></div>
+        <div class="point" style="top:70px;left:190px;" data-anchor="x2"></div>
+        <div class="point" style="top:90px;left:10px;" data-anchor="x3"></div>
+        <div class="point" style="top:70px;left:70px;" data-anchor="x7"></div>
+
+    </div>
+    <div class="b">
+        <p><a id="x1">&nbsp;</a> description1</p>
+        <p><a id="x2">&nbsp;</a> description2</p>
+        <p><a id="x3"></a> description3</p>
+        <p><a id="x4"></a> description4</p>
+        <p><a id="x5"></a> description5</p>
+        <p><a id="x6"></a> description6</p>
+        <p><a id="x7"></a> description7</p>
+    </div>
+</div>
+    <canvas id="canvas"></canvas>
+</div>
+</body>
+</html>
