@@ -29,7 +29,7 @@
      * выдает сумму всех смещений в системе для контроля, что ситуация стабильна
      * @param objects
      * @returns {number}
-     * act - массив навашенных функций взаимодействия, вызываются для каждой пары объектов
+     * act - массив навешанных функций взаимодействия, вызываются для каждой пары объектов
      * move - функция обрабатывающая действующую на объект силу
      */
     function astep(objects) {
@@ -130,7 +130,11 @@
         return prop;
     }
 
-    // точка, отталкивается друг от друга
+    /**
+     * Точка - отталкивается если близко, притягивается, если далеко
+     * @param prop - инициация - {name,rad, mass, speed}
+     * @returns {*}
+     */
     function point(prop) {
         if (!point.pointmove) {
             point.pointmove = function (o, force) {
@@ -284,7 +288,7 @@
 //    world.push(point({ mass: 20 * (1 + Math.random()), pos: {x: 470, y: 100} }));
 //    world.push(point({ mass: 20 * (1 + Math.random()), pos: {x: 532, y: 100} }));
 // поехали
-    function draw(world) {
+    function _draw(world) {
         ctx.strokeStyle = '#000';
         ctx.fillStyle = '#fff';
         // w=world[2].pos.x;
@@ -296,14 +300,29 @@
             }
         }
     }
+    /**
+     * отложенный draw - заявка на перерисовку. Можно частить, все равно не должно тормозить
+     */
+    function draw(world) {
+        if (!draw._TO) {
+            draw._TO = window.requestAnimationFrame(function () {
+                draw._TO = false;
+                _draw(world);
+            });
+        }
+    }
 
-    if (!true) {
-        while (1 < astep(world)) {
+    if (true) {
+        while (200 > astep(world)) {
             ;
         }
         w=world[4].pos.x;
         canvas.setAttribute('width', world[4].pos.x);
         draw(world);
+        setInterval(function () {
+            astep(world);
+            draw(world);
+        }, 10);
     } else {
         setInterval(function () {
             astep(world);

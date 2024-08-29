@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<ul>
+    <li class="lession">
+        <div class="lname">Geography</div>
+        <span class="lstatus"></span>
+        <span class="lstart">8:00</span> - <span class="lfin">8:40</span>
+    </li>
+    <li class="lession">
+        <div class="lname">Chemistry</div>
+        <span class="lstatus"></span>
+        <span class="lstart">8:50</span> - <span class="lfin">9:30</span>
+    </li>
+    <li class="lession">
+        <div class="lname">Russian language</div>
+        <span class="lstatus"></span>
+        <span class="lstart">9:40</span> - <span class="lfin">10:20</span>
+    </li>
+    <li class="lession">
+        <div class="lname">Literature</div>
+        <span class="lstatus"></span>
+        <span class="lstart">10:30</span> - <span class="lfin">15:00</span>
+    </li>
+</ul>
+<script>
+    function getdatebytime(str) {
+        let date = new Date(), x;
+        if ((x = str.match(/^\s*(\d+):(\d+)(:(\d+))?\s*$/))) {
+            date.setHours(x[1], x[2], x[4]||0);
+        }
+        return date;
+    }
+
+    // Заполняем хранилище расписания
+    let  data = [];
+    for (let l of document.querySelectorAll('.lession')) {
+        data.push({
+            html_element: l.querySelector('.lstatus'),
+            start: getdatebytime(l.querySelector('.lstart').innerHTML),
+            fin: getdatebytime(l.querySelector('.lfin').innerHTML),
+        })
+    }
+
+    function handle() {
+        var date = new Date(), status = '', next = false;
+        for (let l of data) {
+            if (date < l.start) {
+                status = 'Upcoming';
+                if (!next || l.start < next) next = l.start;
+            } else if (date < l.fin) {
+                status = 'Going';
+                if (!next || l.fin < next) next = l.fin;
+            } else {
+                status = 'Complete';
+            }
+            if (l.html_element) {
+                l.html_element.innerHTML = status;
+            }
+        }
+        if (next) {
+            let interval = next - date;
+            if (interval > 60000) interval -= 60000; // за минуту до срока, чтобы сильно не промазать
+            setTimeout(handle, interval);
+        }
+        // console.log(next,date);
+    }
+
+    handle();
+</script>
+
+</body>
+</html>
