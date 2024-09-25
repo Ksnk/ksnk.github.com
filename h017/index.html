@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Matrix demo</title>
+    <style>
+        .box {
+            margin: 20px;
+            padding: 10px;
+            height: 100px;
+            width: 400px;
+            border: 1px solid black;
+            font: Consolas, monotype;
+            font-size: 12px
+        }
+    </style>
+</head>
+<body>
+<div class="box">
+    Drag the points to transform the box!
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+<script>
+$(function($){
+    // Assignment:
+    let number   = 42;
+    const opposite = true;
+
+    // Conditions:$ = jQuery
+
+    const getTransform = function(from, to) {
+        let i;
+        console.assert(from.length === to.length && to.length === 4);
+
+        const A = []; // 8x8
+        for (i = 0; i < 4; i++) {
+            A.push([from[i].x, from[i].y, 1, 0, 0, 0, -from[i].x * to[i].x, -from[i].y * to[i].x]);
+            A.push([0, 0, 0, from[i].x, from[i].y, 1, -from[i].x * to[i].y, -from[i].y * to[i].y]);
+        }
+
+        const b = []; // 8x1
+        for (i = 0; i < 4; i++) {
+            b.push(to[i].x);
+            b.push(to[i].y);
+        }
+
+        // Solve A * h = b for h
+        const h = numeric.solve(A, b);
+
+        const H = [[h[0], h[1], 0, h[2]],
+            [h[3], h[4], 0, h[5]],
+            [   0,    0, 1,    0],
+            [h[6], h[7], 0,    1]];
+
+        // Sanity check that H actually maps `from` to `to`
+        for (i = 0; i < 4; i++) {
+            const lhs = numeric.dot(H, [from[i].x, from[i].y, 0, 1]);
+            const k_i = lhs[3];
+            const rhs = numeric.dot(k_i, [to[i].x, to[i].y, 0, 1]);
+            console.assert(numeric.norm2(numeric.sub(lhs, rhs)) < 1e-9, "Not equal:", lhs, rhs);
+        }
+        return H;
+    };
+
+    const applyTransform = function(element, originalPos, targetPos, callback) {
+        // All offsets were calculated relative to the document
+        // Make them relative to (0, 0) of the element instead
+        let p;
+        const from = (() => {
+            const result = [];
+            for (p of originalPos) {
+                result.push({
+                    x: p[0] - originalPos[0][0],
+                    y: p[1] - originalPos[0][1]
+                });
+            }
+            return result;
+        })();
+        const to = (() => {
+            const result1 = [];
+            for (p of targetPos) {
+                result1.push({
+                    x: p[0] - originalPos[0][0],
+                    y: p[1] - originalPos[0][1]
+                });
+            }
+            return result1;
+        })();
+
+        // Solve for the transform
+        const H = getTransform(from, to);
+
+        // Apply the matrix3d as H transposed because matrix3d is column major order
+        // Also need use toFixed because css doesn't allow scientific notation
+        $(element).css({
+            'transform': `matrix3d(${([0, 1, 2, 3].map((i) => [0, 1, 2, 3].map((j) => H[j][i].toFixed(20)))).join(',')})`,
+            'transform-origin': '0 0'
+        });
+
+        return (typeof callback === 'function' ? callback(element, H) : undefined);
+    };
+
+    const makeTransformable = (selector, callback) => $(selector).each(function(i, element) {
+        let p;
+        $(element).css('transform', '');
+
+        // Add four dots to corners of `element` as control points
+        const controlPoints = ['left top', 'left bottom', 'right top', 'right bottom'].map((position) =>
+            $('<div>')
+                .css({
+                    border: '10px solid black',
+                    borderRadius: '10px',
+                    cursor: 'move',
+                    position: 'absolute',
+                    zIndex: 100000}).appendTo('body')
+                .position({
+                    at: position,
+                    of: element,
+                    collision: 'none'
+                }));
+
+        // Record the original positions of the dots
+        const originalPos = ((() => {
+            const result = [];
+            for (p of controlPoints) {         result.push([p.offset().left, p.offset().top]);
+            }
+            return result;
+        })());
+
+        // Transform `element` to match the new positions of the dots whenever dragged
+        $(controlPoints).draggable({
+            start: () => {
+                return $(element).css('pointer-events', 'none');
+            }, // makes dragging around iframes easier
+            drag: () => {
+                return applyTransform(element, originalPos, ((() => {
+                    const result1 = [];
+                    for (p of controlPoints) {             result1.push([p.offset().left, p.offset().top]);
+                    }
+                    return result1;
+                })()), callback);
+            },
+            stop: () => {
+                applyTransform(element, originalPos, ((() => {
+                    const result1 = [];
+                    for (p of controlPoints) {             result1.push([p.offset().left, p.offset().top]);
+                    }
+                    return result1;
+                })()), callback);
+                return $(element).css('pointer-events', 'auto');
+            }
+        });
+
+        return element;
+    });
+
+    makeTransformable('.box', function(element, H) {
+        console.log($(element).css('transform'));
+        return $(element).html(
+            $('<table>')
+                .append(
+                    $('<tr>').html(
+                        $('<td>').text('matrix3d(')
+                    )
+                )
+                .append(
+                    [0, 1, 2, 3].map((i) =>
+                        $('<tr>').append(
+                            [0, 1, 2, 3].map((j) =>
+                                $('<td>').text(H[j][i] + (i === j && j === 3 ? '' : ',')))
+                        ))
+                )
+                .append(
+                    $('<tr>').html(
+                        $('<td>').text(')')
+                    )
+                )
+        );
+    });
+    if (opposite) { number = -42; }
+
+    // Functions:
+    const square = x => x * x;
+
+    // Arrays:
+    const list = [1, 2, 3, 4, 5];
+
+    // Objects:
+    const math = {
+        root:   Math.sqrt,
+        square,
+        cube(x) { return x * square(x); }
+    };
+
+    // Splats:
+    const race = (winner, ...runners) => print(winner, runners);
+
+    // Existence:
+    if (typeof elvis !== 'undefined' && elvis !== null) { alert("I knew it!"); }
+
+    // Array comprehensions:
+    const cubes = (list.map((num) => math.cube(num)));
+})
+</script>
+
+</body>
+</html>
