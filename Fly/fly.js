@@ -53,8 +53,8 @@
          * top-left corner of the canvas
          */
         this.coord = {
-            x: Math.random() * engine.window.x + engine.scroll.x
-            , y: Math.random() * engine.window.y + engine.scroll.y
+            x: Math.random() * engine.window.x + engine.scroll.x,
+            y: Math.random() * engine.window.y + engine.scroll.y
         };
         /**
          * fly speed
@@ -238,7 +238,7 @@
 
             }
         }
-    };
+    }
 
     /**
      * just an engine
@@ -477,71 +477,71 @@
         }
     };
     engine.init([{
-            name: 'cow',
-            cnt: 2,
-            obj: {
-                fid: 'cow_01', width: 87, height: 87,
-                fwidth: 70, fheight: 51, fFheight: 50,
-                _x: -35, _y: -25.5
-            },
-
-            _default: {},
-
-            rules: {
-                walk: {
-                    _mousemove: 'stay',
-                    _timeout: ['walk', 'walk', 'stay'],
-                    _impact: 'flydown',
-                    mintime: 30,
-                    maxtime: 60,
-                    speed: 4,
-                    kadr: [[3, -2, 1], [4, -2, 1], [5, -2, 1], [4, -2, 1]],
-                    init: function () {
-                        this.angle = this.lookat({
-                            x: Math.random() * engine.window.x + engine.scroll.x
-                            , y: Math.random() * engine.window.y + engine.scroll.y
-                        });
-                    }
-                },
-                flydown: {
-                    _timeout: ['walk', 'stay', 'stay', 'stay', 'fly'],
-                    speed: 80,
-                    kadr: [[-2, -1]], mintime: 6, maxtime: 10, init: function () {
-                        this.angle = 3 / 2 * Math.PI;
-                    }
-                },
-                walkaway: {
-                    _timeout: ['walk', 'stay', 'stay', 'stay', 'fly'],
-                    _impact: 'flydown',
-                    speed: 4,
-                    kadr: [[3, -2, 1], [4, -2, 1], [5, -2, 1], [4, -2, 1]],
-                    mintime: 20, maxtime: 40,
-                    every: function () {
-                        this.angle = Math.PI + this.lookat(cursor)
-                    }
-                },
-                stay: {
-                    _mousemove: 'walkaway',
-                    _timeout: ['walk', 'stay', 'stay', 'stay', 'fly'],
-                    _impact: 'flydown',
-                    kadr: [[6, -2, 1]], mintime: 20, maxtime: 40,
-                    every: function () {
-                        this.angle = this.lookat(cursor)
-                    }
-                },
-                fly: {
-                    mintime: 20, maxtime: 40,
-                    _timeout: ['stay', 'fly'],
-                    speed: 30, kadr: [0], init: function () {
-                        this.angle = this.lookat({
-                            x: Math.random() * engine.window.x + engine.scroll.x
-                            , y: Math.random() * engine.window.y + engine.scroll.y
-                        });
-                    }
-                },
-                hidden: {_timeout: ['fly']}
-            }
+        name: 'cow',
+        cnt: 2,
+        obj: {
+            fid: 'cow_01', width: 87, height: 87,
+            fwidth: 70, fheight: 51, fFheight: 50,
+            _x: -35, _y: -25.5
         },
+
+        _default: {},
+
+        rules: {
+            walk: {
+                _mousemove: 'stay',
+                _timeout: ['walk', 'walk', 'stay'],
+                _impact: 'flydown',
+                mintime: 30,
+                maxtime: 60,
+                speed: 4,
+                kadr: [[3, -2, 1], [4, -2, 1], [5, -2, 1], [4, -2, 1]],
+                init: function () {
+                    this.angle = this.lookat({
+                        x: Math.random() * engine.window.x + engine.scroll.x
+                        , y: Math.random() * engine.window.y + engine.scroll.y
+                    });
+                }
+            },
+            flydown: {
+                _timeout: ['walk', 'stay', 'stay', 'stay', 'fly'],
+                speed: 80,
+                kadr: [[-2, -1]], mintime: 6, maxtime: 10, init: function () {
+                    this.angle = 3 / 2 * Math.PI;
+                }
+            },
+            walkaway: {
+                _timeout: ['walk', 'stay', 'stay', 'stay', 'fly'],
+                _impact: 'flydown',
+                speed: 4,
+                kadr: [[3, -2, 1], [4, -2, 1], [5, -2, 1], [4, -2, 1]],
+                mintime: 20, maxtime: 40,
+                every: function () {
+                    this.angle = Math.PI + this.lookat(cursor)
+                }
+            },
+            stay: {
+                _mousemove: 'walkaway',
+                _timeout: ['walk', 'stay', 'stay', 'stay', 'fly'],
+                _impact: 'flydown',
+                kadr: [[6, -2, 1]], mintime: 20, maxtime: 40,
+                every: function () {
+                    this.angle = this.lookat(cursor)
+                }
+            },
+            fly: {
+                mintime: 20, maxtime: 40,
+                _timeout: ['stay', 'fly'],
+                speed: 30, kadr: [0], init: function () {
+                    this.angle = this.lookat({
+                        x: Math.random() * engine.window.x + engine.scroll.x
+                        , y: Math.random() * engine.window.y + engine.scroll.y
+                    });
+                }
+            },
+            hidden: {_timeout: ['fly']}
+        }
+    },
 
         null]);
 })()
