@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Matrix demo</title>
+    <style>
+        :root {
+            --progress: 0;
+        }
+        .progress-circle {
+            stroke-dashoffset: calc(100 - var(--progress));
+            transform-origin: 50% 50%;
+            transform: rotate(-90deg);
+        }
+    </style>
+</head>
+<body>
+<div style="width:200px;height:200px;">
+
+    <svg  viewBox="0 0 36 36">
+        <g id="circles" stroke-width="4">
+            <circle r="16" cx="18" cy="18" fill="none" stroke="lightgray" />
+            <circle r="16" cx="18" cy="18" fill="none" stroke="teal" stroke-dasharray="100 100" class="progress-circle"
+                    style="--progress:85"/>
+        </g>
+    </svg>
+</div>
+</body>
+</html>

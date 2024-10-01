@@ -30,7 +30,7 @@ let anima = {
      */
     moveupto: function (x, dist, fromfin) {
         let d = this.dist(x);
-        return this.moveuptopercent(x, dist / d,fromfin);
+        return this.moveuptopercent(x, dist / d, fromfin);
     },
     /**
      * сдвинутся на долю от длины вектора
@@ -39,8 +39,8 @@ let anima = {
      * @param fromfin
      * @returns {*[]}
      */
-    moveuptopercent: function (x, dist,fromfin) {
-        if(!fromfin)
+    moveuptopercent: function (x, dist, fromfin) {
+        if (!fromfin)
             return [x.start[0] + dist * (x.fin[0] - x.start[0]), x.start[1] + dist * (x.fin[1] - x.start[1])];
         else
             return [x.fin[0] - dist * (x.fin[0] - x.start[0]), x.fin[1] - dist * (x.fin[1] - x.start[1])];
@@ -51,7 +51,7 @@ let anima = {
      * @param x - vector
      * @returns {number}
      */
-    distI: function (x,y) {
+    distI: function (x, y) {
         return Math.sqrt((x[0] - y[0]) * (x[0] - y[0]) + (x[1] - y[1]) * (x[1] - y[1]));
     },
     /**
@@ -60,7 +60,7 @@ let anima = {
      * @returns {number}
      */
     dist: function (x) {
-        return this.distI(x.start,x.fin);
+        return this.distI(x.start, x.fin);
     },
 
     /**
@@ -112,19 +112,23 @@ let anima = {
             ctx.stroke();
         }
 
-        function arrow(aa, options){
+        function arrow(aa, options) {
             options = options || {};
-            let a=anima.moveupto(aa.vector,5, true);
-            let dist=[aa.vector.fin[0]-a[0],aa.vector.fin[1]-a[1]];
+            let a = anima.moveupto(aa.vector, 5, true);
+            let dist = [aa.vector.fin[0] - a[0], aa.vector.fin[1] - a[1]];
             ctx.lineWidth = options.lineWidth || 1;
-            ctx.fillStyle = options.fillStyle || "white";
+            ctx.fillStyle = options.fillStyle || "gray";
+            ctx.strokeStyle = options.color || "white";
             ctx.beginPath();
-            ctx.moveTo(a[0]+2*dist[0], a[1]+2*dist[1]);
-            ctx.lineTo(a[0]+dist[1],a[1]-dist[0]);
-            ctx.lineTo(a[0]-dist[1],a[1]+dist[0]);
-            ctx.lineTo(a[0]+2*dist[0], a[1]+2*dist[1]);
+            ctx.moveTo(a[0] + 2 * dist[0], a[1] + 2 * dist[1]);
+            ctx.lineTo(a[0] + dist[1], a[1] - dist[0]);
+            ctx.lineTo(a[0] - dist[1], a[1] + dist[0]);
+            ctx.lineTo(a[0] + 2 * dist[0], a[1] + 2 * dist[1]);
             ctx.closePath();
+            ctx.fillStyle = options.fillStyle || "gray";
             ctx.fill();
+            ctx.stroke();
+
         }
 
         /**
@@ -218,9 +222,9 @@ let anima = {
 
     todom: function (el) {
         if (typeof el === 'string' || el instanceof String) {
-            let m=el.match(/^(.*?)\:eq\((\d)\)$/);
-            if(!!m){
-                el=document.querySelectorAll(m[1])[m[2]];
+            let m = el.match(/^(.*?)\:eq\((\d)\)$/);
+            if (!!m) {
+                el = document.querySelectorAll(m[1])[m[2]];
             } else {
                 el = document.querySelector(el);
             }
@@ -274,14 +278,15 @@ let anima = {
         produce: function (line, start, fin, border, animation) {
             // линия от старта до финиша, со смещением до границы
             let xstart = [start.left - border.left + start.width / 2, start.top - border.top + start.height / 2],
-                ystart = [fin.left - border.left+ fin.width / 2, fin.top - border.top + fin.height / 2];
-            if(xstart[0]<ystart[0]){
-                ystart[0]-=fin.width / 2;
+                ystart = [fin.left - border.left + fin.width / 2, fin.top - border.top + fin.height / 2];
+            if (xstart[0] < ystart[0]) {
+                ystart[0] -= fin.width / 2;
             } else {
-                ystart[0]+=fin.width / 2;
+                ystart[0] += fin.width / 2;
             }
             xstart = anima.moveupto({start: xstart, fin: ystart}, start.width / 2 + 1);
             let vector = {a: 'line', start: xstart, fin: ystart};
+            vector.fin = anima.moveupto(vector,5,true);
             vector.dist = anima.dist(vector);
             line.a.push(vector);
             //line.a.push({a: 'circle', center: ystart, dist: 0});
@@ -339,37 +344,40 @@ let anima = {
         }
     },
     "hvh": {
-        produceTrace: function(start, fin, border){
+        produceTrace: function (start, fin, border) {
             let xstart = [start.left - border.left + start.width / 2, start.top - border.top + start.height / 2],
-                ystart = [fin.left - border.left+ fin.width / 2, fin.top - border.top + fin.height / 2];
+                ystart = [fin.left - border.left + fin.width / 2, fin.top - border.top + fin.height / 2];
             // линия горизонтально-вертикально-горизонтально
-            let d=5,p0,p1=false,p2; //- 3 реперные точки нашей линии
+            let d = 5, p0, p1 = false, p2; //- 3 реперные точки нашей линии
             // старт и финиш?
             // попытка соединится напрямую слева направо
-            p0=[xstart[0] + start.width / 2 + 1, xstart[1]];
-            p2=[ystart[0] - fin.width/ 2-d,ystart[1]];
-            if(xstart[0]>p2[0] || p0[0]+10>p2[0] ||
-                2*7>Math.min(
-                    Math.abs (p0[0]-p2[0]),Math.abs (p0[1]-p2[1])
+            p0 = [xstart[0] + start.width / 2 + 1, xstart[1]];
+            p2 = [ystart[0] - fin.width / 2 - d, ystart[1]];
+            if (xstart[0] > p2[0] || p0[0] + 10 > p2[0] ||
+                2 * 7 > Math.min(
+                    Math.abs(p0[0] - p2[0]), Math.abs(p0[1] - p2[1])
                 )
             ) {
                 // нельзя, делаем справа-налево
-                p0=[xstart[0] - start.width / 2 - 1, xstart[1]];
-                p2=[ystart[0] + fin.width/ 2+d,ystart[1]];
-                if(xstart[0]<p2[0] || p2[0]+10>p0[0]||
-                    2*7>Math.min(
-                        Math.abs (p0[0]-p2[0]),Math.abs (p0[1]-p2[1])
-                    )){
+                p0 = [xstart[0] - start.width / 2 - 1, xstart[1]];
+                p2 = [ystart[0] + fin.width / 2 + d, ystart[1]];
+                if (xstart[0] < p2[0] || p2[0] + 10 > p0[0] ||
+                    2 * 7 > Math.min(
+                        Math.abs(p0[0] - p2[0]), Math.abs(p0[1] - p2[1])
+                    )) {
                     // опять нельзя, делаем влево, вниз направо
                     // выносим перегиб влево на 40 пх
-                    p0=[xstart[0] - start.width / 2 - 1, xstart[1]];
-                    p2=[ystart[0] - fin.width/ 2-d,ystart[1]];
-                    p1=[Math.min(p0[0],p2[0])-40,(p0[1]+p2[1])/2];
+                    p0 = [xstart[0] - start.width / 2 - 1, xstart[1]];
+                    p2 = [ystart[0] - fin.width / 2 - d, ystart[1]];
+                    p1 = [Math.min(p0[0], p2[0]) - 40, (p0[1] + p2[1]) / 2];
                 }
             }
 
-            if(!p1){
-                p1=[(p0[0]+p2[0])/2, (p0[1]+p2[1])/2];
+            if (!p1) {
+                // y координата - ближайшая кратная 10
+                // border.top+(border.height/10)
+                let xb=(border.width/10);
+                p1 = [Math.round(((p0[0] + p2[0]) / 2)/xb)*xb,(p0[1] + p2[1]) / 2];
             }
             return [
                 p0,
@@ -377,51 +385,51 @@ let anima = {
                 p2];
         },
         allow: function (start, fin, border) {
-            let p=this.produceTrace(start, fin, border);
+            let p = this.produceTrace(start, fin, border);
             // проверяем, что удастся 2 раза скруглить линии
-            if(7>Math.min(
-                Math.abs (p[0][0]-p[1][0]),
-                Math.abs (p[2][0]-p[1][0]),
-                Math.abs (p[0][1]-p[1][1]),
-                Math.abs (p[2][1]-p[1][1])
+            if (7 > Math.min(
+                Math.abs(p[0][0] - p[1][0]),
+                Math.abs(p[2][0] - p[1][0]),
+                Math.abs(p[0][1] - p[1][1]),
+                Math.abs(p[2][1] - p[1][1])
             )) return false;
             return true;
         },
         produce: function (line, start, fin, border, animation) {
-            let p=this.produceTrace(start, fin, border);
+            let p = this.produceTrace(start, fin, border);
 
-            anima.buildline(line, {a: 'line',start:[p[0][0], p[0][1]], fin: [p[1][0], p[0][1]]},
+            anima.buildline(line, {a: 'line', start: [p[0][0], p[0][1]], fin: [p[1][0], p[0][1]]},
                 {a: 'line', start: [p[1][0], p[0][1]], fin: [p[1][0], p[2][1]]},
                 {a: 'line', start: [p[1][0], p[2][1]], fin: [p[2][0], p[2][1]]},
                 animation);
         }
     },
 
-    vhv:{
-        produceTrace: function(start, fin, border){
+    vhv: {
+        produceTrace: function (start, fin, border) {
             let xstart = [start.left - border.left + start.width / 2, start.top - border.top + start.height / 2],
-                ystart = [fin.left - border.left+ fin.width / 2, fin.top - border.top + fin.height / 2];
+                ystart = [fin.left - border.left + fin.width / 2, fin.top - border.top + fin.height / 2];
             // линия вертикально-горизонтально-вертикальная
-            let d=5,p0,p1=false,p2; //- 3 реперные точки нашей линии
+            let d = 5, p0, p1 = false, p2; //- 3 реперные точки нашей линии
             // старт и финиш?
             // попытка соединится напрямую сверху вниз
-            p0=[xstart[0] , xstart[1]+ start.height / 2 + 1];
-            p2=[ystart[0] ,ystart[1]- fin.height/ 2-d];
-            if(xstart[1]>p2[1] || p0[1]+10>p2[1]) {
+            p0 = [xstart[0], xstart[1] + start.height / 2 + 1];
+            p2 = [ystart[0], ystart[1] - fin.height / 2 - d];
+            if (xstart[1] > p2[1] || p0[1] + 14 > p2[1]) { // не с той стороны или слишком близко перегиб
                 // нельзя, делаем снизувверх
-                p0=[xstart[0], xstart[1]- start.height / 2 - 1];
-                p2=[ystart[0] ,ystart[1]+ fin.height/ 2+d];
-                if(xstart[1]<p2[1] || p2[1]+10>p0[1]){
-                    // опять нельзя, плачем, а не, не плачем...
-                    // выносим перегиб вниз на 40 пх
-                    p0=[xstart[0] , xstart[1]+ start.height / 2 + 1];
-                    p2=[ystart[0] ,ystart[1]+ fin.height/ 2+d];
-                    p1=[(p0[0]+p2[0])/2,Math.min(p0[1],p2[1])+40];
+                p0 = [xstart[0], xstart[1] - start.height / 2 - 1];
+                p2 = [ystart[0], ystart[1] + fin.height / 2 + d];
+                if (xstart[1] < p2[1] || p2[1] + 14 > p0[1]) { // не с той стороны или слишком близко перегиб
+                    // опять нельзя, выносим перегиб вниз на 40 пх
+                    p0 = [xstart[0], xstart[1] + start.height / 2 + 1];
+                    p2 = [ystart[0], ystart[1] + fin.height / 2 + d];
+                    p1 = [(p0[0] + p2[0]) / 2, Math.max(p0[1], p2[1]) + 40];
                 }
             }
+            if (Math.abs(p0[0]-p2[0]) < 20) return false;
 
-            if(!p1){
-                p1=[(p0[0]+p2[0])/2, (p0[1]+p2[1])/2];
+            if (!p1) {
+                p1 = [(p0[0] + p2[0]) / 2, (p0[1] + p2[1]) / 2];
             }
             return [
                 p0,
@@ -429,34 +437,36 @@ let anima = {
                 p2];
         },
         allow: function (start, fin, border) {
-            let p=this.produceTrace(start, fin, border);
+            let p = this.produceTrace(start, fin, border);
+            if(!p) return false;
             // проверяем, что удастся 2 раза скруглить линии
-            if(anima.distI(p[0],p[1])<20) return false;
-            if (fin.width>30) return false; // todo: временно, для отладки включаем в общий поток
+            if (fin.width > 30) return false; // todo: временно, для отладки включаем в общий поток
             return true;
         },
         produce: function (line, start, fin, border, animation) {
-            let p=this.produceTrace(start, fin, border);
+            let p = this.produceTrace(start, fin, border);
 
-            anima.buildline(line, {a: 'line',start:[p[0][0], p[0][1]], fin: [p[0][0], p[1][1]]},
+            anima.buildline(line, {a: 'line', start: [p[0][0], p[0][1]], fin: [p[0][0], p[1][1]]},
                 {a: 'line', start: [p[0][0], p[1][1]], fin: [p[2][0], p[1][1]]},
                 {a: 'line', start: [p[2][0], p[1][1]], fin: [p[2][0], p[2][1]]},
                 animation);
         }
     },
 
-    buildline: function(line,l0,l1,l2,animation){
+    buildline: function (line, l0, l1, l2, animation) {
         // первый отрезок
         let arc01 = anima.connectWarc(l1, l0),
             arc12 = l2 && anima.connectWarc(l2, l1);
-        line.a.push(l0); if(!!arc01)line.a.push(arc01);
-        line.a.push(l1); if(!!arc12)line.a.push(arc12);
+        line.a.push(l0);
+        if (!!arc01) line.a.push(arc01);
+        line.a.push(l1);
+        if (!!arc12) line.a.push(arc12);
         l2 && line.a.push(l2);
-        line.dist=0;
-        for(let x of line.a) if(!!x.dist) line.dist+=x.dist;
+        line.dist = 0;
+        for (let x of line.a) if (!!x.dist) line.dist += x.dist;
 
         line.a.push({a: 'arrow', vector: l2, dist: 0});
-     //   line.a.push({a: 'circle', center: [l2.fin[0], l2.fin[1]], dist: 0});
+        //   line.a.push({a: 'circle', center: [l2.fin[0], l2.fin[1]], dist: 0});
         line.animation = animation || 0;
         if (!!animation) {
             line.starttime = new Date();
@@ -490,10 +500,11 @@ $(function () {
 
     anima.root = $('.container')[0];
     anima.canvas = $('.container canvas')[0];
+
     /**
      * Изменение окна броузера
      */
-    function aredraw(){
+    function aredraw() {
         anima.lines = []; // пока вот так вот просто, без пересчета
         $('[data-anchor]').each(function () {
             if ($(this).data('complete')) {
@@ -518,20 +529,21 @@ $(function () {
         }
     })
     const draggableElements = document.querySelectorAll('div[draggable="true"]');
-    let disp=[], tgt=null;
-    function movetgt(event, clear){
-        tgt.style.left=event.screenX+disp[0]+'px';
-        tgt.style.top=event.screenY+disp[1]+'px';
+    let disp = [], tgt = null;
+
+    function movetgt(event, clear) {
+        tgt.style.left = event.screenX + disp[0] + 'px';
+        tgt.style.top = event.screenY + disp[1] + 'px';
         aredraw();
         event.preventDefault();
-        if(!!clear)
+        if (!!clear)
             event.dataTransfer.clearData();
     }
 
-    for(const e of draggableElements) {
+    for (const e of draggableElements) {
         e.addEventListener("dragstart", (event) => {
             // console.log(event);
-            tgt=event.target;
+            tgt = event.target;
             event.dataTransfer.clearData();
             event.dataTransfer.effectAllowed = 'move';
             var img = document.createElement("img");
@@ -554,7 +566,7 @@ $(function () {
     dropElement.addEventListener("drop", (event) => {
         movetgt(event, true)
     });
-    dropElement.addEventListener("dragover", function(event) {
+    dropElement.addEventListener("dragover", function (event) {
         movetgt(event);
     });
 })
