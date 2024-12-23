@@ -181,7 +181,7 @@
                                 || item.radius == 0
                                 || item.variant === this._VARIANT_SHARP
                                 || item.x === from.x && item.y === from.y
-                                || item.x === next.x && item.y === next.y
+ //                               || item.x === next.x && item.y === next.y
                             ) {
                                 path.push([ !idx ? 'M' : 'L', item.x, item.y, ]);
                                 continue;
@@ -518,6 +518,10 @@
             background: linear-gradient(-10deg, red, yellow);
             padding: 20px 20px 60px;
             clip-path: path(var(--u7n-polygon-path));
+        }
+
+        :root {
+            --u7n-polygon-path:'';
         }
 
         :root { font-family: system-ui; }
