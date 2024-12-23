@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CSS demo</title>
+    <style>
+        h3 {
+            background:
+                    linear-gradient(#1095c1 0 0) no-repeat
+                    var(--p,0) 100%/var(--p, 0) .1em;
+            transition: 0.4s, background-position 0s;
+        }
+
+        h3:hover {
+            --p: 100%;
+        }
+
+        .element {
+            border: 5px solid red;
+            border-image: linear-gradient(blue, red) 1;
+
+            background-image: repeating-conic-gradient(#000 0 25%, #fff 0 50%);
+            background-size: 100px 100px;
+        }
+        .element2 {
+            background:
+                    repeating-conic-gradient(#000 0 12.5%, #fff 0 25%)
+                    0 / 100px 100px;
+        }
+        .grid-lines {
+            --n: 3; /* number of rows */
+            --m: 5; /* number of columns */
+            --s: 80px; /* control the size of the grid */
+            --t: 2px; /* the thickness */
+
+            width: calc(round(down, 100%, var(--s)) + var(--t));
+
+            height: calc(var(--n)*var(--s) + var(--t));
+            background:
+                    conic-gradient(from 90deg at var(--t) var(--t), #0000 25%, #000 0)
+                    0 0/var(--s) var(--s);
+
+
+        }
+        .dashed-lines {
+            --t: 2px;  /* thickness of the lines */
+            --g: 50px; /* gap between lines */
+            --s: 12px; /* size of the dashes */
+
+            background:
+                    conic-gradient(at var(--t) 50%, #0000 75%, #000 0)
+                    var(--g)/calc(var(--g) + var(--t)) var(--s);
+
+
+        }
+
+        .rainbow {
+            background: linear-gradient(90deg in hsl longer hue, red 0 0);
+        }
+    </style>
+</head>
+<body>
+<h3>Hello world!</h3>
+<div class="element"><br><br><br><br></div>
+<div class="element2"><br><br><br><br></div>
+<div class="dashed-lines"><br><br><br><br></div>
+<div class="grid-lines"></div>
+
+<div class="rainbow"><br><br><br><br></div>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *,
+        *::after,
+        *::before {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Walter Turncoat', cursive;
+        }
+        .preload {
+            width: 100vw;
+            height: 100vh;
+            background: #393939;
+            position: fixed;
+        }
+        .preload__bottle {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            left: 50%;
+            top: 50%;
+            width: 240px;
+            height: 200px;
+            border-radius: 40% 40% 50% 50%/60% 60% 30% 30%;
+            background: #48a299;
+        }
+        .preload__bottle h2 {
+            color: #fff;
+            font-size: 2rem;
+            position: absolute;
+            top: 115px;
+            left: 50px;
+        }
+        .preload__bottle::before {
+            content: '';
+            background: #48a299;
+            position: absolute;
+            width: 170px;
+            height: 50px;
+            left: calc(50% - 85px);
+            border-radius: 0;
+            margin-top: 10px;
+        }
+        .preload__bottle::after {
+            content: '';
+            top: 0;
+            width: 200px;
+            left: calc(50% - 100px);
+            height: 20px;
+            background: #5cbba8;
+            border-radius: 7%/50%;
+            position: absolute;
+            z-index: 5;
+        }
+        .preload__bottle_bubbles {
+            width: 30px;
+            height: 30px;
+            position: absolute;
+            top: 110px;
+            right: 50px;
+            opacity: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.6);
+            -webkit-animation: 3.5s flyaway ease infinite;
+            animation: 3.5s flyaway ease infinite;
+        }
+        .preload__bottle_bubbles.a {
+            right: 50px;
+            -webkit-animation-duration: 2.5s;
+            animation-duration: 2.5s;
+            -webkit-animation-delay: 3.3s;
+            animation-delay: 3.3s;
+        }
+        .preload__bottle_bubbles.b {
+            width: 25px;
+            height: 25px;
+            right: 150px;
+            -webkit-animation-duration: 3s;
+            animation-duration: 3s;
+            -webkit-animation-delay: 3.5s;
+            animation-delay: 3.5s;
+        }
+        .preload__bottle_bubbles.c {
+            width: 20px;
+            height: 20px;
+            right: 120px;
+            -webkit-animation-duration: 2s;
+            animation-duration: 2s;
+            -webkit-animation-delay: 4s;
+            animation-delay: 4s;
+        }
+        .preload__bottle_bubbles::after {
+            content: '';
+            position: absolute;
+            width: 35%;
+            height: 25%;
+            background: rgba(255,255,255,0.7);
+            border-radius: 50%;
+            top: 17%;
+            left: 15%;
+            transform: rotate(-45deg);
+        }
+        .preload__bottle_zhizha {
+            width: inherit;
+            height: inherit;
+            background: #552f4e;
+            border-radius: 50% 50% 40% 40%/25% 25% 60% 60%;
+            transform: scaleY(0.5) scaleX(0.93);
+            transform-origin: 50% 89%;
+            -webkit-animation: 3s fillBottle linear;
+            animation: 3s fillBottle linear;
+        }
+        .preload__bottle_zhizha::after {
+            content: '';
+            width: 230px;
+            height: 100px;
+            border-radius: 70% 70% 50% 50%/80% 80% 100% 100%;
+            background: #2d2e44;
+            left: calc(50% - 115px);
+            position: absolute;
+            margin-top: 3px;
+            -webkit-animation: 3s waves infinite ease;
+            animation: 3s waves infinite ease;
+        }
+        .typing {
+            width: 3em;
+            overflow: hidden;
+            display: inline-block;
+            vertical-align: bottom;
+            -webkit-animation: type 1s steps(5, end) infinite;
+            animation: type 1s steps(5, end) infinite;
+        }
+        @-webkit-keyframes fillBottle {
+            0% {
+                transform: scaleY(0.1) scaleX(0.8);
+            }
+            50% {
+                transform: scaleY(0.5) scaleX(0.93);
+            }
+            100% {
+                transform: scaleY(0.5) scaleX(0.93);
+            }
+        }
+        @keyframes fillBottle {
+            0% {
+                transform: scaleY(0.1) scaleX(0.8);
+            }
+            50% {
+                transform: scaleY(0.5) scaleX(0.93);
+            }
+            100% {
+                transform: scaleY(0.5) scaleX(0.93);
+            }
+        }
+        @-webkit-keyframes flyaway {
+            0% {
+                transform: translateY(0px) scale(1);
+            }
+            10% {
+                opacity: 1;
+            }
+            50%, 100% {
+                transform: scale(1.5) translateY(-150px);
+                opacity: 0;
+            }
+        }
+        @keyframes flyaway {
+            0% {
+                transform: translateY(0px) scale(1);
+            }
+            10% {
+                opacity: 1;
+            }
+            50%, 100% {
+                transform: scale(1.5) translateY(-150px);
+                opacity: 0;
+            }
+        }
+        @-webkit-keyframes waves {
+            0%, 100% {
+                transform: scaleY(1.2);
+            }
+            50% {
+                transform: scaleY(1);
+            }
+        }
+        @keyframes waves {
+            0%, 100% {
+                transform: scaleY(1.2);
+            }
+            50% {
+                transform: scaleY(1);
+            }
+        }
+        @-webkit-keyframes type {
+            0%, 100% {
+                width: 0;
+            }
+            50% {
+                width: 22px;
+            }
+        }
+        @keyframes type {
+            0%, 100% {
+                width: 0;
+            }
+            50% {
+                width: 22px;
+            }
+        }
+
+    </style>
+</head>
+<body class="preload">
+<div class="preload__bottle">
+    <div class="preload__bottle_zhizha"></div>
+    <div class="preload__bottle_bubbles a"></div>
+    <div class="preload__bottle_bubbles b"></div>
+    <div class="preload__bottle_bubbles c"></div>
+    <h2>Loading <span class="typing">...</span></h2>
+</div>
+
+</body>
+</html>
