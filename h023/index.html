@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- source: https://codepen.io/ksnk/pen/dPbmxvR?editors=1111 -->
+<head>
+    <meta charset="UTF-8">
+    <title>Rating stars</title>
+    <style>
+        .rating {
+            direction: rtl;
+        }
+        .rating > svg{
+            width:1.1em;
+            --scolor:blue;
+            --fcolor:white
+        }
+        .rating > svg.select,
+        .rating > svg.select ~ svg,.rating > svg:hover,
+        .rating > svg:hover ~ svg {
+            --scolor:yellow;
+            --fcolor:yellow
+        }
+    </style>
+
+</head>
+<body>
+<h1 data-splitting>Can’t stop looping </h1>
+<!-- Draw the star as a symbol and remove it from view -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="star" viewBox="0.4 -0.1 19.1 18.5">
+        xmlns="http://www.w3.org/2000/svg" viewBox="0.4 -0.1 19.1 18.5">
+        <path d="M10 0 12.9 6.5 19.4 7.1 14.3 11.4 16 18 10 14.3 3.9 18.3 5.7 11.5.5 6.8 7.3 6.4z" stroke="var(--scolor)" stroke-width="0.4" fill="var(--fcolor)"/>
+
+    </symbol>
+</svg>
+
+<div class="rating">
+    <svg class="icon"><use xlink:href="#star"></use></svg>
+    <svg class="icon"><use xlink:href="#star"></use></svg>
+    <svg class="icon"><use xlink:href="#star"></use></svg>
+    <svg class="icon"><use xlink:href="#star"></use></svg>
+    <svg class="icon"><use xlink:href="#star"></use></svg>
+    <input type="hidden" name="rating" value="2">
+</div>
+<script >
+(()=>{
+    function nearest(elem,selector){
+        if(elem.matches(selector))
+            return elem;
+        while ((elem = elem.parentElement) !== null) {
+            if (elem.nodeType !== Node.ELEMENT_NODE) {
+                continue;
+            }
+            if (elem.matches(selector)) {
+                return elem;
+            }
+        }
+        return false;
+    }
+
+    document.querySelectorAll('.rating').forEach(function(Item){
+        let input=Item.querySelector('input'), val=input&&input.value||0;
+        if(val>0){
+            let svgs=Item.querySelectorAll('svg'), star=svgs[svgs.length-val];
+            svgs.forEach((svg)=>{
+                if(svg===star) svg.classList.add("select");
+                else svg.classList.remove("select");
+            })
+        }
+        Item.addEventListener('click', function(e){
+            let index=0,input=this.querySelector('input'),
+                svgs=this.querySelectorAll('svg'), star=nearest(e.target,'svg');
+            if(!star) return;
+            svgs.forEach((svg)=>{
+                if(svg===star) {
+                    input.value=svgs.length-index;
+                    svg.classList.add("select");
+                }
+                else svg.classList.remove("select");
+                index++;
+            })
+            console.log(input.value);
+        })
+    })
+})()
+</script>
+
+</body>
+</html>

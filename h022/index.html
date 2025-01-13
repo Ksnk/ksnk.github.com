@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- source: https://codepen.io/Ivan-U7n/pen/VwoGvGr -->
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://unpkg.com/splitting/dist/splitting.css" />
+    <link rel="stylesheet" href="https://unpkg.com/splitting/dist/splitting-cells.css" />
+    <script src="https://unpkg.com/splitting/dist/splitting.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Nova+Mono&display=swap');
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: #18181c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1 {
+            font-family: 'Nova Mono', monospace;
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            width: 1109px;
+            height: 365px;
+            color: turquoise;
+        }
+
+        .char {
+            offset-path: path('M.2 219.6c247-107 233.3 91.4 406.4 138.4C659.2 426.6 750.2 6.6 552.2.6 337.7-5.9 426.9 415 696.1 359.4c256.1-52.9 182.1-217.9 413.1-163.9');
+            offset-distance: calc(var(--char-index) * 1.5rem);
+            position: absolute;
+            animation: loop 3500ms cubic-bezier(.62,.01,.42,1.01) infinite alternate calc(var(--char-index) * 10ms);
+        }
+
+        @keyframes loop {
+            50% {
+                offset-distance: calc((var(--char-index) * 2.5rem) + 700px);
+                color: hotpink;
+            }
+            100% {
+                offset-distance: calc((var(--char-index) * 1.5rem) + 1690px);
+            }
+        }
+        /*
+        .items {
+            offset-path: path('M.2 219.6c247-107 233.3 91.4 406.4 138.4C659.2 426.6 750.2 6.6 552.2.6 337.7-5.9 426.9 415 696.1 359.4c256.1-52.9 182.1-217.9 413.1-163.9');
+            offset-distance: calc(var(--item-index) * 1.5rem);
+            position: absolute;
+            animation: loopi 3500ms cubic-bezier(.62,.01,.42,1.01) infinite alternate calc(var(--item-index) * 10ms);
+        }
+
+        @keyframes loopi {
+            50% {
+                offset-distance: calc((var(--item-index) * 2.5rem) + 700px);
+                color: hotpink;
+            }
+            100% {
+                offset-distance: calc((var(--item-index) * 1.5rem) + 1690px);
+            }
+        }
+*/
+
+            .splitting li {
+                --name: jumping;
+                --dur: 1200ms;
+                --del: calc(var(--item-index) * 0.075s);
+                --tf: cubic-bezier(0.165, 0.44, 0.64, 1);
+
+                animation-delay: var(--del);
+                animation-direction: var(--dir, normal);
+                animation-duration: var(--dur);
+                animation-iteration-count: var(--it, infinite);
+                animation-name: var(--name);
+                animation-timing-function: var(--tf);
+                animation-fill-mode: var(--fill, forwards);
+                display: inline-block;
+                position: relative;
+                transform-origin: 50% 100%;
+                z-index: 1;
+            }
+
+            @keyframes jumping {
+                20% {
+                    transform: translateY(1%) scaleY(0.8);
+                }
+                40% {
+                    transform: translateY(-100%) scaleY(1.6);
+                }
+                50% {
+                    transform: translateY(10%) scaleY(0.6);
+                }
+                70% {
+                    transform: translateY(-5%) scaleY(1);
+                }
+                80%, 100% {
+                    transform: translateY(0) scaleY(1);
+                }
+            }
+        }
+    </style>
+
+</head>
+<body>
+<h1 data-splitting>Can’t stop looping </h1>
+<p data-splitting="words">Split by words</p>
+<div class="container">
+    <ul>
+        <li>One</li>
+        <li>Two</li>
+        <li>Three</li>
+    </ul>
+</div>
+<div class="image">
+    <img src="http://unsplash.it/200/200?random" />
+</div>
+<script >
+    let results = Splitting({
+        target: '.image',
+        by: 'cells',
+        image: true,
+        cols: 2,
+        rows: 2
+    });
+
+    results[0].el // <div class="image splitting cells" style="background-image: url(http://unsplash.it/200/200?random); --cell-total: 4; --row-total: 2; --col-total: 2;">...</div>
+    results[0].cells[0] // <span class="cell" style="--cell-index: 0; --row-index: 0; --col-index: 0"></span>
+    results[0].cells[1] // <span class="cell" style="--cell-index: 1; --row-index: 0; --col-index: 1"></span>
+    results[0].cells[3] // <span class="cell" style="--cell-index: 2; --row-index: 1; --col-index: 0"></span>
+    results[0].cells[4] // <span class="cell" style="--cell-index: 3; --row-index: 1; --col-index: 1"></span>
+
+    results = Splitting({
+        target: '.container',
+        by: 'items',
+        matching: 'li'
+    });
+
+    results[0].items[0] // <li style="--item-index: 0">One</li>
+    results[0].items[1] // <li style="--item-index: 1">Two</li>
+    results[0].items[2] // <li style="--item-index: 2">Three</li>
+</script>
+
+</body>
+</html>
