@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- source: https://codepen.io/ksnk/pen/dPbmxvR?editors=1111 -->
+<head>
+    <meta charset="UTF-8">
+    <title>Swiping pigg</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="demo">
+    <header class="demo__header"></header>
+    <div class="demo__content">
+        <div class="demo__card-cont">
+            <div class="demo__card result">
+                <p class="demo__card__we">You are among</p>
+                <p style="margin-top: 50%" class="demo__card__we counter-description"></p>
+            </div>
+            <div class="demo__card on-scroll-trigger-2 reject">
+                <div class="demo__card on-scroll-trigger-1 accept">
+                    <div id="top_card" class="demo__card">
+                        <div class="demo__card__top purple">
+                            <div class="demo__card__img"></div>
+                            <p class="demo__card__name">Spider pig</p>
+                        </div>
+                        <div class="demo__card__btm">
+                            <p class="demo__card__we">Swipe left or right</p>
+                        </div>
+                        <div class="demo__card__choice m--reject on-scroll-trigger-2 reject-overlay"></div>
+                        <div class="demo__card__choice m--like on-scroll-trigger-1 accept-overlay"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<main>
+    <div class="slide">
+    </div>
+    <div id="middle" class="slide">
+        <div class="scroll-trigger-1"></div>
+        <div class="scroll-trigger-2"></div>
+    </div>
+    <div class="slide">
+    </div>
+</main>
+</body>
+</html>
