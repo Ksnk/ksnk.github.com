@@ -1,0 +1,1975 @@
+@charset "UTF-8";
+body {
+  -webkit-animation-name: run-scroll-trigger-1, run-scroll-trigger-2, run-scroll-trigger-3, run-scroll-trigger-4, run-scroll-trigger-5, run-scroll-trigger-6, run-scroll-trigger-7, run-scroll-trigger-8, run-scroll-trigger-9, run-scroll-trigger-10, run-scroll-trigger-11, run-scroll-trigger-12, run-scroll-trigger-13, run-scroll-trigger-14, run-scroll-trigger-15, run-scroll-trigger-16, run-scroll-trigger-17, run-scroll-trigger-18, run-scroll-trigger-19, run-scroll-trigger-20, run-scroll-trigger-21, run-scroll-trigger-22, run-scroll-trigger-23, run-scroll-trigger-24, run-scroll-trigger-25, run-scroll-trigger-26, run-scroll-trigger-27, run-scroll-trigger-28, run-scroll-trigger-29, run-scroll-trigger-30, run-scroll-trigger-31, run-scroll-trigger-32, run-scroll-trigger-33, run-scroll-trigger-34, run-scroll-trigger-35, run-scroll-trigger-36, run-scroll-trigger-37, run-scroll-trigger-38, run-scroll-trigger-39, run-scroll-trigger-40, run-scroll-trigger-41, run-scroll-trigger-42, run-scroll-trigger-43, run-scroll-trigger-44, run-scroll-trigger-45, run-scroll-trigger-46, run-scroll-trigger-47, run-scroll-trigger-48, run-scroll-trigger-49, run-scroll-trigger-50;
+  animation-name: run-scroll-trigger-1, run-scroll-trigger-2, run-scroll-trigger-3, run-scroll-trigger-4, run-scroll-trigger-5, run-scroll-trigger-6, run-scroll-trigger-7, run-scroll-trigger-8, run-scroll-trigger-9, run-scroll-trigger-10, run-scroll-trigger-11, run-scroll-trigger-12, run-scroll-trigger-13, run-scroll-trigger-14, run-scroll-trigger-15, run-scroll-trigger-16, run-scroll-trigger-17, run-scroll-trigger-18, run-scroll-trigger-19, run-scroll-trigger-20, run-scroll-trigger-21, run-scroll-trigger-22, run-scroll-trigger-23, run-scroll-trigger-24, run-scroll-trigger-25, run-scroll-trigger-26, run-scroll-trigger-27, run-scroll-trigger-28, run-scroll-trigger-29, run-scroll-trigger-30, run-scroll-trigger-31, run-scroll-trigger-32, run-scroll-trigger-33, run-scroll-trigger-34, run-scroll-trigger-35, run-scroll-trigger-36, run-scroll-trigger-37, run-scroll-trigger-38, run-scroll-trigger-39, run-scroll-trigger-40, run-scroll-trigger-41, run-scroll-trigger-42, run-scroll-trigger-43, run-scroll-trigger-44, run-scroll-trigger-45, run-scroll-trigger-46, run-scroll-trigger-47, run-scroll-trigger-48, run-scroll-trigger-49, run-scroll-trigger-50;
+  -webkit-animation-duration: 1ms;
+  animation-duration: 1ms;
+  -webkit-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+  animation-timeline: --trigger-timeline-1, --trigger-timeline-2, --trigger-timeline-3, --trigger-timeline-4, --trigger-timeline-5, --trigger-timeline-6, --trigger-timeline-7, --trigger-timeline-8, --trigger-timeline-9, --trigger-timeline-10, --trigger-timeline-11, --trigger-timeline-12, --trigger-timeline-13, --trigger-timeline-14, --trigger-timeline-15, --trigger-timeline-16, --trigger-timeline-17, --trigger-timeline-18, --trigger-timeline-19, --trigger-timeline-20, --trigger-timeline-21, --trigger-timeline-22, --trigger-timeline-23, --trigger-timeline-24, --trigger-timeline-25, --trigger-timeline-26, --trigger-timeline-27, --trigger-timeline-28, --trigger-timeline-29, --trigger-timeline-30, --trigger-timeline-31, --trigger-timeline-32, --trigger-timeline-33, --trigger-timeline-34, --trigger-timeline-35, --trigger-timeline-36, --trigger-timeline-37, --trigger-timeline-38, --trigger-timeline-39, --trigger-timeline-40, --trigger-timeline-41, --trigger-timeline-42, --trigger-timeline-43, --trigger-timeline-44, --trigger-timeline-45, --trigger-timeline-46, --trigger-timeline-47, --trigger-timeline-48, --trigger-timeline-49, --trigger-timeline-50;
+  timeline-scope: --trigger-timeline-1, --trigger-timeline-2, --trigger-timeline-3, --trigger-timeline-4, --trigger-timeline-5, --trigger-timeline-6, --trigger-timeline-7, --trigger-timeline-8, --trigger-timeline-9, --trigger-timeline-10, --trigger-timeline-11, --trigger-timeline-12, --trigger-timeline-13, --trigger-timeline-14, --trigger-timeline-15, --trigger-timeline-16, --trigger-timeline-17, --trigger-timeline-18, --trigger-timeline-19, --trigger-timeline-20, --trigger-timeline-21, --trigger-timeline-22, --trigger-timeline-23, --trigger-timeline-24, --trigger-timeline-25, --trigger-timeline-26, --trigger-timeline-27, --trigger-timeline-28, --trigger-timeline-29, --trigger-timeline-30, --trigger-timeline-31, --trigger-timeline-32, --trigger-timeline-33, --trigger-timeline-34, --trigger-timeline-35, --trigger-timeline-36, --trigger-timeline-37, --trigger-timeline-38, --trigger-timeline-39, --trigger-timeline-40, --trigger-timeline-41, --trigger-timeline-42, --trigger-timeline-43, --trigger-timeline-44, --trigger-timeline-45, --trigger-timeline-46, --trigger-timeline-47, --trigger-timeline-48, --trigger-timeline-49, --trigger-timeline-50;
+}
+
+[class^=scroll-trigger-] {
+  animation-timeline: view();
+  -webkit-animation-name: stick-to-the-top;
+  animation-name: stick-to-the-top;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-animation-duration: 1ms;
+  animation-duration: 1ms;
+  content: "";
+  height: 0;
+}
+
+[class*=on-scroll-trigger-] {
+  -webkit-animation-play-state: paused;
+  animation-play-state: paused;
+}
+
+.scroll-trigger-1 {
+  view-timeline-name: --trigger-timeline-1;
+}
+
+@property --scroll-trigger-1 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-1 {
+  from, to {
+    --scroll-trigger-1: 1;
+  }
+}
+@keyframes run-scroll-trigger-1 {
+  from, to {
+    --scroll-trigger-1: 1;
+  }
+}
+@container style(--scroll-trigger-1: 1) {
+  .on-scroll-trigger-1 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-2 {
+  view-timeline-name: --trigger-timeline-2;
+}
+
+@property --scroll-trigger-2 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-2 {
+  from, to {
+    --scroll-trigger-2: 1;
+  }
+}
+@keyframes run-scroll-trigger-2 {
+  from, to {
+    --scroll-trigger-2: 1;
+  }
+}
+@container style(--scroll-trigger-2: 1) {
+  .on-scroll-trigger-2 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-3 {
+  view-timeline-name: --trigger-timeline-3;
+}
+
+@property --scroll-trigger-3 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-3 {
+  from, to {
+    --scroll-trigger-3: 1;
+  }
+}
+@keyframes run-scroll-trigger-3 {
+  from, to {
+    --scroll-trigger-3: 1;
+  }
+}
+@container style(--scroll-trigger-3: 1) {
+  .on-scroll-trigger-3 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-4 {
+  view-timeline-name: --trigger-timeline-4;
+}
+
+@property --scroll-trigger-4 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-4 {
+  from, to {
+    --scroll-trigger-4: 1;
+  }
+}
+@keyframes run-scroll-trigger-4 {
+  from, to {
+    --scroll-trigger-4: 1;
+  }
+}
+@container style(--scroll-trigger-4: 1) {
+  .on-scroll-trigger-4 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-5 {
+  view-timeline-name: --trigger-timeline-5;
+}
+
+@property --scroll-trigger-5 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-5 {
+  from, to {
+    --scroll-trigger-5: 1;
+  }
+}
+@keyframes run-scroll-trigger-5 {
+  from, to {
+    --scroll-trigger-5: 1;
+  }
+}
+@container style(--scroll-trigger-5: 1) {
+  .on-scroll-trigger-5 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-6 {
+  view-timeline-name: --trigger-timeline-6;
+}
+
+@property --scroll-trigger-6 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-6 {
+  from, to {
+    --scroll-trigger-6: 1;
+  }
+}
+@keyframes run-scroll-trigger-6 {
+  from, to {
+    --scroll-trigger-6: 1;
+  }
+}
+@container style(--scroll-trigger-6: 1) {
+  .on-scroll-trigger-6 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-7 {
+  view-timeline-name: --trigger-timeline-7;
+}
+
+@property --scroll-trigger-7 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-7 {
+  from, to {
+    --scroll-trigger-7: 1;
+  }
+}
+@keyframes run-scroll-trigger-7 {
+  from, to {
+    --scroll-trigger-7: 1;
+  }
+}
+@container style(--scroll-trigger-7: 1) {
+  .on-scroll-trigger-7 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-8 {
+  view-timeline-name: --trigger-timeline-8;
+}
+
+@property --scroll-trigger-8 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-8 {
+  from, to {
+    --scroll-trigger-8: 1;
+  }
+}
+@keyframes run-scroll-trigger-8 {
+  from, to {
+    --scroll-trigger-8: 1;
+  }
+}
+@container style(--scroll-trigger-8: 1) {
+  .on-scroll-trigger-8 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-9 {
+  view-timeline-name: --trigger-timeline-9;
+}
+
+@property --scroll-trigger-9 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-9 {
+  from, to {
+    --scroll-trigger-9: 1;
+  }
+}
+@keyframes run-scroll-trigger-9 {
+  from, to {
+    --scroll-trigger-9: 1;
+  }
+}
+@container style(--scroll-trigger-9: 1) {
+  .on-scroll-trigger-9 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-10 {
+  view-timeline-name: --trigger-timeline-10;
+}
+
+@property --scroll-trigger-10 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-10 {
+  from, to {
+    --scroll-trigger-10: 1;
+  }
+}
+@keyframes run-scroll-trigger-10 {
+  from, to {
+    --scroll-trigger-10: 1;
+  }
+}
+@container style(--scroll-trigger-10: 1) {
+  .on-scroll-trigger-10 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-11 {
+  view-timeline-name: --trigger-timeline-11;
+}
+
+@property --scroll-trigger-11 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-11 {
+  from, to {
+    --scroll-trigger-11: 1;
+  }
+}
+@keyframes run-scroll-trigger-11 {
+  from, to {
+    --scroll-trigger-11: 1;
+  }
+}
+@container style(--scroll-trigger-11: 1) {
+  .on-scroll-trigger-11 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-12 {
+  view-timeline-name: --trigger-timeline-12;
+}
+
+@property --scroll-trigger-12 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-12 {
+  from, to {
+    --scroll-trigger-12: 1;
+  }
+}
+@keyframes run-scroll-trigger-12 {
+  from, to {
+    --scroll-trigger-12: 1;
+  }
+}
+@container style(--scroll-trigger-12: 1) {
+  .on-scroll-trigger-12 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-13 {
+  view-timeline-name: --trigger-timeline-13;
+}
+
+@property --scroll-trigger-13 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-13 {
+  from, to {
+    --scroll-trigger-13: 1;
+  }
+}
+@keyframes run-scroll-trigger-13 {
+  from, to {
+    --scroll-trigger-13: 1;
+  }
+}
+@container style(--scroll-trigger-13: 1) {
+  .on-scroll-trigger-13 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-14 {
+  view-timeline-name: --trigger-timeline-14;
+}
+
+@property --scroll-trigger-14 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-14 {
+  from, to {
+    --scroll-trigger-14: 1;
+  }
+}
+@keyframes run-scroll-trigger-14 {
+  from, to {
+    --scroll-trigger-14: 1;
+  }
+}
+@container style(--scroll-trigger-14: 1) {
+  .on-scroll-trigger-14 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-15 {
+  view-timeline-name: --trigger-timeline-15;
+}
+
+@property --scroll-trigger-15 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-15 {
+  from, to {
+    --scroll-trigger-15: 1;
+  }
+}
+@keyframes run-scroll-trigger-15 {
+  from, to {
+    --scroll-trigger-15: 1;
+  }
+}
+@container style(--scroll-trigger-15: 1) {
+  .on-scroll-trigger-15 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-16 {
+  view-timeline-name: --trigger-timeline-16;
+}
+
+@property --scroll-trigger-16 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-16 {
+  from, to {
+    --scroll-trigger-16: 1;
+  }
+}
+@keyframes run-scroll-trigger-16 {
+  from, to {
+    --scroll-trigger-16: 1;
+  }
+}
+@container style(--scroll-trigger-16: 1) {
+  .on-scroll-trigger-16 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-17 {
+  view-timeline-name: --trigger-timeline-17;
+}
+
+@property --scroll-trigger-17 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-17 {
+  from, to {
+    --scroll-trigger-17: 1;
+  }
+}
+@keyframes run-scroll-trigger-17 {
+  from, to {
+    --scroll-trigger-17: 1;
+  }
+}
+@container style(--scroll-trigger-17: 1) {
+  .on-scroll-trigger-17 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-18 {
+  view-timeline-name: --trigger-timeline-18;
+}
+
+@property --scroll-trigger-18 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-18 {
+  from, to {
+    --scroll-trigger-18: 1;
+  }
+}
+@keyframes run-scroll-trigger-18 {
+  from, to {
+    --scroll-trigger-18: 1;
+  }
+}
+@container style(--scroll-trigger-18: 1) {
+  .on-scroll-trigger-18 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-19 {
+  view-timeline-name: --trigger-timeline-19;
+}
+
+@property --scroll-trigger-19 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-19 {
+  from, to {
+    --scroll-trigger-19: 1;
+  }
+}
+@keyframes run-scroll-trigger-19 {
+  from, to {
+    --scroll-trigger-19: 1;
+  }
+}
+@container style(--scroll-trigger-19: 1) {
+  .on-scroll-trigger-19 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-20 {
+  view-timeline-name: --trigger-timeline-20;
+}
+
+@property --scroll-trigger-20 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-20 {
+  from, to {
+    --scroll-trigger-20: 1;
+  }
+}
+@keyframes run-scroll-trigger-20 {
+  from, to {
+    --scroll-trigger-20: 1;
+  }
+}
+@container style(--scroll-trigger-20: 1) {
+  .on-scroll-trigger-20 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-21 {
+  view-timeline-name: --trigger-timeline-21;
+}
+
+@property --scroll-trigger-21 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-21 {
+  from, to {
+    --scroll-trigger-21: 1;
+  }
+}
+@keyframes run-scroll-trigger-21 {
+  from, to {
+    --scroll-trigger-21: 1;
+  }
+}
+@container style(--scroll-trigger-21: 1) {
+  .on-scroll-trigger-21 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-22 {
+  view-timeline-name: --trigger-timeline-22;
+}
+
+@property --scroll-trigger-22 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-22 {
+  from, to {
+    --scroll-trigger-22: 1;
+  }
+}
+@keyframes run-scroll-trigger-22 {
+  from, to {
+    --scroll-trigger-22: 1;
+  }
+}
+@container style(--scroll-trigger-22: 1) {
+  .on-scroll-trigger-22 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-23 {
+  view-timeline-name: --trigger-timeline-23;
+}
+
+@property --scroll-trigger-23 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-23 {
+  from, to {
+    --scroll-trigger-23: 1;
+  }
+}
+@keyframes run-scroll-trigger-23 {
+  from, to {
+    --scroll-trigger-23: 1;
+  }
+}
+@container style(--scroll-trigger-23: 1) {
+  .on-scroll-trigger-23 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-24 {
+  view-timeline-name: --trigger-timeline-24;
+}
+
+@property --scroll-trigger-24 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-24 {
+  from, to {
+    --scroll-trigger-24: 1;
+  }
+}
+@keyframes run-scroll-trigger-24 {
+  from, to {
+    --scroll-trigger-24: 1;
+  }
+}
+@container style(--scroll-trigger-24: 1) {
+  .on-scroll-trigger-24 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-25 {
+  view-timeline-name: --trigger-timeline-25;
+}
+
+@property --scroll-trigger-25 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-25 {
+  from, to {
+    --scroll-trigger-25: 1;
+  }
+}
+@keyframes run-scroll-trigger-25 {
+  from, to {
+    --scroll-trigger-25: 1;
+  }
+}
+@container style(--scroll-trigger-25: 1) {
+  .on-scroll-trigger-25 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-26 {
+  view-timeline-name: --trigger-timeline-26;
+}
+
+@property --scroll-trigger-26 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-26 {
+  from, to {
+    --scroll-trigger-26: 1;
+  }
+}
+@keyframes run-scroll-trigger-26 {
+  from, to {
+    --scroll-trigger-26: 1;
+  }
+}
+@container style(--scroll-trigger-26: 1) {
+  .on-scroll-trigger-26 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-27 {
+  view-timeline-name: --trigger-timeline-27;
+}
+
+@property --scroll-trigger-27 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-27 {
+  from, to {
+    --scroll-trigger-27: 1;
+  }
+}
+@keyframes run-scroll-trigger-27 {
+  from, to {
+    --scroll-trigger-27: 1;
+  }
+}
+@container style(--scroll-trigger-27: 1) {
+  .on-scroll-trigger-27 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-28 {
+  view-timeline-name: --trigger-timeline-28;
+}
+
+@property --scroll-trigger-28 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-28 {
+  from, to {
+    --scroll-trigger-28: 1;
+  }
+}
+@keyframes run-scroll-trigger-28 {
+  from, to {
+    --scroll-trigger-28: 1;
+  }
+}
+@container style(--scroll-trigger-28: 1) {
+  .on-scroll-trigger-28 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-29 {
+  view-timeline-name: --trigger-timeline-29;
+}
+
+@property --scroll-trigger-29 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-29 {
+  from, to {
+    --scroll-trigger-29: 1;
+  }
+}
+@keyframes run-scroll-trigger-29 {
+  from, to {
+    --scroll-trigger-29: 1;
+  }
+}
+@container style(--scroll-trigger-29: 1) {
+  .on-scroll-trigger-29 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-30 {
+  view-timeline-name: --trigger-timeline-30;
+}
+
+@property --scroll-trigger-30 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-30 {
+  from, to {
+    --scroll-trigger-30: 1;
+  }
+}
+@keyframes run-scroll-trigger-30 {
+  from, to {
+    --scroll-trigger-30: 1;
+  }
+}
+@container style(--scroll-trigger-30: 1) {
+  .on-scroll-trigger-30 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-31 {
+  view-timeline-name: --trigger-timeline-31;
+}
+
+@property --scroll-trigger-31 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-31 {
+  from, to {
+    --scroll-trigger-31: 1;
+  }
+}
+@keyframes run-scroll-trigger-31 {
+  from, to {
+    --scroll-trigger-31: 1;
+  }
+}
+@container style(--scroll-trigger-31: 1) {
+  .on-scroll-trigger-31 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-32 {
+  view-timeline-name: --trigger-timeline-32;
+}
+
+@property --scroll-trigger-32 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-32 {
+  from, to {
+    --scroll-trigger-32: 1;
+  }
+}
+@keyframes run-scroll-trigger-32 {
+  from, to {
+    --scroll-trigger-32: 1;
+  }
+}
+@container style(--scroll-trigger-32: 1) {
+  .on-scroll-trigger-32 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-33 {
+  view-timeline-name: --trigger-timeline-33;
+}
+
+@property --scroll-trigger-33 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-33 {
+  from, to {
+    --scroll-trigger-33: 1;
+  }
+}
+@keyframes run-scroll-trigger-33 {
+  from, to {
+    --scroll-trigger-33: 1;
+  }
+}
+@container style(--scroll-trigger-33: 1) {
+  .on-scroll-trigger-33 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-34 {
+  view-timeline-name: --trigger-timeline-34;
+}
+
+@property --scroll-trigger-34 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-34 {
+  from, to {
+    --scroll-trigger-34: 1;
+  }
+}
+@keyframes run-scroll-trigger-34 {
+  from, to {
+    --scroll-trigger-34: 1;
+  }
+}
+@container style(--scroll-trigger-34: 1) {
+  .on-scroll-trigger-34 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-35 {
+  view-timeline-name: --trigger-timeline-35;
+}
+
+@property --scroll-trigger-35 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-35 {
+  from, to {
+    --scroll-trigger-35: 1;
+  }
+}
+@keyframes run-scroll-trigger-35 {
+  from, to {
+    --scroll-trigger-35: 1;
+  }
+}
+@container style(--scroll-trigger-35: 1) {
+  .on-scroll-trigger-35 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-36 {
+  view-timeline-name: --trigger-timeline-36;
+}
+
+@property --scroll-trigger-36 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-36 {
+  from, to {
+    --scroll-trigger-36: 1;
+  }
+}
+@keyframes run-scroll-trigger-36 {
+  from, to {
+    --scroll-trigger-36: 1;
+  }
+}
+@container style(--scroll-trigger-36: 1) {
+  .on-scroll-trigger-36 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-37 {
+  view-timeline-name: --trigger-timeline-37;
+}
+
+@property --scroll-trigger-37 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-37 {
+  from, to {
+    --scroll-trigger-37: 1;
+  }
+}
+@keyframes run-scroll-trigger-37 {
+  from, to {
+    --scroll-trigger-37: 1;
+  }
+}
+@container style(--scroll-trigger-37: 1) {
+  .on-scroll-trigger-37 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-38 {
+  view-timeline-name: --trigger-timeline-38;
+}
+
+@property --scroll-trigger-38 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-38 {
+  from, to {
+    --scroll-trigger-38: 1;
+  }
+}
+@keyframes run-scroll-trigger-38 {
+  from, to {
+    --scroll-trigger-38: 1;
+  }
+}
+@container style(--scroll-trigger-38: 1) {
+  .on-scroll-trigger-38 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-39 {
+  view-timeline-name: --trigger-timeline-39;
+}
+
+@property --scroll-trigger-39 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-39 {
+  from, to {
+    --scroll-trigger-39: 1;
+  }
+}
+@keyframes run-scroll-trigger-39 {
+  from, to {
+    --scroll-trigger-39: 1;
+  }
+}
+@container style(--scroll-trigger-39: 1) {
+  .on-scroll-trigger-39 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-40 {
+  view-timeline-name: --trigger-timeline-40;
+}
+
+@property --scroll-trigger-40 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-40 {
+  from, to {
+    --scroll-trigger-40: 1;
+  }
+}
+@keyframes run-scroll-trigger-40 {
+  from, to {
+    --scroll-trigger-40: 1;
+  }
+}
+@container style(--scroll-trigger-40: 1) {
+  .on-scroll-trigger-40 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-41 {
+  view-timeline-name: --trigger-timeline-41;
+}
+
+@property --scroll-trigger-41 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-41 {
+  from, to {
+    --scroll-trigger-41: 1;
+  }
+}
+@keyframes run-scroll-trigger-41 {
+  from, to {
+    --scroll-trigger-41: 1;
+  }
+}
+@container style(--scroll-trigger-41: 1) {
+  .on-scroll-trigger-41 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-42 {
+  view-timeline-name: --trigger-timeline-42;
+}
+
+@property --scroll-trigger-42 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-42 {
+  from, to {
+    --scroll-trigger-42: 1;
+  }
+}
+@keyframes run-scroll-trigger-42 {
+  from, to {
+    --scroll-trigger-42: 1;
+  }
+}
+@container style(--scroll-trigger-42: 1) {
+  .on-scroll-trigger-42 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-43 {
+  view-timeline-name: --trigger-timeline-43;
+}
+
+@property --scroll-trigger-43 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-43 {
+  from, to {
+    --scroll-trigger-43: 1;
+  }
+}
+@keyframes run-scroll-trigger-43 {
+  from, to {
+    --scroll-trigger-43: 1;
+  }
+}
+@container style(--scroll-trigger-43: 1) {
+  .on-scroll-trigger-43 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-44 {
+  view-timeline-name: --trigger-timeline-44;
+}
+
+@property --scroll-trigger-44 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-44 {
+  from, to {
+    --scroll-trigger-44: 1;
+  }
+}
+@keyframes run-scroll-trigger-44 {
+  from, to {
+    --scroll-trigger-44: 1;
+  }
+}
+@container style(--scroll-trigger-44: 1) {
+  .on-scroll-trigger-44 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-45 {
+  view-timeline-name: --trigger-timeline-45;
+}
+
+@property --scroll-trigger-45 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-45 {
+  from, to {
+    --scroll-trigger-45: 1;
+  }
+}
+@keyframes run-scroll-trigger-45 {
+  from, to {
+    --scroll-trigger-45: 1;
+  }
+}
+@container style(--scroll-trigger-45: 1) {
+  .on-scroll-trigger-45 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-46 {
+  view-timeline-name: --trigger-timeline-46;
+}
+
+@property --scroll-trigger-46 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-46 {
+  from, to {
+    --scroll-trigger-46: 1;
+  }
+}
+@keyframes run-scroll-trigger-46 {
+  from, to {
+    --scroll-trigger-46: 1;
+  }
+}
+@container style(--scroll-trigger-46: 1) {
+  .on-scroll-trigger-46 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-47 {
+  view-timeline-name: --trigger-timeline-47;
+}
+
+@property --scroll-trigger-47 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-47 {
+  from, to {
+    --scroll-trigger-47: 1;
+  }
+}
+@keyframes run-scroll-trigger-47 {
+  from, to {
+    --scroll-trigger-47: 1;
+  }
+}
+@container style(--scroll-trigger-47: 1) {
+  .on-scroll-trigger-47 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-48 {
+  view-timeline-name: --trigger-timeline-48;
+}
+
+@property --scroll-trigger-48 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-48 {
+  from, to {
+    --scroll-trigger-48: 1;
+  }
+}
+@keyframes run-scroll-trigger-48 {
+  from, to {
+    --scroll-trigger-48: 1;
+  }
+}
+@container style(--scroll-trigger-48: 1) {
+  .on-scroll-trigger-48 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-49 {
+  view-timeline-name: --trigger-timeline-49;
+}
+
+@property --scroll-trigger-49 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-49 {
+  from, to {
+    --scroll-trigger-49: 1;
+  }
+}
+@keyframes run-scroll-trigger-49 {
+  from, to {
+    --scroll-trigger-49: 1;
+  }
+}
+@container style(--scroll-trigger-49: 1) {
+  .on-scroll-trigger-49 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+.scroll-trigger-50 {
+  view-timeline-name: --trigger-timeline-50;
+}
+
+@property --scroll-trigger-50 {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: true;
+}
+@-webkit-keyframes run-scroll-trigger-50 {
+  from, to {
+    --scroll-trigger-50: 1;
+  }
+}
+@keyframes run-scroll-trigger-50 {
+  from, to {
+    --scroll-trigger-50: 1;
+  }
+}
+@container style(--scroll-trigger-50: 1) {
+  .on-scroll-trigger-50 {
+    -webkit-animation-play-state: running;
+    animation-play-state: running;
+  }
+}
+@-webkit-keyframes stick-to-the-top {
+  .1%, to {
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+}
+@keyframes stick-to-the-top {
+  .1%, to {
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+}
+*, *:before, *:after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  font-size: 62.5%;
+  font-family: arial;
+}
+
+body {
+  background: #63BDF7;
+  transition: --scroll-position-delayed 0.15s linear;
+  --scroll-velocity: calc(var(--scroll-position) - var(--scroll-position-delayed));
+  --scroll-direction: sign(var(--scroll-velocity));
+  --scroll-speed: abs(var(--scroll-velocity));
+}
+
+main {
+  background: transparent;
+  z-index: 1;
+  -ms-scroll-snap-type: x mandatory;
+  scroll-snap-type: x mandatory;
+}
+
+@supports not (transform: scaleX(sign(-1))) {
+  body {
+    --scroll-speed: max(var(--scroll-velocity), -1 * var(--scroll-velocity));
+    --scroll-direction: calc(var(--scroll-velocity) / var(--scroll-speed));
+  }
+}
+.demo {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  width: 30.6rem;
+  height: 55rem;
+  margin-left: -15.3rem;
+  margin-top: -27.5rem;
+  background: #F6F6F5;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+}
+.demo__header {
+  height: 6rem;
+  background: #002942;
+}
+.demo__content {
+  overflow: hidden;
+  position: relative;
+  height: 49rem;
+  padding-top: 4.5rem;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.demo__card-cont {
+  position: relative;
+  width: 24rem;
+  height: 32rem;
+  margin: 0 auto 5rem;
+}
+.demo__card {
+  z-index: 2;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 100%;
+}
+.demo__card.reset {
+  transition: transform 0.3s;
+  transform: translateX(0) !important;
+}
+.demo__card.reset .demo__card__choice {
+  transition: opacity 0.3s;
+  opacity: 0 !important;
+}
+.demo__card.inactive {
+  transition: transform 0.3s;
+}
+.demo__card.to-left {
+  transform: translateX(-30rem) rotate(-30deg) !important;
+}
+.demo__card.to-right {
+  transform: translate(30rem) rotate(30deg) !important;
+}
+.demo__card.below {
+  z-index: 1;
+}
+.demo__card__top {
+  height: 20.5rem;
+  padding-top: 4rem;
+}
+.demo__card__top.purple {
+  background: #7132B9;
+}
+.demo__card__top.blue {
+  background: #248CB6;
+}
+.demo__card__top.indigo {
+  background: #303F9F;
+}
+.demo__card__top.cyan {
+  background: #26C6DA;
+}
+.demo__card__top.lime {
+  background: #AFB42B;
+}
+.demo__card__top.brown {
+  background: #795548;
+}
+.demo__card__img {
+  overflow: hidden;
+  width: 12rem;
+  height: 12rem;
+  margin: 0 auto 1.5rem;
+  border-radius: 50%;
+  border: 0.5rem solid #ffffff;
+  background-image: url("https://i.imgur.com/NT992d7.jpeg");
+  background-size: cover;
+}
+.demo__card__name {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #fff;
+}
+.demo__card__btm {
+  height: 11.5rem;
+  background: #FFFFFF;
+}
+.demo__card__we {
+  text-align: center;
+  font-size: 2.2rem;
+  line-height: 11.5rem;
+}
+.demo__card__choice {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+.demo__card__choice:before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 2rem;
+  height: 2rem;
+  margin-left: -1rem;
+  color: #fff;
+  border-radius: 50%;
+  box-shadow: -2rem -3rem #fff, 2rem -3rem #fff;
+}
+.demo__card__choice:after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 4rem;
+  height: 1.5rem;
+  margin-left: -2rem;
+  border: 0.6rem solid #fff;
+  border-bottom: none;
+  border-top-left-radius: 1.5rem;
+  border-top-right-radius: 1.5rem;
+}
+.demo__card__choice.m--reject {
+  background: #FF945A;
+}
+.demo__card__choice.m--like {
+  background: #B1DA96;
+}
+.demo__card__choice.m--like:after {
+  transform: scaleY(-1);
+}
+.demo__card__drag {
+  z-index: 5;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+.demo__tip {
+  text-align: center;
+  font-size: 2.2rem;
+}
+
+.reject {
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-name: reject;
+  animation-name: reject;
+  -webkit-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+}
+
+.reject-overlay {
+  -webkit-animation-duration: 0.5s;
+  animation-duration: 0.5s;
+  -webkit-animation-name: reject-overlay;
+  animation-name: reject-overlay;
+  -webkit-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+}
+
+.accept-overlay {
+  -webkit-animation-duration: 0.5s;
+  animation-duration: 0.5s;
+  -webkit-animation-name: accept-overlay;
+  animation-name: accept-overlay;
+  -webkit-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+}
+
+.accept {
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-name: accept;
+  animation-name: accept;
+  -webkit-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+}
+
+@-webkit-keyframes accept {
+  to {
+    transform: translateX(30rem) rotate(30deg);
+  }
+}
+
+@keyframes accept {
+  to {
+    transform: translateX(30rem) rotate(30deg);
+  }
+}
+@-webkit-keyframes reject {
+  to {
+    transform: translateX(-30rem) rotate(-30deg);
+  }
+}
+@keyframes reject {
+  to {
+    transform: translateX(-30rem) rotate(-30deg);
+  }
+}
+@-webkit-keyframes reject-overlay {
+  to {
+    opacity: 1;
+  }
+}
+@keyframes reject-overlay {
+  to {
+    opacity: 1;
+  }
+}
+@-webkit-keyframes accept-overlay {
+  to {
+    opacity: 1;
+  }
+}
+@keyframes accept-overlay {
+  to {
+    opacity: 1;
+  }
+}
+body {
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  overflow-x: auto;
+}
+body .slide {
+  width: 100vw;
+}
+body .slide::after {
+  content: " ";
+}
+
+.slide {
+  scroll-snap-stop: always;
+}
+
+:root {
+  -webkit-animation: adjust-slide-index 3s steps(3, end), adjust-pos 1s;
+  animation: adjust-slide-index 3s steps(3, end), adjust-pos 1s;
+  animation-timeline: scroll(root x);
+  -ms-scroll-snap-type: x mandatory;
+  scroll-snap-type: x mandatory;
+}
+
+main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-flow: row nowrap;
+  font-family: monospace;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  margin: 1em auto;
+  outline: 1px dashed lightgray;
+  flex-wrap: nowrap;
+}
+
+.slide {
+  text-align: center;
+  flex: none;
+  width: 100vw;
+  height: 100vh;
+  scroll-padding-left: 15vh;
+}
+
+#middle {
+  scroll-snap-align: center;
+}
+
+.scroll-trigger-1 {
+  animation-timeline: --trigger-timeline-1;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-2 {
+  animation-timeline: --trigger-timeline-2;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-3 {
+  animation-timeline: --trigger-timeline-3;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-4 {
+  animation-timeline: --trigger-timeline-4;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-5 {
+  animation-timeline: --trigger-timeline-5;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-6 {
+  animation-timeline: --trigger-timeline-6;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-7 {
+  animation-timeline: --trigger-timeline-7;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-8 {
+  animation-timeline: --trigger-timeline-8;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-9 {
+  animation-timeline: --trigger-timeline-9;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-10 {
+  animation-timeline: --trigger-timeline-10;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-11 {
+  animation-timeline: --trigger-timeline-11;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-12 {
+  animation-timeline: --trigger-timeline-12;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-13 {
+  animation-timeline: --trigger-timeline-13;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-14 {
+  animation-timeline: --trigger-timeline-14;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-15 {
+  animation-timeline: --trigger-timeline-15;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-16 {
+  animation-timeline: --trigger-timeline-16;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-17 {
+  animation-timeline: --trigger-timeline-17;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-18 {
+  animation-timeline: --trigger-timeline-18;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-19 {
+  animation-timeline: --trigger-timeline-19;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-20 {
+  animation-timeline: --trigger-timeline-20;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-21 {
+  animation-timeline: --trigger-timeline-21;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-22 {
+  animation-timeline: --trigger-timeline-22;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-23 {
+  animation-timeline: --trigger-timeline-23;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-24 {
+  animation-timeline: --trigger-timeline-24;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-25 {
+  animation-timeline: --trigger-timeline-25;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-26 {
+  animation-timeline: --trigger-timeline-26;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-27 {
+  animation-timeline: --trigger-timeline-27;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-28 {
+  animation-timeline: --trigger-timeline-28;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-29 {
+  animation-timeline: --trigger-timeline-29;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-30 {
+  animation-timeline: --trigger-timeline-30;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-31 {
+  animation-timeline: --trigger-timeline-31;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-32 {
+  animation-timeline: --trigger-timeline-32;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-33 {
+  animation-timeline: --trigger-timeline-33;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-34 {
+  animation-timeline: --trigger-timeline-34;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-35 {
+  animation-timeline: --trigger-timeline-35;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-36 {
+  animation-timeline: --trigger-timeline-36;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-37 {
+  animation-timeline: --trigger-timeline-37;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-38 {
+  animation-timeline: --trigger-timeline-38;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-39 {
+  animation-timeline: --trigger-timeline-39;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-40 {
+  animation-timeline: --trigger-timeline-40;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-41 {
+  animation-timeline: --trigger-timeline-41;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-42 {
+  animation-timeline: --trigger-timeline-42;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-43 {
+  animation-timeline: --trigger-timeline-43;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-44 {
+  animation-timeline: --trigger-timeline-44;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-45 {
+  animation-timeline: --trigger-timeline-45;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-46 {
+  animation-timeline: --trigger-timeline-46;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-47 {
+  animation-timeline: --trigger-timeline-47;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-48 {
+  animation-timeline: --trigger-timeline-48;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-49 {
+  animation-timeline: --trigger-timeline-49;
+  view-timeline-axis: x;
+}
+
+.scroll-trigger-50 {
+  animation-timeline: --trigger-timeline-50;
+  view-timeline-axis: x;
+}
+
+@property --scroll-position {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+@property --scroll-position-delayed {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+@property --scroll-direction {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+@property --slide-index {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+@-webkit-keyframes adjust-pos {
+  to {
+    --scroll-position: 1;
+    --scroll-position-delayed: 1;
+  }
+}
+@keyframes adjust-pos {
+  to {
+    --scroll-position: 1;
+    --scroll-position-delayed: 1;
+  }
+}
+@-webkit-keyframes adjust-slide-index {
+  to {
+    --slide-index: 3;
+  }
+}
+@keyframes adjust-slide-index {
+  to {
+    --slide-index: 3;
+  }
+}
+#debug {
+  counter-reset: scroll-position calc(var(--scroll-position) * 100) scroll-position-delayed calc(var(--scroll-position-delayed) * 100) scroll-velocity calc(var(--scroll-velocity) * 100) scroll-direction var(--scroll-direction) scroll-speed calc(var(--scroll-speed) * 100) slide-index var(--slide-index);
+}
+#debug [data-id="--scroll-position"]::after {
+  content: "--scroll-position: " counter(scroll-position);
+}
+#debug [data-id="--scroll-position-delayed"]::after {
+  content: "--scroll-position-delayed: " counter(scroll-position-delayed);
+}
+#debug [data-id="--scroll-velocity"]::after {
+  content: "--scroll-velocity: " counter(scroll-velocity);
+}
+#debug [data-id="--scroll-direction"]::after {
+  content: "--scroll-direction: " counter(scroll-direction);
+}
+#debug [data-id="--scroll-speed"]::after {
+  content: "--scroll-speed: " counter(scroll-speed);
+}
+#debug [data-id="--slide-index"]::after {
+  content: "--slide-index: " counter(slide-index);
+}
+
+.scroll-trigger-1, .scroll-trigger-2 {
+  display: none;
+}
+
+@container style(--scroll-direction: -1) and style(--slide-index: 0) {
+  .scroll-trigger-1 {
+    display: block;
+  }
+}
+@container style(--scroll-direction: 1) and style(--slide-index:2) {
+  .scroll-trigger-2 {
+    display: block;
+  }
+}
+@container style(--scroll-trigger-1: 1) {
+  .result {
+    background-image: url("https://webthemez.com/tools/website-hit-counter/count/&style=style5&show=p&num=5&uid=nc");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+  }
+
+  .counter-description::after {
+    content: "who like spider pig";
+  }
+
+  .scroll-trigger-2 {
+    display: none;
+  }
+}
+@container style(--scroll-trigger-2: 1) {
+  .result {
+    background-image: url("https://webthemez.com/tools/website-hit-counter/count/&style=style1&show=p&num=5&uid=m9");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+  }
+
+  .counter-description::after {
+    content: "who dislike spider pig";
+  }
+
+  .scroll-trigger-1 {
+    display: none;
+  }
+}
