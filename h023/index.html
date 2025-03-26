@@ -6,12 +6,15 @@
     <title>Rating stars</title>
     <style>
         .rating {
-            direction: rtl;
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: start;
         }
         .rating > svg{
-            width:1.1em;
+            width:1.3em;
+            height: 1.1em;
             --scolor:blue;
-            --fcolor:white
+            --fcolor:lightgray;
         }
         .rating > svg.select,
         .rating > svg.select ~ svg,.rating > svg:hover,
@@ -25,11 +28,13 @@
 <body>
 <h1 data-splitting>Can’t stop looping </h1>
 <!-- Draw the star as a symbol and remove it from view -->
+<!-- острые углы M187 152 280 1l93 151 172 42L430 329l14 177-164-68-164 68 14-177L15 194l172-42Z -->
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-    <symbol id="star" viewBox="0.4 -0.1 19.1 18.5">
-        xmlns="http://www.w3.org/2000/svg" viewBox="0.4 -0.1 19.1 18.5">
-        <path d="M10 0 12.9 6.5 19.4 7.1 14.3 11.4 16 18 10 14.3 3.9 18.3 5.7 11.5.5 6.8 7.3 6.4z" stroke="var(--scolor)" stroke-width="0.4" fill="var(--fcolor)"/>
-
+    <symbol id="star" viewBox="13.0381 0.1 533.9 509.5">
+        <path d="M187 152c99-202 87-202 186 0 223 32 219 21 57 177 39 221 49 215-150 109C81 544 91 550 130 329-32 173-36 184 187 152Z" stroke="var(--scolor)" stroke-width="0.4" fill="var(--fcolor)"/>
+    </symbol>
+    <symbol id="starblade" viewBox="14.6 0.6 530.8 505.8">
+        <path d="M187 152 280 1l93 151 172 42L430 329l14 177-164-68-164 68 14-177L15 194l172-42Z" stroke="var(--scolor)" stroke-width="0.4" fill="var(--fcolor)"/>
     </symbol>
 </svg>
 

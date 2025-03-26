@@ -11,6 +11,7 @@ let anima = {
     lines: [],
     /* список дефолтных генераторов линий в порядке предпочтений */
     currentline: [
+        'vhvC', // круглый path сверху вниз - вертикально
         'vhv', // вертикально, горизонтально, вертикально ! есть расстояние для скругления, расположено слева от точки назначения
         'hvh', // горизонтально, скругление, вертикально, скругление, горизонтально ! есть расстояние для скругления
         'vh', // вертикально, скругление, горизонтально ! есть расстояние для скругления, расположено слева от точки назначения
@@ -203,6 +204,12 @@ let anima = {
                     //console.log(percent, l.dist, alength);
                     if (alength > 0)
                         arrow(a)
+                } else if (a.a === 'path') {
+                    //console.log(percent, l.dist, alength);
+                    ctx.setLineDash([5, 3]);
+                    ctx.strokeStyle = "white";
+                    ctx.lineWidth=3;
+                    ctx.stroke(a.path);
                 }
             }
         }
@@ -404,6 +411,35 @@ let anima = {
                 animation);
         }
     },
+    vhvC:{
+        allow: function (start, fin, border) {
+            return true;
+        },
+        // прорисовываем гладкую кривую с помощью кривых Безье
+        produce: function (line, start, fin, border, animation){
+            let xstart = [start.left - border.left + start.width / 2, start.top - border.top + start.height ],
+                ystart = [fin.left - border.left + fin.width / 2, fin.top - border.top ];
+            if(xstart[1]>=ystart[1]){
+                xstart = [start.left - border.left + start.width / 2, start.top - border.top ];
+                ystart = [fin.left - border.left + fin.width / 2, fin.top - border.top + fin.height ];
+            }
+
+            function x(x,y,prop){
+                return (x*(1-prop)+(y*prop)).toFixed(2)+' ';
+            }
+
+            let p = new Path2D("M"+xstart[0]+' '+xstart[1]+"C "
+                +xstart[0]+' '+x(xstart[1],ystart[1],4/7)
+                +x(xstart[0],ystart[0],1/4)+x(xstart[1],ystart[1],10/16)
+                +x(xstart[0],ystart[0],1/2)+x(xstart[1],ystart[1],1/2)
+
+                +x(xstart[0],ystart[0],3/4)+x(xstart[1],ystart[1],6/16)
+                +ystart[0]+' '+x(xstart[1],ystart[1],3/7)
+                +ystart[0]+' '+ystart[1]
+            );
+            line.a.push({a: 'path', path: p, animation:100});
+        }
+    },
 
     vhv: {
         produceTrace: function (start, fin, border) {
@@ -528,6 +564,13 @@ $(function () {
                 anima.newline(this, xx, 1000);
         }
     })
+    $('.connect[data-anchor]').each(function(){
+    let x = $(this).data('anchor').split(';');
+        $(this).data('complete', 'complete'); // больше не будем реагировать
+    for (const xx of x)
+        anima.newline(this, xx, 1000);
+    })
+
     const draggableElements = document.querySelectorAll('div[draggable="true"]');
     let disp = [], tgt = null;
 

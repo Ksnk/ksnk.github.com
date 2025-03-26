@@ -49,6 +49,37 @@
             order: 1;
             background: blue;
         }
+        .flex {
+            display: grid;grid-template-columns: auto;grid-gap: 80px 0;
+            background:gray;
+            width:60%; margin:0 auto;
+        }
+        .flex .label {
+            flex: auto;margin: 0 10px;display: flex;overflow: hidden;
+        }
+        .label>.number {
+            display: inline-flex;
+            width: 100px;
+            padding: 30px 40px;
+            border-radius: 40px;
+            background: blue;
+        }
+        .label>.text {
+            flex-direction: column;
+             display: inline-flex;
+            width: auto;
+         }
+        .flex .label:nth-of-type(2) {
+            margin: 0 0 0 auto;
+            flex-direction: row-reverse;
+        }
+        .flex .label:nth-of-type(3) {
+            margin: 0 auto;
+        }
+        .flex .label:nth-of-type(4) {
+            margin: 0 auto;
+            flex-direction: row-reverse;
+        }
 
     </style>
 </head>
@@ -58,13 +89,13 @@
 <div class="container">
 
     <div class="foo">
-        <div class="point" style="top:34px;left:10px;" draggable="true" data-anchor=".b>p>span:eq(4);.b>p>span:eq(0)"></div>
+        <div class="point connect" style="top:34px;left:10px;" draggable="true" data-anchor=".b>p>span:eq(4);.b>p>span:eq(0)"></div>
         <div class="point" style="top:40px;left:160px;" draggable="true" data-anchor=".b>p>span:eq(0);.point:eq(6)"></div>
         <div class="point" style="top:10px;left:90px;" draggable="true" data-anchor=".b>p>span:eq(5)"></div>
         <div class="point" style="top:70px;left:190px;" draggable="true" data-anchor=".b>p>span:eq(1)"></div>
         <div class="point" style="top:90px;left:10px;" draggable="true" data-anchor=".b>p>span:eq(3)"></div>
         <div class="point" style="top:70px;left:70px;" draggable="true" data-anchor=".c>p>span:eq(0)"></div>
-        <div class="point" style="top:170px;left:570px;" draggable="true" data-anchor=".c>p>span:eq(6);.c>p>span:eq(3)"></div>
+        <div class="point connect" style="top:170px;left:570px;" draggable="true" data-anchor=".c>p>span:eq(6);.c>p>span:eq(3)"></div>
 
         <div class="a"></div>
         <div class="b">
@@ -85,6 +116,25 @@
             <p><span> description16</span></p>
             <p><span> description17</span></p>
         </div>
+    </div>
+    <div class="flex">
+        <div class="label " draggable="true">
+            <span class="number" data-anchor=".flex .number:eq(1)">1</span><span class="text">
+            <span class="title">Подготовка</span>планирование планирование планирование планирование планирование планирование планирование планирование планирование планирование планирование планирование планирование планирование планирование планирование планирование планирование планирование планирование планирование планирование планирование планирование планирование планирование планирование планирование планирование планирование планирование планирование </span>
+        </div>
+        <div class="label " draggable="true">
+            <span class="number" data-anchor=".flex .number:eq(2)">2</span><span class="text">
+            <span class="title">Подготовка</span>планирование</span>
+        </div>
+        <div class="label " draggable="true">
+            <span class="number" data-anchor=".flex .number:eq(3)">3</span><span class="text">
+            <span class="title">Подготовка</span>планирование</span>
+        </div>
+        <div class="label " draggable="true">
+            <span class="number">4</span><span class="text">
+            <span class="title">Подготовка</span>планирование</span>
+        </div>
+
     </div>
     <canvas></canvas>
 </div>

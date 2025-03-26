@@ -1905,27 +1905,6 @@ main {
     --slide-index: 3;
   }
 }
-#debug {
-  counter-reset: scroll-position calc(var(--scroll-position) * 100) scroll-position-delayed calc(var(--scroll-position-delayed) * 100) scroll-velocity calc(var(--scroll-velocity) * 100) scroll-direction var(--scroll-direction) scroll-speed calc(var(--scroll-speed) * 100) slide-index var(--slide-index);
-}
-#debug [data-id="--scroll-position"]::after {
-  content: "--scroll-position: " counter(scroll-position);
-}
-#debug [data-id="--scroll-position-delayed"]::after {
-  content: "--scroll-position-delayed: " counter(scroll-position-delayed);
-}
-#debug [data-id="--scroll-velocity"]::after {
-  content: "--scroll-velocity: " counter(scroll-velocity);
-}
-#debug [data-id="--scroll-direction"]::after {
-  content: "--scroll-direction: " counter(scroll-direction);
-}
-#debug [data-id="--scroll-speed"]::after {
-  content: "--scroll-speed: " counter(scroll-speed);
-}
-#debug [data-id="--slide-index"]::after {
-  content: "--slide-index: " counter(slide-index);
-}
 
 .scroll-trigger-1, .scroll-trigger-2 {
   display: none;

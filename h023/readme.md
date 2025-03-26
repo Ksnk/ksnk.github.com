@@ -1,2 +1,5 @@
-## змеящийся текст
-отсюда https://css-irl.info/positioning-text-along-a-path-with-css/
+## рейтинг
+
+
+еще удачный пример БЕЗ СКРИПТА
+https://codepen.io/delphinpro/pen/OPLoOoP
