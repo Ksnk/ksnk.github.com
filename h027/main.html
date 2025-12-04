@@ -1,0 +1,60 @@
+<!DOCTYPE html public "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+	<title>Хоккей</title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+</head>
+<body onload="createField()">
+<div id="field" style="float:left;position:relative;width:540px;height:550px;background:green;">
+	<img id="ball" style="display:none;z-index:12;position:absolute; width:27px;height:40px;"  src="img/ball.png">
+</div>
+<div  id="control" style="float:left;">
+	<table>
+		<tr>
+			<td><input type='button' value='\' onclick='xturn(0)'></td>
+			<td><input type='button' value='|' onclick='xturn(1)'></td>
+			<td><input type='button' value='/' onclick='xturn(2)'></td>
+		</tr>
+		<tr>
+			<td><input type='button' value='-' onclick='xturn(4)'></td>
+			<td><input type="button" onclick="xturn(-1)" value="X"></td>
+			<td><input type='button' value='-' onclick='xturn(3)'></td>
+		</tr>
+		<tr>
+			<td><input type='button' value='/' onclick='xturn(5)'></td>
+			<td><input type='button' value='|' onclick='xturn(6)'></td>
+			<td><input type='button' value='\' onclick='xturn(7)'></td>
+		</tr>
+		<tr><td colspan="3"><input type='checkbox' checked id='auto'>auto</td></tr>
+	</table>
+</div>
+
+<div  style="display:none;">
+
+	<img id="gold_center" style="z-index:10;position:absolute; width:17px;height:16px;"  src="img/gold_c.png">
+	<img id="gold_less" style="z-index:9;position:absolute; width:36px;height:35px;" src="img/gold_ls.png">
+	<img id="gold_hor" style="z-index:9;position:absolute; width:36px;height:11px;"  src="img/gold_lr.png">
+	<img id="gold_vert" style="z-index:9;position:absolute; width:13px;height:38px;"  src="img/gold_ud.png">
+
+	<img id="blue_more" style="z-index:8;position:absolute; width:36px;height:35px;"  src="img/blue_more.png">
+	<img id="blue_less" style="z-index:8;position:absolute; width:36px;height:35px;" src="img/blue_less.png">
+	<img id="blue_hor" style="z-index:8;position:absolute; width:36px;height:11px;"  src="img/blue_lr.png">
+	<img id="blue_vert" style="z-index:8;position:absolute; width:13px;height:38px;"  src="img/blue_ud.png">
+
+	<img id="red_more" style="z-index:8;position:absolute; width:36px;height:35px;"  src="img/red_more.png">
+	<img id="red_less" style="z-index:8;position:absolute; width:36px;height:35px;" src="img/red_less.png">
+	<img id="red_hor" style="z-index:8;position:absolute; width:36px;height:11px;"  src="img/red_lr.png">
+	<img id="red_vert" style="z-index:8;position:absolute; width:13px;height:38px;"  src="img/red_ud.png">
+
+	<img id="gw_red" style="z-index:9;position:absolute; width:138px;height:35px;"  src="img/gw_red.png">
+	<img id="gw_blue" style="z-index:9;position:absolute; width:139px;height:45px;"  src="img/gw_blue.png">
+</div>
+
+</body>
+<script type="text/javascript" src="js/hockey.js">
+</script>
+</html>
+
+
+
