@@ -203,7 +203,7 @@ function createField() {
 //-----------------
     svg.parentNode.style.minHeight=`${b_z+b_z+(fmaxY-1)*s_z}px`;
     svg.parentNode.style.minWidth=`${b_z+b_z+(fmaxX-1)*s_z}px`;
-
+    svg.parentNode.setAttribute('viewBox',`0 0 ${b_z+b_z+(fmaxX-1)*s_z} ${b_z+b_z+(fmaxY-1)*s_z}`)
 }
 
 function turn(x){
