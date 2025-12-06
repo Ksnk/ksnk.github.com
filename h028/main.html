@@ -7,6 +7,15 @@
 </head>
 <body onload="createField()">
 <style>
+	/** layout+ */
+	.container {
+		display: flex;
+		flex-direction: row;
+	}
+	.item {
+
+	}
+	/** -layout */
 	.shadow {
 		-webkit-filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7));
 		filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7));
@@ -33,12 +42,6 @@
 		background-color: green;
 	}
 
-	.svgfield {
-		display:inline-block;
-	}
-	#control {
-		display:inline-block;
-	}
 	@media only screen and (orientation: portrait) and (min-device-width: 300px){
 		.svgfield {
 			width:100%;
@@ -47,13 +50,15 @@
 		}
 		#control {
 			position:absolute;
+			font-size:24px;
 			top:0;left:0;
 			opacity: 0.7;
 		}
 	}
 </style>
-<div class="svgfield">
-	<svg><!-- границы поля -->
+<div class="container">
+<div class="item svgfield">
+	<svg onclick="click(this)"><!-- границы поля -->
 		<defs>
 			<radialGradient id="RadialGradient1">
 				<stop offset="0%" stop-color="#DFFF03FF" />
@@ -76,7 +81,7 @@
 	</svg>
 </div>
 
-<div  id="control">
+<div class="item" id="control">
 	<table>
 		<tr>
 			<td><input type='button' value='\' onclick='xturn(0)'></td>
@@ -96,7 +101,7 @@
 		<tr><td colspan="3"><input type='checkbox' checked id='auto'>auto</td></tr>
 	</table>
 </div>
-
+</div>
 </body>
 <script type="text/javascript" src="hockey.js">
 </script>
