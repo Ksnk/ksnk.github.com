@@ -132,7 +132,7 @@ let hockeyGame = {
         while (false !== (i = this.nextturn(i))) {
             this.mk_turn(i);
             x = this.curpos.cost;
-            if (depth >= MaxDepth || x === 0 || x === this.MaxScore) {
+            if (depth >= MaxDepth || x <= 0 || x >= this.MaxScore) {
                 Score = x;
             } else {
                 if (this.curpos.click === 1) {
@@ -247,16 +247,16 @@ function turn(x) {
  */
 function xturn(x) {
     var c = hockeyGame.curcolor;
-    if (hockeyGame.curpos.cost == 0) {
+    if (hockeyGame.curpos.cost <= 0) {
         alert('Red player win!');
         return;
-    } else if (hockeyGame.curpos.cost == hockeyGame.MaxScore) {
+    } else if (hockeyGame.curpos.cost >= hockeyGame.MaxScore) {
         alert('Blue player win!');
         return;
     }
     if (x < 0) {
         x = [0]
-        while ((x[0] !== null) && c == hockeyGame.curcolor && (!(hockeyGame.curpos.cost == 0 || hockeyGame.curpos.cost == hockeyGame.MaxScore))) {
+        while ((x[0] !== null) && c == hockeyGame.curcolor && (!(hockeyGame.curpos.cost <= 0 || hockeyGame.curpos.cost >= hockeyGame.MaxScore))) {
             x = hockeyGame.calc(0, hockeyGame.curcolor);
             turn(x[0])
         }
@@ -277,19 +277,14 @@ function xturn(x) {
                 if (cnt < 0) break;
                 turn(x[0])
             }
-            if(hockeyGame.curpos.y<hockeyGame.fmaxY>>1){
-                control.classList.add('col0');
-            } else {
-                control.classList.remove('col0');
-            }
             control.style.display = last;
 
         }, 1);
     }
-    if (hockeyGame.curpos.cost === 0) {
+    if (hockeyGame.curpos.cost <= 0) {
         alert('Red player win!');
         return;
-    } else if (hockeyGame.curpos.cost === hockeyGame.MaxScore) {
+    } else if (hockeyGame.curpos.cost >= hockeyGame.MaxScore) {
         alert('Blue player win!');
         return;
     }
