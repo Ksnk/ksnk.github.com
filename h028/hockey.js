@@ -15,7 +15,7 @@
  * @type {{curpos: null, nextturn: ((function(*): (boolean|*))|*), calc: ((function(*, *): (number[]|number))|*)}}
  */
 let hockeyGame = {
-
+    fmaxX:0,fmaxY:0,
     curpos: null, // текущая позиция мяча
     field: [], // массив массивов точек
     curcolor: 0,
@@ -49,6 +49,8 @@ let hockeyGame = {
      *  cost - "стоимость" позиции, как расстояние до ворот противника
      */
     fillfield: function (fmaxX, fmaxY) {
+        this.fmaxX=fmaxX;
+        this.fmaxY=fmaxY;
         this.field = [];
         let that = this;
         for (let i = 0; i < fmaxX; i++) {
@@ -264,8 +266,8 @@ function xturn(x) {
     } else
         turn(x);
     if (sh.$('auto').checked) {
-        let last=sh.$('control').style.display;
-        sh.$('control').style.display = 'none';
+        let last=sh.$('control').style.display, control=sh.$('control');
+        control.style.display = 'none';
         setTimeout(function () {
             let cnt = 100;
             while (c != hockeyGame.curcolor && (!(hockeyGame.curpos.cost <= 0 || hockeyGame.curpos.cost >= hockeyGame.MaxScore))) {
@@ -275,7 +277,13 @@ function xturn(x) {
                 if (cnt < 0) break;
                 turn(x[0])
             }
-            sh.$('control').style.display = last;
+            if(hockeyGame.curpos.y<hockeyGame.fmaxY>>1){
+                control.classList.add('col0');
+            } else {
+                control.classList.remove('col0');
+            }
+            control.style.display = last;
+
         }, 1);
     }
     if (hockeyGame.curpos.cost === 0) {
