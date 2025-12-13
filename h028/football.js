@@ -14,8 +14,8 @@
  * Поле игры [x,y] состоит из точек c перечисленными там возможными ходами - 8 направлений
  * @type {{curpos: null, nextturn: ((function(*): (boolean|*))|*), calc: ((function(*, *): (number[]|number))|*)}}
  */
-let hockeyGame = {
-    fmaxX:0,fmaxY:0,
+let footballGame = {
+    fmaxX:0,fmaxY:0,b_z:0,s_z:0,
     curpos: null, // текущая позиция мяча
     field: [], // массив массивов точек
     curcolor: 0,
@@ -48,8 +48,11 @@ let hockeyGame = {
      *  lines - массив возможных ходов по 8 направлениям
      *  cost - "стоимость" позиции, как расстояние до ворот противника
      */
-    fillfield: function (fmaxX, fmaxY, b_z, s_z) {
+    fillfield: function (fmaxX, fmaxY, s_z, b_z) {
         this.fmaxX=fmaxX;
+        this.fmaxY=fmaxY;
+        this.s_z=s_z;
+        this.b_z=b_z;
         this.fmaxY=fmaxY;
         this.field = [];
         let that = this;
@@ -177,9 +180,12 @@ let sh = {
 }
 
 function createField() {
-    let fmaxX = 11, fmaxY = 15, r_len = 45;
-    hockeyGame.fillfield(fmaxX, fmaxY);
-    //  console.log(hockeyGame);
+    footballGame.fillfield(11,15, 45,20);
+    let fmaxX = footballGame.fmaxX,
+        fmaxY = footballGame.fmaxY,
+        b_z = footballGame.b_z,
+        s_z = footballGame.s_z;
+    //  console.log(footballGame);
 
     // creave SVG field
     let svg = sh.$('svg-border');
@@ -189,7 +195,7 @@ function createField() {
         svg.removeChild(svg.lastElementChild);
     }
     //place border
-    let b_z = 20, s_z = 45, midX = fmaxX >> 1, midY = fmaxY >> 1;
+    let midX = fmaxX >> 1, midY = fmaxY >> 1;
 
     svg.appendChild(sh.create('path', {
             d: `m${b_z} ${b_z}h${(fmaxX - 1) * s_z}v${(fmaxY - 1) * s_z}h-${(fmaxX - 1) * s_z}v-${(fmaxY - 1) * s_z} m0 ${midY * s_z}h${(fmaxX - 1) * s_z}`
@@ -203,7 +209,7 @@ function createField() {
     //place points
     for (let i = 0; i < fmaxX; i++) for (let j = 0; j < fmaxY; j++) {
         let a = {
-            r: 5, "cx": `${b_z + i * r_len}`, "cy": `${b_z + j * r_len}`
+            r: 5, "cx": `${b_z + i * s_z}`, "cy": `${b_z + j * s_z}`
         };
         if (Math.abs(midX - i) < 2 && (j === 0 || j === fmaxY - 1))
             a["class"] = `box`;
@@ -214,7 +220,7 @@ function createField() {
     while (svg.lastElementChild) {
         svg.removeChild(svg.lastElementChild);
     }
-    svg.appendChild(sh.create('circle', {"r": `6`, "cx": `${b_z + midX * r_len}`, "cy": `${b_z + midY * r_len}`}));
+    svg.appendChild(sh.create('circle', {"r": `6`, "cx": `${b_z + midX * s_z}`, "cy": `${b_z + midY * s_z}`}));
 //-----------------
     svg.parentNode.style.minHeight = `${b_z + b_z + (fmaxY - 1) * s_z}px`;
     svg.parentNode.style.minWidth = `${b_z + b_z + (fmaxX - 1) * s_z}px`;
@@ -223,12 +229,12 @@ function createField() {
 
 function turn(x) {
     var s;
-    if (!hockeyGame.curpos.lines[x]) return;
-    hockeyGame.mk_turn(x);
+    if (!footballGame.curpos.lines[x]) return;
+    footballGame.mk_turn(x);
     //drawturn(x,curcolor==0?'red':'blue');
     // svg field
     let b_z = 20, s_z = 45;
-    let i0 = hockeyGame.curpos.x, j0 = hockeyGame.curpos.y,
+    let i0 = footballGame.curpos.x, j0 = footballGame.curpos.y,
         disp = [
             [1, 1], [0, 1], [-1, 1], [-1, 0],
             [1, 0], [1, -1], [0, -1], [-1, -1]][x],
@@ -236,57 +242,58 @@ function turn(x) {
     let svg = sh.$('svg-turns');
     svg.appendChild(sh.create('path', {
         d: `M${(i1 - 1) * s_z + b_z} ${(j1 - 1) * s_z + b_z}L${(i0 - 1) * s_z + b_z} ${(j0 - 1) * s_z + b_z}`,
-        class: `col${hockeyGame.curcolor}`
+        class: `col${footballGame.curcolor}`
     }));
     console.log(x, [i0, j0], [i1, j1]);
     sh.attr(sh.$('svg-ball').children[0], {
         'cx': `${b_z + (i0 - 1) * s_z}`,
         'cy': `${b_z + (j0 - 1) * s_z}`
     });
-    if (hockeyGame.curpos.click == 1) hockeyGame.curcolor = 1 - hockeyGame.curcolor;
+    if (footballGame.curpos.click == 1) footballGame.curcolor = 1 - footballGame.curcolor;
 }
 
 function backturn(){
-    var c = hockeyGame.curcolor;
-    let lastturn=hockeyGame.turns[hockeyGame.turns.length-1];
+    var c = footballGame.curcolor;
+    let lastturn=footballGame.turns[footballGame.turns.length-1];
     if(lastturn.color==-1) return;
     let svg = sh.$('svg-turns');
     if(lastturn.color==1-c) {
         while (lastturn.color == 1 - c) {
-            hockeyGame.back_turn();
+            footballGame.back_turn();
             svg.removeChild(svg.lastChild);
-            lastturn = hockeyGame.turns[hockeyGame.turns.length - 1];
+            lastturn = footballGame.turns[footballGame.turns.length - 1];
         }
     }
     while (lastturn.color == c) {
-        hockeyGame.back_turn();
+        footballGame.back_turn();
         svg.removeChild(svg.lastChild);
-        lastturn = hockeyGame.turns[hockeyGame.turns.length - 1];
+        lastturn = footballGame.turns[footballGame.turns.length - 1];
     }
 
-    let i0=hockeyGame.curpos.x, j0=hockeyGame.curpos.y, b_z=20, s_z=45;
+    let i0=footballGame.curpos.x, j0=footballGame.curpos.y,
+        b_z=20, s_z=45;
     sh.attr(sh.$('svg-ball').children[0], {
         'cx': `${b_z + (i0 - 1) * s_z}`,
         'cy': `${b_z + (j0 - 1) * s_z}`
     });
-    //if (hockeyGame.curpos.click == 1) hockeyGame.curcolor = 1 - hockeyGame.curcolor;
+    //if (footballGame.curpos.click == 1) footballGame.curcolor = 1 - footballGame.curcolor;
 }
 /**
  * двинуть мяч на один отрезок и передать ход автомату
  */
 function xturn(x) {
-    var c = hockeyGame.curcolor;
-    if (hockeyGame.curpos.cost <= 0) {
+    var c = footballGame.curcolor;
+    if (footballGame.curpos.cost <= 0) {
         alert('Red player win!');
         return;
-    } else if (hockeyGame.curpos.cost >= hockeyGame.MaxScore) {
+    } else if (footballGame.curpos.cost >= footballGame.MaxScore) {
         alert('Blue player win!');
         return;
     }
     if (x < 0) {
         x = [0]
-        while ((x[0] !== null) && c == hockeyGame.curcolor && (!(hockeyGame.curpos.cost <= 0 || hockeyGame.curpos.cost >= hockeyGame.MaxScore))) {
-            x = hockeyGame.calc(0, hockeyGame.curcolor);
+        while ((x[0] !== null) && c == footballGame.curcolor && (!(footballGame.curpos.cost <= 0 || footballGame.curpos.cost >= footballGame.MaxScore))) {
+            x = footballGame.calc(0, footballGame.curcolor);
             turn(x[0])
         }
         if (x[0] === null) {
@@ -299,8 +306,8 @@ function xturn(x) {
         control.style.display = 'none';
         setTimeout(function () {
             let cnt = 100;
-            while (c != hockeyGame.curcolor && (!(hockeyGame.curpos.cost <= 0 || hockeyGame.curpos.cost >= hockeyGame.MaxScore))) {
-                x = hockeyGame.calc(0, hockeyGame.curcolor);
+            while (c != footballGame.curcolor && (!(footballGame.curpos.cost <= 0 || footballGame.curpos.cost >= footballGame.MaxScore))) {
+                x = footballGame.calc(0, footballGame.curcolor);
                 console.log(x);
                 cnt--;
                 if (cnt < 0) break;
@@ -310,10 +317,10 @@ function xturn(x) {
 
         }, 1);
     }
-    if (hockeyGame.curpos.cost <= 0) {
+    if (footballGame.curpos.cost <= 0) {
         alert('Red player win!');
         return;
-    } else if (hockeyGame.curpos.cost >= hockeyGame.MaxScore) {
+    } else if (footballGame.curpos.cost >= footballGame.MaxScore) {
         alert('Blue player win!');
         return;
     }

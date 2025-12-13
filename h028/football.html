@@ -4,72 +4,76 @@
 	<title>Хоккей</title>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8">
 
-</head>
-<body onload="createField()">
-<style>
-	/** layout+ */
-	.container {
-		display: flex;
-		flex-direction: row;
-	}
-	.item {
-
-	}
-	/** -layout */
-	.shadow {
-		-webkit-filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7));
-		filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7));
-	}
-	#svg-ball.shadow {
-		filter: drop-shadow( 10px 10px 4px rgba(0, 0, 0, .7));
-	}
-	#svg-points circle {
-		fill: url(#RadialGradient1);
-	}
-	#svg-points circle.box {
-		fill: red;
-	}
-	#svg-ball circle {
-		fill: url(#RadialGradient2);
-	}
-	#svg-turns .col1 {
-		stroke: blue;
-	}
-	#svg-turns .col0 {
-		stroke: red;
-	}
-	div.svgfield{
-		background-color: green;
-	}
-	#control table {
-		width:200px;
-	}
-	#control input {
-		font-size: 44px;
-		width:100%; height:85px;/**/
-	}
-
-	@media only screen and (orientation: portrait) and (min-device-width: 300px){
-		.svgfield {
-			width:100%;
-			display:block;
-			position:relative;
+	<style>
+		/** layout+ */
+		.container {
+			display: flex;
+			flex-direction: row;
+		}
+		.item {
+			display: flex;
+		}
+		/** -layout */
+		.shadow {
+			-webkit-filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7));
+			filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7));
+		}
+		#svg-ball.shadow {
+			filter: drop-shadow( 10px 10px 4px rgba(0, 0, 0, .7));
+		}
+		#svg-points circle {
+			fill: url(#RadialGradient1);
+		}
+		#svg-points circle.box {
+			fill: red;
+		}
+		#svg-ball circle {
+			fill: url(#RadialGradient2);
+		}
+		#svg-turns .col1 {
+			stroke: blue;
+		}
+		#svg-turns .col0 {
+			stroke: red;
+		}
+		div.svgfield{
+			background-color: green;
 		}
 		#control table {
-			width:40%;
-			opacity: 0.5;
+			width:200px;
+			height: 200px;
 		}
 		#control input {
-			font-size: 44px;
-			width:100%; height:85px;/**/
+			font-size: 36px;
+			width:100%; height:66px;/**/
 		}
-		.container {
-			flex-direction: column;
-			height:100%;
-			align-items: center;
+
+		@media only screen and (orientation: portrait) and (min-device-width: 300px){
+			.svgfield {
+				width:100%;
+				display:block;
+				position:relative;
+			}
+			#control {
+				display:flex;
+				flex-direction: row;
+			}
+			#control table {
+				opacity: 0.5;
+			}
+			#control input {
+				font-size: 44px;
+				width:85px; height:85px;/**/
+			}
+			.container {
+				flex-direction: column;
+				height:100%;
+				align-items: center;
+			}
 		}
-	}
-</style>
+	</style>
+</head>
+<body onload="createField()">
 <div class="container">
 <div class="item svgfield">
 	<svg onclick="click(this)"><!-- границы поля -->
@@ -95,7 +99,7 @@
 	</svg>
 </div>
 
-<div class="item" id="control">
+<div class="item " id="control">
 	<table>
 		<tr>
 			<td><input type='button' value='\' onclick='xturn(0)'></td>
@@ -112,8 +116,11 @@
 			<td><input type='button' value='|' onclick='xturn(6)'></td>
 			<td><input type='button' value='\' onclick='xturn(7)'></td>
 		</tr>
-		<tr><td colspan="3"><input type='checkbox' checked id='auto'>auto</td></tr>
 	</table>
+	<div class="item" style="flex-direction: column">
+	<label><input type='checkbox' checked id='auto'>auto</label>
+	<input type='button' value='Back' style="width:200px" onclick='backturn()'>
+	</div>
 </div>
 </div>
 </body>
