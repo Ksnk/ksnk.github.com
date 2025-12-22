@@ -1,130 +1,280 @@
 <!DOCTYPE html public "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
-	<title>Хоккей</title>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>Хоккей</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
 
-	<style>
-		/** layout+ */
-		.container {
-			display: flex;
-			flex-direction: row;
-		}
-		.item {
-			display: flex;
-		}
-		/** -layout */
-		.shadow {
-			-webkit-filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7));
-			filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7));
-		}
-		#svg-ball.shadow {
-			filter: drop-shadow( 10px 10px 4px rgba(0, 0, 0, .7));
-		}
-		#svg-points circle {
-			fill: url(#RadialGradient1);
-		}
-		#svg-points circle.box {
-			fill: red;
-		}
-		#svg-ball circle {
-			fill: url(#RadialGradient2);
-		}
-		#svg-turns .col1 {
-			stroke: blue;
-		}
-		#svg-turns .col0 {
-			stroke: red;
-		}
-		div.svgfield{
-			background-color: green;
-		}
-		#control table {
-			width:200px;
-			height: 200px;
-		}
-		#control input {
-			font-size: 36px;
-			width:100%; height:66px;/**/
-		}
+    <style>
+        :root {
+            --start-color1: #DFFF03FF;
+            --stop-color1: #9BB202FF;
+            --start-color2: #EFEEEEFF;
+            --stop-color2: #868383;
+            --start-color3: #f60101;
+            --stop-color3: #7c0202;
+            --start-color4: #0101fa;
+            --stop-color4: #02266e;
+            --green-color: green;
+        }
 
-		@media only screen and (orientation: portrait) and (min-device-width: 300px){
-			.svgfield {
-				width:100%;
-				display:block;
-				position:relative;
-			}
-			#control {
-				display:flex;
-				flex-direction: row;
-			}
-			#control table {
-				opacity: 0.5;
-			}
-			#control input {
-				font-size: 44px;
-				width:85px; height:85px;/**/
-			}
-			.container {
-				flex-direction: column;
-				height:100%;
-				align-items: center;
-			}
-		}
-	</style>
+        /** layout+ */
+        .container {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .item {
+            display: flex;
+        }
+
+        /** -layout */
+        .shadow {
+            -webkit-filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, .7));
+            filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, .7));
+        }
+
+        #svg-ball.shadow {
+            filter: drop-shadow(10px 10px 4px rgba(0, 0, 0, .7));
+        }
+
+        #svg-points circle {
+            fill: url(#RadialGradient1);
+        }
+
+        #svg-points circle.box.col0 {
+            fill: url(#RadialGradient4)
+        }
+
+        #svg-points circle.box.col1 {
+            fill: url(#RadialGradient3)
+        }
+
+        #svg-ball circle {
+            fill: url(#RadialGradient2);
+        }
+
+        #svg-turns .col1 {
+            stroke: var(--start-color4);
+        }
+
+        #svg-turns .col0 {
+            stroke: var(--start-color3);
+        }
+
+        div.svgfield {
+            background-color: var(--green-color)
+        }
+
+        #control input, #control button {
+            font-size: 36px;
+            width: 100%;
+            height: 80px; /**/
+            padding: 0;
+            margin: 0
+        }
+
+        #control td input, #control td button {
+            width: 100%;
+            height: 90px;
+        }
+
+        #control table {
+            width: 270px;
+            height: 270px;
+        }
+
+        #control {
+            display: flex;
+            flex-direction: column;
+        }
+        #control>div {
+            align-self: center;
+            flex-direction: column
+        }
+
+        @media only screen and (orientation: portrait) and (min-device-width: 300px) {
+            .svgfield {
+                width: 100%;
+                display: block;
+                position: relative;
+            }
+
+            #control {
+                display: flex;
+                flex-direction: row;
+            }
+
+            #control table {
+                opacity: 0.5;
+                width: 400px;
+                height: 400px;
+            }
+
+            #control td input, #control td button {
+                font-size: 72px;
+                width: 132px;
+                height: 132px;
+            }
+
+            .container {
+                flex-direction: column;
+                height: 100%;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        .redwin {
+            animation: onClick 0.5s forwards;
+        }
+
+        #control.col0 input {
+            background-color: var(--stop-color3);
+        }
+
+        #control.col1 input {
+            background-color: var(--stop-color4);
+        }
+
+        #control button svg {
+            width: 80px;
+            height: 80px;
+        }
+
+        #control.col0 button svg {
+
+            stroke: var(--stop-color3);
+            fill: var(--stop-color3);
+        }
+
+        #control.col1 button svg {
+            stroke: var(--stop-color4);
+            fill: var(--stop-color4);
+        }
+
+        @keyframes onClick {
+            from {
+                stroke-width: 1px;
+            }
+            to {
+                stroke-width: 10px;
+                fill: var(--start-color3);;
+            }
+        }
+    </style>
 </head>
 <body onload="createField()">
 <div class="container">
-<div class="item svgfield">
-	<svg onclick="click(this)"><!-- границы поля -->
-		<defs>
-			<radialGradient id="RadialGradient1">
-				<stop offset="0%" stop-color="#DFFF03FF" />
-				<stop offset="100%" stop-color="#9BB202FF" />
-			</radialGradient>
-			<radialGradient id="RadialGradient2"><!-- cx="0.25" cy="0.25" r="0.25">-->
-				<stop offset="0%" stop-color="#EFEEEEFF" />
-				<stop offset="100%" stop-color="#B6B3B3FF" />
-			</radialGradient>
-		</defs>
-		<g class="shadow" fill="none" id="svg-border" stroke="#decade" stroke-width="2" >
-			<path d="m20 45h150v250h-150v-250z"></path>
-		</g>
-		<g class="shadow" fill="none" id="svg-turns" stroke="#decade" stroke-width="1" >
-		</g>
-		<g class="shadow" fill="#decade" id="svg-points" stroke-width="0">
-		</g>
-		<g class="shadow"  id="svg-ball" stroke-width="0">
-		</g>
-	</svg>
-</div>
+    <div class="item svgfield">
+        <svg onclick="click(this)"><!-- границы поля -->
+            <symbol id="arrow" viewBox="0 0 80 80">
+                <path d="m40 10L35 30H45ZV70Z"></path>
+            </symbol>
+            <defs>
+                <radialGradient id="RadialGradient1" cx="45%" cy="45%" r="80%" fx="35%" fy="35%">
+                    <stop offset="0.2" stop-color="var(--start-color1)"/>
+                    <stop offset="0.9" stop-color="var(--stop-color1)"/>
+                </radialGradient>
+                <radialGradient id="RadialGradient2" cx="45%" cy="45%" r="80%" fx="35%" fy="35%">
+                    <stop offset="0.2" stop-color="var(--start-color2)"/>
+                    <stop offset="0.9" stop-color="var(--stop-color2)"/>
+                </radialGradient>
+                <radialGradient id="RadialGradient3" cx="45%" cy="45%" r="80%" fx="35%" fy="35%">
+                    <stop offset="0.2" stop-color="var(--start-color3)"/>
+                    <stop offset="0.9" stop-color="var(--stop-color3)"/>
+                </radialGradient>
+                <radialGradient id="RadialGradient4" cx="45%" cy="45%" r="80%" fx="35%" fy="35%">
+                    <stop offset="0.2" stop-color="var(--start-color4)"/>
+                    <stop offset="0.9" stop-color="var(--stop-color4)"/>
+                </radialGradient>
+            </defs>
+            <g class="shadow" fill="none" id="svg-border" stroke="#decade" stroke-width="2">
+                <path d="m20 45h150v250h-150v-250z"></path>
+            </g>
+            <g class="shadow" fill="none" id="svg-turns" stroke="#decade" stroke-width="1">
+            </g>
+            <g class="shadow" fill="#decade" id="svg-points" stroke-width="0">
+            </g>
+            <g class="shadow" id="svg-ball" stroke-width="0">
+            </g>
+        </svg>
+    </div>
 
-<div class="item " id="control">
-	<table>
-		<tr>
-			<td><input type='button' value='\' onclick='xturn(0)'></td>
-			<td><input type='button' value='|' onclick='xturn(1)'></td>
-			<td><input type='button' value='/' onclick='xturn(2)'></td>
-		</tr>
-		<tr>
-			<td><input type='button' value='-' onclick='xturn(4)'></td>
-			<td><input type="button" onclick="xturn(-1)" value="X"></td>
-			<td><input type='button' value='-' onclick='xturn(3)'></td>
-		</tr>
-		<tr>
-			<td><input type='button' value='/' onclick='xturn(5)'></td>
-			<td><input type='button' value='|' onclick='xturn(6)'></td>
-			<td><input type='button' value='\' onclick='xturn(7)'></td>
-		</tr>
-	</table>
-	<div class="item" style="flex-direction: column">
-	<label><input type='checkbox' checked id='auto'>auto</label>
-	<input type='button' value='Back' style="width:200px" onclick='backturn()'>
-	</div>
-</div>
+    <div class="item " id="control">
+        <table>
+            <tr>
+                <td>
+                    <button onclick='xturn(0)'>
+                        <svg class="shadow">
+                            <use transform="rotate(-45 40 40)" href="#arrow"/>
+                        </svg>
+                    </button>
+                </td>
+                <td>
+                    <button onclick='xturn(1)'>
+                        <svg class="shadow">
+                            <use transform="rotate(0 40 40)" href="#arrow"/>
+                        </svg>
+                    </button>
+                </td>
+                <td>
+                    <button onclick='xturn(2)'>
+                        <svg class="shadow">
+                            <use transform="rotate(45 40 40)" href="#arrow"/>
+                        </svg>
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button onclick='xturn(7)'>
+                        <svg class="shadow">
+                            <use transform="rotate(-90 40 40)" href="#arrow"/>
+                        </svg>
+                    </button>
+                </td>
+                <td><input type="button" onclick="xturn(-1)" value="X"></td>
+                <td>
+                    <button onclick='xturn(3)'>
+                        <svg class="shadow">
+                            <use transform="rotate(90 40 40)" href="#arrow"/>
+                        </svg>
+                    </button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button onclick='xturn(6)'>
+                        <svg class="shadow">
+                            <use transform="rotate(-135 40 40)" href="#arrow"/>
+                        </svg>
+                    </button>
+                </td>
+                <td>
+                    <button onclick='xturn(5)'>
+                        <svg class="shadow">
+                            <use transform="rotate(180 40 40)" href="#arrow"/>
+                        </svg>
+                    </button>
+                </td>
+                <td>
+                    <button onclick='xturn(4)'>
+                        <svg class="shadow">
+                            <use transform="rotate(135 40 40)" href="#arrow"/>
+                        </svg>
+                    </button>
+                </td>
+            </tr>
+        </table>
+        <div style="flex-direction: column">
+            <label><input type='checkbox' checked id='auto'></label>
+            <input type='button' value='Back' onclick='backturn()'>
+            <input type='button' value='New' onclick='createField()'>
+        </div>
+    </div>
 </div>
 </body>
-<script type="text/javascript" src="hockey2.js">
+<script type="text/javascript" src="hockey.js">
 </script>
 </html>
 

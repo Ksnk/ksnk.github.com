@@ -1,10 +1,21 @@
 <!DOCTYPE html public "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
-	<title>Хоккей</title>
+	<title>Футбол</title>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8">
 
 	<style>
+		:root {
+			--start-color1: #DFFF03FF;
+			--stop-color1: #9BB202FF;
+			--start-color2: #EFEEEEFF;
+			--stop-color2: #868383;
+			--start-color3: #f60101;
+			--stop-color3: #7c0202;
+			--start-color4: #0101fa;
+			--stop-color4: #02266e;
+			--green-color: green;
+		}
 		/** layout+ */
 		.container {
 			display: flex;
@@ -24,20 +35,23 @@
 		#svg-points circle {
 			fill: url(#RadialGradient1);
 		}
-		#svg-points circle.box {
-			fill: red;
+		#svg-points circle.box.col0 {
+			fill: url(#RadialGradient4)
+		}
+		#svg-points circle.box.col1 {
+			fill: url(#RadialGradient3)
 		}
 		#svg-ball circle {
 			fill: url(#RadialGradient2);
 		}
 		#svg-turns .col1 {
-			stroke: blue;
+			stroke: var(--start-color4);
 		}
 		#svg-turns .col0 {
-			stroke: red;
+			stroke: var(--start-color3);
 		}
 		div.svgfield{
-			background-color: green;
+			background-color: var(--green-color)
 		}
 		#control table {
 			width:200px;
@@ -71,6 +85,26 @@
 				align-items: center;
 			}
 		}
+		.redwin {
+			animation: onClick 0.5s forwards;
+		}
+
+		#control.col0 input {
+			background-color:var(--stop-color3);
+		}
+		#control.col1 input {
+			background-color:var(--stop-color4);
+		}
+
+		@keyframes onClick {
+			from {
+				stroke-width: 1px;
+			}
+			to {
+				stroke-width: 10px;
+				fill: var(--start-color3);;
+			}
+		}
 	</style>
 </head>
 <body onload="createField()">
@@ -78,13 +112,21 @@
 <div class="item svgfield">
 	<svg onclick="click(this)"><!-- границы поля -->
 		<defs>
-			<radialGradient id="RadialGradient1">
-				<stop offset="0%" stop-color="#DFFF03FF" />
-				<stop offset="100%" stop-color="#9BB202FF" />
+			<radialGradient id="RadialGradient1" cx="45%" cy="45%" r="80%" fx="35%" fy="35%">
+				<stop offset="0.2" stop-color="var(--start-color1)"/>
+				<stop offset="0.9" stop-color="var(--stop-color1)"/>
 			</radialGradient>
-			<radialGradient id="RadialGradient2"><!-- cx="0.25" cy="0.25" r="0.25">-->
-				<stop offset="0%" stop-color="#EFEEEEFF" />
-				<stop offset="100%" stop-color="#B6B3B3FF" />
+			<radialGradient id="RadialGradient2" cx="45%" cy="45%" r="80%" fx="35%" fy="35%">
+				<stop offset="0.2" stop-color="var(--start-color2)"/>
+				<stop offset="0.9" stop-color="var(--stop-color2)"/>
+			</radialGradient>
+			<radialGradient id="RadialGradient3" cx="45%" cy="45%" r="80%" fx="35%" fy="35%">
+				<stop offset="0.2" stop-color="var(--start-color3)"/>
+				<stop offset="0.9" stop-color="var(--stop-color3)"/>
+			</radialGradient>
+			<radialGradient id="RadialGradient4" cx="45%" cy="45%" r="80%" fx="35%" fy="35%">
+				<stop offset="0.2" stop-color="var(--start-color4)"/>
+				<stop offset="0.9" stop-color="var(--stop-color4)"/>
 			</radialGradient>
 		</defs>
 		<g class="shadow" fill="none" id="svg-border" stroke="#decade" stroke-width="2" >
@@ -107,24 +149,25 @@
 			<td><input type='button' value='/' onclick='xturn(2)'></td>
 		</tr>
 		<tr>
-			<td><input type='button' value='-' onclick='xturn(4)'></td>
+			<td><input type='button' value='-' onclick='xturn(7)'></td>
 			<td><input type="button" onclick="xturn(-1)" value="X"></td>
 			<td><input type='button' value='-' onclick='xturn(3)'></td>
 		</tr>
 		<tr>
-			<td><input type='button' value='/' onclick='xturn(5)'></td>
-			<td><input type='button' value='|' onclick='xturn(6)'></td>
-			<td><input type='button' value='\' onclick='xturn(7)'></td>
+			<td><input type='button' value='/' onclick='xturn(6)'></td>
+			<td><input type='button' value='|' onclick='xturn(5)'></td>
+			<td><input type='button' value='\' onclick='xturn(4)'></td>
 		</tr>
 	</table>
-	<div class="item" style="flex-direction: column">
+	<div class="item">
 	<label><input type='checkbox' checked id='auto'>auto</label>
-	<input type='button' value='Back' style="width:200px" onclick='backturn()'>
+		<input type='button' value='Back' style="width:200px" onclick='backturn()'>
+		<input type='button' value='New' style="width:200px" onclick='createField()'>
 	</div>
 </div>
 </div>
 </body>
-<script type="text/javascript" src="hockey.js">
+<script type="text/javascript" src="football.js">
 </script>
 </html>
 
